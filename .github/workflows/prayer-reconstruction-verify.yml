@@ -57,6 +57,20 @@ jobs:
         run: |
           Copy-Item verification-output/native verification-output/native-original-pri -Recurse -Force
           Copy-Item reference/FluentPrayerTimes-SelfContained/resources.pri verification-output/native-original-pri/resources.pri -Force
+      - name: Run native self-tests and differential behavior checks
+        shell: pwsh
+        run: |
+          $env:FPT_COMPONENT_PROBE='0'
+          $env:FPT_XAML_DIAGNOSTICS='0'
+          $app=Join-Path $env:APPDATA 'FluentPrayerTimes'
+          New-Item -ItemType Directory -Force $app | Out-Null
+          foreach ($variant in @('reference/FluentPrayerTimes-SelfContained','verification-output/native')) {
+            $p=Start-Process "$variant/FluentPrayerTimes.exe" -ArgumentList '--selftest' -PassThru -Wait
+            Get-ChildItem $app -Filter '*selftest*' | Copy-Item -Destination verification-output/ -Force
+            if ($p.ExitCode -ne 0) { throw "Native selftest failed: $variant ($($p.ExitCode))" }
+          }
+          dotnet run --project reconstruction/tests/Parity.csproj -- reference/FluentPrayerTimes-SelfContained/FluentPrayerTimes.dll verification-output/native/FluentPrayerTimes.dll > verification-output/native-differential.json
+          if ($LASTEXITCODE -ne 0) { throw 'Differential checks failed' }
       - name: Compare native original and rebuilt screen launches
         shell: pwsh
         run: ./reconstruction/verification/windows-parity.ps1
@@ -68,7 +82,8 @@ jobs:
           retention-days: 7
           path: |
             native-build.log
-            verification-output/launch-results.json
+            verification-output/*.json
+            verification-output/*selftest*
             verification-output/screenshots/
             verification-output/*.log
             verification-output/native/
