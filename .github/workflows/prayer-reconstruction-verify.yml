@@ -42,6 +42,13 @@ jobs:
           $buildCode = $LASTEXITCODE
           Pop-Location
           if ($buildCode -ne 0) { throw 'Native source build failed' }
+      - name: Build managed recovery with original connectors
+        shell: pwsh
+        run: |
+          dotnet build reconstruction/src/FluentPrayerTimes.csproj -p:OriginalAppDir="$pwd/reference/FluentPrayerTimes-SelfContained" -v:minimal
+          if ($LASTEXITCODE -ne 0) { throw 'Managed recovery build failed' }
+          Copy-Item reference/FluentPrayerTimes-SelfContained verification-output/recovered -Recurse -Force
+          Copy-Item reconstruction/src/bin/Debug/netcoreapp8.0/FluentPrayerTimes.dll verification-output/recovered/FluentPrayerTimes.dll -Force
       - name: Compare native original and rebuilt screen launches
         shell: pwsh
         run: ./reconstruction/verification/windows-parity.ps1

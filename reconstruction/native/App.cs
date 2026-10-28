@@ -36,7 +36,7 @@ public partial class App : Application
 	{
 		if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") {
             System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs? last = null;
-            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (e.Exception.GetType().Name.Contains("Xaml") || e.Exception is NullReferenceException) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\n"); } } catch {} };
+            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (true) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\n"); } } catch {} };
             DebugSettings.XamlResourceReferenceFailed += (sender, e) => { try { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Message+"\n"); } catch {} };
         }
         InitializeComponent();

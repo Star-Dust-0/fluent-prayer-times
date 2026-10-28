@@ -22,8 +22,8 @@ $settings=Join-Path $env:APPDATA 'FluentPrayerTimes'
 $env:FPT_XAML_DIAGNOSTICS='1'
 $results=@()
 $started=Get-Date
-foreach($variant in @('rebuilt')) {
- $dir=if($variant -eq 'original'){$original}else{$rebuilt}
+foreach($variant in @('rebuilt','recovered')) {
+ $dir=if($variant -eq 'original'){$original}elseif($variant -eq 'recovered'){Join-Path $out 'recovered'}else{$rebuilt}
  foreach($language in @('ar')) {
   foreach($part in @('main')) {
    Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
