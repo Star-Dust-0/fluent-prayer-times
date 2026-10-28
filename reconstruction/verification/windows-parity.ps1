@@ -20,13 +20,13 @@ public class CaptureNative {
 '@
 $settings=Join-Path $env:APPDATA 'FluentPrayerTimes'
 $env:FPT_XAML_DIAGNOSTICS='0'
-$env:FPT_COMPONENT_PROBE='1'
+$env:FPT_COMPONENT_PROBE='0'
 $results=@()
 $started=Get-Date
-foreach($variant in @('rebuilt','native-original-pri','recovered')) {
+foreach($variant in @('original','rebuilt')) {
  $dir=if($variant -eq 'original'){$original}elseif($variant -eq 'native-original-pri'){Join-Path $out 'native-original-pri'}elseif($variant -eq 'recovered'){Join-Path $out 'recovered'}else{$rebuilt}
- foreach($language in @('ar')) {
-  foreach($part in @('main')) {
+ foreach($language in @('ar','en')) {
+  foreach($part in @('main','calendar','settings','calculation','sounds','about','widget','hover')) {
    Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
    New-Item -ItemType Directory -Force $settings | Out-Null
    '{"AutoUpdate":false,"Theme":"light","LocationPending":false}' | Set-Content "$settings\settings.json" -Encoding utf8

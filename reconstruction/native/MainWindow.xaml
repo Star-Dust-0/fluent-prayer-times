@@ -22,7 +22,7 @@
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
                     OpenPaneLength="200"
-                    >
+                    IsPaneOpen="False">
                     <NavigationView.MenuItems>
                         <NavigationViewItem Content="المواقيت" Tag="times">
                             <NavigationViewItem.Icon>
