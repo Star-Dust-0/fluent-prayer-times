@@ -176,7 +176,7 @@ public sealed class MainWindow : Window, IComponentConnector
 
 	private static readonly string[] SoundTags = new string[4] { "default", "short", "full", "none" };
 
-	private const string UpdateRepo = "MohamedElnaggar00/fluent-prayer-times";
+	private const string UpdateRepo = "StarsDust01/fluent-prayer-times";
 
 	private string _updateState = "idle";
 
@@ -186,7 +186,7 @@ public sealed class MainWindow : Window, IComponentConnector
 
 	private UpdateAsset? _manualUpdateAsset;
 
-	private static readonly UpdateAsset PreviewAsset = new UpdateAsset("https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/download/v9.0.0/FluentPrayerTimes-v9.0.0-installer-win-x64.exe", "FluentPrayerTimes-v9.0.0-installer-win-x64.exe", 0L, null);
+	private static readonly UpdateAsset PreviewAsset = new UpdateAsset("https://github.com/StarsDust01/fluent-prayer-times/releases/download/v9.0.0/FluentPrayerTimes-v9.0.0-installer-win-x64.exe", "FluentPrayerTimes-v9.0.0-installer-win-x64.exe", 0L, null);
 
 	[GeneratedCode("Microsoft.UI.Xaml.Markup.Compiler", " 3.0.0.2501")]
 	private Grid RootGrid;
@@ -1245,7 +1245,7 @@ public sealed class MainWindow : Window, IComponentConnector
 			};
 			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes/" + (typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
 			http.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
-			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/MohamedElnaggar00/fluent-prayer-times/releases/latest");
+			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/StarsDust01/fluent-prayer-times/releases/latest");
 			response.EnsureSuccessStatusCode();
 			using JsonDocument jsonDocument = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 			Version installed = ReleaseVersion(typeof(MainWindow).Assembly.GetName().Version?.ToString(3)) ?? new Version(0, 0, 0);
@@ -1261,7 +1261,7 @@ public sealed class MainWindow : Window, IComponentConnector
 			}
 			_s.UpdateSeen = text;
 			_s.Save();
-			_toast = new UpdateToast(text, updateAsset, "https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/latest", _s.Theme);
+			_toast = new UpdateToast(text, updateAsset, "https://github.com/StarsDust01/fluent-prayer-times/releases/latest", _s.Theme);
 			_toast.ShowToast();
 		}
 		catch (Exception ex)
@@ -1747,7 +1747,7 @@ public sealed class MainWindow : Window, IComponentConnector
 			}
 			else if (text.StartsWith("update") && !text.StartsWith("updates"))
 			{
-				_toast = new UpdateToast("1.2.5", PreviewAsset, "https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/latest", _s.Theme);
+				_toast = new UpdateToast("1.2.5", PreviewAsset, "https://github.com/StarsDust01/fluent-prayer-times/releases/latest", _s.Theme);
 				_toast.ShowToast();
 				if (text != "update")
 				{
@@ -1762,7 +1762,7 @@ public sealed class MainWindow : Window, IComponentConnector
 			_updateState = (text.Contains("available") ? "available" : (text.Contains("error") ? "error" : (text.Contains("checking") ? "checking" : "current")));
 			_checkingUpdates = _updateState == "checking";
 			_manualUpdateVersion = "v9.0.0";
-			_manualUpdateUrl = ((_updateState == "available") ? "https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/latest" : null);
+			_manualUpdateUrl = ((_updateState == "available") ? "https://github.com/StarsDust01/fluent-prayer-times/releases/latest" : null);
 			_manualUpdateAsset = ((_updateState == "available") ? PreviewAsset : null);
 			RefreshUpdateCards();
 		}
@@ -2549,7 +2549,7 @@ public sealed class MainWindow : Window, IComponentConnector
 					continue;
 				}
 				string text3 = item.GetProperty("browser_download_url").GetString();
-				if (Uri.TryCreate(text3, UriKind.Absolute, out Uri result) && result.Scheme == "https" && result.Host == "github.com" && result.AbsolutePath.StartsWith("/MohamedElnaggar00/fluent-prayer-times/releases/download/", StringComparison.OrdinalIgnoreCase))
+				if (Uri.TryCreate(text3, UriKind.Absolute, out Uri result) && result.Scheme == "https" && result.Host == "github.com" && result.AbsolutePath.StartsWith("/StarsDust01/fluent-prayer-times/releases/download/", StringComparison.OrdinalIgnoreCase))
 				{
 					JsonElement value;
 					long size = ((item.TryGetProperty("size", out value) && value.ValueKind == JsonValueKind.Number) ? value.GetInt64() : 0);
@@ -2576,13 +2576,13 @@ public sealed class MainWindow : Window, IComponentConnector
 		{
 			using HttpClient http = new HttpClient();
 			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes-ci");
-			using JsonDocument jsonDocument = JsonDocument.Parse(await http.GetStringAsync("https://api.github.com/repos/MohamedElnaggar00/fluent-prayer-times/releases/latest"));
+			using JsonDocument jsonDocument = JsonDocument.Parse(await http.GetStringAsync("https://api.github.com/repos/StarsDust01/fluent-prayer-times/releases/latest"));
 			UpdateAsset updateAsset = UpdateAssetFor(jsonDocument.RootElement, new Version(1, 3, 3));
 			if (updateAsset == null)
 			{
 				return;
 			}
-			_toast = new UpdateToast("1.3.4", updateAsset, "https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/latest", _s.Theme);
+			_toast = new UpdateToast("1.3.4", updateAsset, "https://github.com/StarsDust01/fluent-prayer-times/releases/latest", _s.Theme);
 			_toast.ShowToast();
 			_toast.Begin();
 		}
@@ -2602,7 +2602,7 @@ public sealed class MainWindow : Window, IComponentConnector
 			catch
 			{
 			}
-			_toast = new UpdateToast((_manualUpdateVersion ?? "").TrimStart('v', 'V'), _manualUpdateAsset, "https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/latest", _s.Theme);
+			_toast = new UpdateToast((_manualUpdateVersion ?? "").TrimStart('v', 'V'), _manualUpdateAsset, "https://github.com/StarsDust01/fluent-prayer-times/releases/latest", _s.Theme);
 			_toast.ShowToast();
 			_toast.Begin();
 		}
@@ -2668,7 +2668,7 @@ public sealed class MainWindow : Window, IComponentConnector
 			};
 			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes/" + (typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
 			http.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
-			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/MohamedElnaggar00/fluent-prayer-times/releases/latest");
+			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/StarsDust01/fluent-prayer-times/releases/latest");
 			response.EnsureSuccessStatusCode();
 			using JsonDocument jsonDocument = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 			Version installed = ReleaseVersion(typeof(MainWindow).Assembly.GetName().Version?.ToString(3)) ?? new Version(0, 0, 0);

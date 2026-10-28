@@ -13,3 +13,9 @@ Native Windows build and original-versus-rebuilt screenshot verification are in 
 See [reconstruction/README.md](reconstruction/README.md) and [RECOVERY-STATUS.md](RECOVERY-STATUS.md).
 
 brought to you by Instinct
+
+## Updates after account migration
+
+The app checks `StarsDust01/fluent-prayer-times`. The source repository is private. Anonymous GitHub release API requests currently return 404, so the automatic check logs a failed check without showing an update, and the manual check shows the existing error state. This is not evidence that the installed version is current.
+
+No access token is included. A public releases-only repository would allow automatic updates; alternatively, an explicit unavailable notice and a browser link can support signed-in manual downloads. These are choices to agree before changing the update flow further.
