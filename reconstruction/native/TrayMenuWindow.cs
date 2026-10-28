@@ -130,7 +130,7 @@ internal sealed class TrayMenuWindow : Window
 			Content = grid,
 			HorizontalAlignment = HorizontalAlignment.Stretch,
 			HorizontalContentAlignment = HorizontalAlignment.Stretch,
-			Background = new SolidColorBrush(Colors.Transparent),
+			Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent),
 			BorderThickness = new Thickness(0.0),
 			Padding = new Thickness(12.0, 0.0, 12.0, 0.0),
 			Height = 36.0,

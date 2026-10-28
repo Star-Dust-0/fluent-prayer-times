@@ -1199,7 +1199,7 @@ public sealed partial class MainWindow : Window
 				Padding = new Thickness(14.0, 6.0, 14.0, 6.0),
 				CornerRadius = new CornerRadius(6.0),
 				BorderThickness = new Thickness(1.0),
-				BorderBrush = new SolidColorBrush(Colors.Transparent)
+				BorderBrush = new SolidColorBrush(Microsoft.UI.Colors.Transparent)
 			};
 			_rowName[i] = textBlock;
 			_rowTime[i] = textBlock2;
@@ -1445,8 +1445,8 @@ public sealed partial class MainWindow : Window
 			for (int i = 0; i < 6; i++)
 			{
 				bool flag = i == num;
-				_rowBox[i].Background = (flag ? new SolidColorBrush(Color.FromArgb(40, 0, 196, 204)) : new SolidColorBrush(Colors.Transparent));
-				_rowBox[i].BorderBrush = (flag ? new SolidColorBrush(Color.FromArgb(byte.MaxValue, 0, 196, 204)) : new SolidColorBrush(Colors.Transparent));
+				_rowBox[i].Background = (flag ? new SolidColorBrush(Color.FromArgb(40, 0, 196, 204)) : new SolidColorBrush(Microsoft.UI.Colors.Transparent));
+				_rowBox[i].BorderBrush = (flag ? new SolidColorBrush(Color.FromArgb(byte.MaxValue, 0, 196, 204)) : new SolidColorBrush(Microsoft.UI.Colors.Transparent));
 				_rowName[i].FontWeight = (flag ? FontWeights.SemiBold : FontWeights.Normal);
 				_rowTime[i].FontWeight = _rowName[i].FontWeight;
 			}

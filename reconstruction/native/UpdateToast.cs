@@ -117,7 +117,7 @@ internal sealed class UpdateToast : Window
 		{
 			Glyph = "\ue896",
 			FontSize = 18.0,
-			Foreground = new SolidColorBrush(Colors.White),
+			Foreground = new SolidColorBrush(Microsoft.UI.Colors.White),
 			HorizontalAlignment = HorizontalAlignment.Center,
 			VerticalAlignment = VerticalAlignment.Center
 		};

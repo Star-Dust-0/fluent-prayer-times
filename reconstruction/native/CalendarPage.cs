@@ -236,7 +236,7 @@ internal sealed class CalendarPage : StackPanel
 				Height = 6.0,
 				Margin = new Thickness(0.0, 2.0, 0.0, 0.0),
 				HorizontalAlignment = HorizontalAlignment.Center,
-				Fill = (flag2 ? solidColorBrush : new SolidColorBrush(Colors.Transparent))
+				Fill = (flag2 ? solidColorBrush : new SolidColorBrush(Microsoft.UI.Colors.Transparent))
 			});
 			Border border = HijriUtil.Themed("ControlFillColorDefaultBrush");
 			border.Child = stackPanel;
