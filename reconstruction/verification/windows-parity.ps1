@@ -23,8 +23,8 @@ $env:FPT_XAML_DIAGNOSTICS='0'
 $env:FPT_COMPONENT_PROBE='1'
 $results=@()
 $started=Get-Date
-foreach($variant in @('rebuilt','recovered')) {
- $dir=if($variant -eq 'original'){$original}elseif($variant -eq 'recovered'){Join-Path $out 'recovered'}else{$rebuilt}
+foreach($variant in @('rebuilt','native-original-pri','recovered')) {
+ $dir=if($variant -eq 'original'){$original}elseif($variant -eq 'native-original-pri'){Join-Path $out 'native-original-pri'}elseif($variant -eq 'recovered'){Join-Path $out 'recovered'}else{$rebuilt}
  foreach($language in @('ar')) {
   foreach($part in @('main')) {
    Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force

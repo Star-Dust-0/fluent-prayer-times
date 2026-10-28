@@ -49,6 +49,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Managed recovery build failed' }
           Copy-Item reference/FluentPrayerTimes-SelfContained verification-output/recovered -Recurse -Force
           Copy-Item reconstruction/src/bin/Debug/netcoreapp8.0/FluentPrayerTimes.dll verification-output/recovered/FluentPrayerTimes.dll -Force
+      - name: Isolate generated PRI from native code
+        shell: pwsh
+        run: |
+          Copy-Item verification-output/native verification-output/native-original-pri -Recurse -Force
+          Copy-Item reference/FluentPrayerTimes-SelfContained/resources.pri verification-output/native-original-pri/resources.pri -Force
       - name: Compare native original and rebuilt screen launches
         shell: pwsh
         run: ./reconstruction/verification/windows-parity.ps1
