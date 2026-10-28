@@ -94,7 +94,17 @@ jobs:
           $window.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition) | ForEach-Object { $_.Current.Name } | Set-Content installer-controls.txt
           $nextCondition=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::NameProperty),'Next'
           $next=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$nextCondition)
-          $next.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+          Add-Type @'
+          using System; using System.Runtime.InteropServices;
+          public class WizardClick {
+            [DllImport("user32.dll")] public static extern bool SetCursorPos(int x,int y);
+            [DllImport("user32.dll")] public static extern void mouse_event(uint flags,uint dx,uint dy,uint data,UIntPtr extra);
+          }
+          '@
+          $r=$next.Current.BoundingRectangle
+          [WizardClick]::SetCursorPos([int]($r.X+$r.Width/2),[int]($r.Y+$r.Height/2)) | Out-Null
+          [WizardClick]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
+          [WizardClick]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
           Start-Sleep -Seconds 2
           $graphics.CopyFromScreen($bounds.Location,[System.Drawing.Point]::Empty,$bounds.Size)
           $bitmap.Save("$PWD/installer-tasks.png")
