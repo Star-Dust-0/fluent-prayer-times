@@ -87,4 +87,4 @@ The historical root project is incomplete. For the reconstruction build instruct
 
 ## License
 
-The original app was recorded as MIT-licensed. The full original license text is still being recovered and checked before a restored public release. Third-party dependencies keep their own licenses.
+The original 1.3.6 backup includes the MIT License, copyright 2026 Mohamed Elnaggar. Its license text will be included with the restored source and downloads. Third-party dependencies keep their own licenses.
