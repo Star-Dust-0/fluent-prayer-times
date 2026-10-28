@@ -1,9 +1,0 @@
-{
-  "checks": 1830,
-  "exceptions": 1830,
-  "failed": 1830,
-  "errors": [
-    "EXCEPTION SolarCalc.Compute: EXCEPTION:System.TypeInitializationException:The type initializer for '<Module>' threw an exception. / EXCEPTION:System.TypeInitializationException:The type initializer for '<Module>' threw an exception."
-  ],
-  "note": "All cases blocked by Windows-only module initializer on Linux. Full case list omitted."
-}
