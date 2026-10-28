@@ -20,8 +20,12 @@ jobs:
       - name: Build editable native WinUI source
         shell: pwsh
         run: |
-          dotnet publish reconstruction/native/FluentPrayerTimes.csproj -c Release -r win-x64 -p:Platform=x64 -o verification-output/native -v:minimal 2>&1 | Tee-Object native-build.log
-          if ($LASTEXITCODE -ne 0) { throw 'Native source build failed' }
+          Push-Location reconstruction/native
+          dotnet --version
+          dotnet publish FluentPrayerTimes.csproj -c Release -r win-x64 -p:Platform=x64 -o ../../verification-output/native -v:minimal 2>&1 | Tee-Object ../../native-build.log
+          $buildCode = $LASTEXITCODE
+          Pop-Location
+          if ($buildCode -ne 0) { throw 'Native source build failed' }
       - name: Save build logs and native output (not a release)
         if: always()
         uses: actions/upload-artifact@v4
