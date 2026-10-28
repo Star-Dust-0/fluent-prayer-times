@@ -94,8 +94,10 @@ jobs:
           $graphics.CopyFromScreen($bounds.Location,[System.Drawing.Point]::Empty,$bounds.Size)
           $bitmap.Save("$PWD/installer-self-contained.png")
           Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
-          $cond=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::ProcessIdProperty),$p.Id
+          $cond=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::NameProperty),'Setup - Fluent Prayer Times version 1.3.6'
           $window=[System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
+          if (-not $window) { throw 'Setup wizard window missing' }
+          $window.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition) | ForEach-Object { $_.Current.Name } | Set-Content installer-controls.txt
           $nextCondition=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::NameProperty),'Next >'
           $next=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$nextCondition)
           $next.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
@@ -194,6 +196,7 @@ jobs:
             packaging-proof.txt
             candidate-update-e2e.log
             installed-entry.json
+            installer-controls.txt
             installed-shortcut.png
             installed-programs.png
             packaging-install.log
