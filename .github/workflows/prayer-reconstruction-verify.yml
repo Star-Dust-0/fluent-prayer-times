@@ -12,6 +12,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -22,7 +23,7 @@ jobs:
         run: |
           Push-Location reconstruction/native
           dotnet --version
-          dotnet publish FluentPrayerTimes.csproj -c Release -r win-x64 -p:Platform=x64 -o ../../verification-output/native -v:minimal 2>&1 | Tee-Object ../../native-build.log
+          msbuild FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../verification-output/native/ /v:minimal 2>&1 | Tee-Object ../../native-build.log
           $buildCode = $LASTEXITCODE
           Pop-Location
           if ($buildCode -ne 0) { throw 'Native source build failed' }
