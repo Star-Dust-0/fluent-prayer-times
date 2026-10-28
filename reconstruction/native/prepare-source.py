@@ -29,10 +29,6 @@ for p in source.glob('*.cs'):
      elif s[end]=='}':depth-=1
      end+=1
    s=s[:start]+s[end:]
- if p.stem == 'App':
-  s=s.replace('InitializeComponent();', 'if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") {\n            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs? last = null;\n            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (true) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\\n"); } } catch {} };\n            DebugSettings.XamlResourceReferenceFailed += (sender, e) => { try { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Message+"\\n"); } catch {} };\n        }\n        InitializeComponent();')
- if p.stem == 'App':
-  s=s.replace('string[] commandLineArgs = Environment.GetCommandLineArgs();', 'if (Environment.GetEnvironmentVariable("FPT_COMPONENT_PROBE") == "1") {\n            Directory.CreateDirectory(AppData);\n            var log=Path.Combine(AppData,"component-probe.log");\n            var win=new Microsoft.UI.Xaml.Window();win.Activate();\n            string[] tests={"<Grid/>","<Grid><NavigationView/></Grid>","<Grid><NavigationView IsPaneOpen=\'False\'/></Grid>","<Grid><Button Style=\'{StaticResource AccentButtonStyle}\'/></Grid>","<Grid><TextBlock Foreground=\'{ThemeResource TextFillColorSecondaryBrush}\'/></Grid>"};\n            for(int n=0;n<tests.Length;n++){File.AppendAllText(log,"START "+n+"\\n");try{var xml=tests[n].Replace("<Grid", "<Grid xmlns=\'http://schemas.microsoft.com/winfx/2006/xaml/presentation\'");win.Content=(Microsoft.UI.Xaml.UIElement)Microsoft.UI.Xaml.Markup.XamlReader.Load(xml);File.AppendAllText(log,"OK "+n+"\\n");}catch(Exception ex){File.AppendAllText(log,ex.ToString()+"\\n");}}\n            Environment.Exit(0);return;\n        }\n        string[] commandLineArgs = Environment.GetCommandLineArgs();')
  if p.stem == 'MainWindow':
   s=s.replace('private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)\n\t{', 'private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)\n\t{\n        if (PageTimes == null || PageSettings == null || PageAbout == null) return;')
  if p.stem in ['MainWindow','WidgetWindow']:
@@ -51,9 +47,3 @@ for p in (root.parent/'xaml').glob('*.xaml'):
  s=re.sub(r'<Color ([^>]*?)Value="([^"]+)"\s*/>',r'<Color \1>\2</Color>',s)
  (root/p.name).write_text(s, encoding="utf-8")
 
-# Runtime-only parser diagnostic, not the app's loaded XAML.
-s=(root/'MainWindow.xaml').read_text(encoding='utf-8')
-s=re.sub(r' x:Class="[^"]*"','',s)
-s=s.replace('<Window ', '<Grid ').replace('</Window>', '</Grid>').replace('<Window.Content>', '').replace('</Window.Content>', '')
-s=re.sub(r' (?:SelectionChanged|Click|Checked|Toggled|TextChanged|QuerySubmitted|SuggestionChosen)="[^"]*"','',s)
-(root/'MainWindow.diagnostic.xaml').write_text(s,encoding='utf-8')

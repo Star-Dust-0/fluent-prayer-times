@@ -26,11 +26,12 @@ $started=Get-Date
 foreach($variant in @('original','rebuilt')) {
  $dir=if($variant -eq 'original'){$original}elseif($variant -eq 'native-original-pri'){Join-Path $out 'native-original-pri'}elseif($variant -eq 'recovered'){Join-Path $out 'recovered'}else{$rebuilt}
  foreach($language in @('ar','en')) {
+ foreach($theme in @('light','dark')) {
   foreach($part in @('main','calendar','settings','calculation','sounds','about','widget','hover')) {
    Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
    New-Item -ItemType Directory -Force $settings | Out-Null
-   '{"AutoUpdate":false,"Theme":"light","LocationPending":false}' | Set-Content "$settings\settings.json" -Encoding utf8
-   $process=Start-Process "$dir\FluentPrayerTimes.exe" -WorkingDirectory $dir -ArgumentList @('--preview=iqama',"--part=$part","--lang=$language") -PassThru -RedirectStandardOutput "$out\$variant-$language-$part-stdout.log" -RedirectStandardError "$out\$variant-$language-$part-stderr.log"
+   ('{"AutoUpdate":false,"Theme":"'+$theme+'","LocationPending":false}') | Set-Content "$settings\settings.json" -Encoding utf8
+   $process=Start-Process "$dir\FluentPrayerTimes.exe" -WorkingDirectory $dir -ArgumentList @('--preview=iqama',"--part=$part","--lang=$language") -PassThru -RedirectStandardOutput "$out\$variant-$language-$theme-$part-stdout.log" -RedirectStandardError "$out\$variant-$language-$theme-$part-stderr.log"
    Start-Sleep -Seconds 9
    $windows=@([CaptureNative]::Windows([uint32]$process.Id))
    $count=0
@@ -44,17 +45,18 @@ foreach($variant in @('original','rebuilt')) {
     $bmp=New-Object System.Drawing.Bitmap $w,$h
     $g=[System.Drawing.Graphics]::FromImage($bmp)
     $g.CopyFromScreen($r.l,$r.t,0,0,(New-Object System.Drawing.Size $w,$h))
-    $bmp.Save("$out\screenshots\$variant-$language-$part-$count.png")
+    $bmp.Save("$out\screenshots\$variant-$language-$theme-$part-$count.png")
     $g.Dispose();$bmp.Dispose();$count++
    }
-   $results += [pscustomobject]@{variant=$variant;language=$language;part=$part;processExited=$process.HasExited;exitCode=if($process.HasExited){$process.ExitCode}else{$null};visibleCaptures=$count}
-   if(Test-Path "$settings\crash.log"){Copy-Item "$settings\crash.log" "$out\$variant-$language-$part-crash.log"}
-   if(Test-Path "$settings\xaml-diagnostics.log"){Copy-Item "$settings\xaml-diagnostics.log" "$out\$variant-$language-$part-xaml.log"}
+   $results += [pscustomobject]@{variant=$variant;language=$language;theme=$theme;part=$part;processExited=$process.HasExited;exitCode=if($process.HasExited){$process.ExitCode}else{$null};visibleCaptures=$count}
+   if(Test-Path "$settings\crash.log"){Copy-Item "$settings\crash.log" "$out\$variant-$language-$theme-$part-crash.log"}
+   if(Test-Path "$settings\xaml-diagnostics.log"){Copy-Item "$settings\xaml-diagnostics.log" "$out\$variant-$language-$theme-$part-xaml.log"}
    if(Test-Path "$settings\component-probe.log"){Copy-Item "$settings\component-probe.log" "$out\$variant-components.log"}
    Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
   }
  }
 }
 Get-WinEvent -FilterHashtable @{LogName="Application";StartTime=$started} -ErrorAction SilentlyContinue | Where-Object {$_.ProviderName -in @(".NET Runtime","Application Error","Windows Error Reporting")} | Format-List * | Out-File "$out\event-errors.log"
+}
 $results|ConvertTo-Json|Set-Content "$out\launch-results.json"
 if(@($results|Where-Object {$_.visibleCaptures -eq 0}).Count -gt 0){throw 'Some native screens had no visible capture'}

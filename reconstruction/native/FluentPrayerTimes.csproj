@@ -30,8 +30,6 @@
   <ItemGroup>
     <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Audio\**" CopyToOutputDirectory="PreserveNewest" />
-    <Page Remove="MainWindow.diagnostic.xaml" />
-    <Content Include="MainWindow.diagnostic.xaml" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="logo.png" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="tray*.ico" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

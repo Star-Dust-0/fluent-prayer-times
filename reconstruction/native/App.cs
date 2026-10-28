@@ -34,12 +34,7 @@ public partial class App : Application
 
 	public App()
 	{
-		if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") {
-            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs? last = null;
-            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (true) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\n"); } } catch {} };
-            DebugSettings.XamlResourceReferenceFailed += (sender, e) => { try { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Message+"\n"); } catch {} };
-        }
-        InitializeComponent();
+		InitializeComponent();
 		base.UnhandledException += delegate(object s, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
 			try
@@ -55,15 +50,7 @@ public partial class App : Application
 
 	protected override void OnLaunched(LaunchActivatedEventArgs args)
 	{
-		if (Environment.GetEnvironmentVariable("FPT_COMPONENT_PROBE") == "1") {
-            Directory.CreateDirectory(AppData);
-            var log=Path.Combine(AppData,"component-probe.log");
-            var win=new Microsoft.UI.Xaml.Window();win.Activate();
-            string[] tests={"<Grid/>","<Grid><NavigationView/></Grid>","<Grid><NavigationView IsPaneOpen='False'/></Grid>","<Grid><Button Style='{StaticResource AccentButtonStyle}'/></Grid>","<Grid><TextBlock Foreground='{ThemeResource TextFillColorSecondaryBrush}'/></Grid>"};
-            for(int n=0;n<tests.Length;n++){File.AppendAllText(log,"START "+n+"\n");try{var xml=tests[n].Replace("<Grid", "<Grid xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'");win.Content=(Microsoft.UI.Xaml.UIElement)Microsoft.UI.Xaml.Markup.XamlReader.Load(xml);File.AppendAllText(log,"OK "+n+"\n");}catch(Exception ex){File.AppendAllText(log,ex.ToString()+"\n");}}
-            Environment.Exit(0);return;
-        }
-        string[] commandLineArgs = Environment.GetCommandLineArgs();
+		string[] commandLineArgs = Environment.GetCommandLineArgs();
 		foreach (string text in commandLineArgs)
 		{
 			if (text.StartsWith("--preview="))
