@@ -18,7 +18,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release download v1.3.6 --repo "$env:GITHUB_REPOSITORY" --pattern '*-portable-*.zip' --dir artifacts
-          Expand-Archive artifacts/FluentPrayerTimes-v1.3.6-self-contained-portable-win-x64.zip app
+          Expand-Archive artifacts/FluentPrayerTimes-v1.3.6-portable-win-x64.zip app
       - name: Exercise actual converter and azkar navigation
         shell: pwsh
         run: |
