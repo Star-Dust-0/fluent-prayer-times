@@ -12,6 +12,21 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Checkout private original fixture
+        uses: actions/checkout@v4
+        with:
+          ref: fixtures
+          path: fixture-input
+      - name: Verify and extract original fixture
+        shell: pwsh
+        run: |
+          $archive = 'fixture-input/test-fixtures/FluentPrayerTimes-1.3.6-original.rar'
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne '845999cf1190566b685dbc6b19f558c394b855cc857af22d9bb3f8a619c78fba') { throw 'Fixture hash mismatch' }
+          & 7z x $archive '-oreference' -y
+          if ($LASTEXITCODE -ne 0) { throw 'Fixture extraction failed' }
+          Copy-Item reference/FluentPrayerTimes-SelfContained/Audio reconstruction/native/Audio -Recurse -Force
+          Copy-Item reference/FluentPrayerTimes-SelfContained/tray*.ico reconstruction/native/ -Force
+          Copy-Item reference/FluentPrayerTimes-SelfContained/logo.png reconstruction/native/ -Force
       - uses: microsoft/setup-msbuild@v2
       - uses: actions/setup-dotnet@v4
         with:
@@ -27,6 +42,9 @@ jobs:
           $buildCode = $LASTEXITCODE
           Pop-Location
           if ($buildCode -ne 0) { throw 'Native source build failed' }
+      - name: Compare native original and rebuilt screen launches
+        shell: pwsh
+        run: ./reconstruction/verification/windows-parity.ps1
       - name: Save build logs and native output (not a release)
         if: always()
         uses: actions/upload-artifact@v4
@@ -35,5 +53,8 @@ jobs:
           retention-days: 7
           path: |
             native-build.log
+            verification-output/launch-results.json
+            verification-output/screenshots/
+            verification-output/*crash.log
             verification-output/native/
             reconstruction/native/obj/**/output.json
