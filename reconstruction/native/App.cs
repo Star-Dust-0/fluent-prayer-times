@@ -55,7 +55,15 @@ public partial class App : Application
 
 	protected override void OnLaunched(LaunchActivatedEventArgs args)
 	{
-		string[] commandLineArgs = Environment.GetCommandLineArgs();
+		if (Environment.GetEnvironmentVariable("FPT_COMPONENT_PROBE") == "1") {
+            Directory.CreateDirectory(AppData);
+            var log=Path.Combine(AppData,"component-probe.log");
+            var win=new Microsoft.UI.Xaml.Window();win.Activate();
+            string[] tests={"<Grid/>","<Grid><NavigationView/></Grid>","<Grid><NavigationView IsPaneOpen='False'/></Grid>","<Grid><Button Style='{StaticResource AccentButtonStyle}'/></Grid>","<Grid><TextBlock Foreground='{ThemeResource TextFillColorSecondaryBrush}'/></Grid>"};
+            for(int n=0;n<tests.Length;n++){File.AppendAllText(log,"START "+n+"\n");try{var xml=tests[n].Replace("<Grid", "<Grid xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'");win.Content=(Microsoft.UI.Xaml.UIElement)Microsoft.UI.Xaml.Markup.XamlReader.Load(xml);File.AppendAllText(log,"OK "+n+"\n");}catch(Exception ex){File.AppendAllText(log,ex.ToString()+"\n");}}
+            Environment.Exit(0);return;
+        }
+        string[] commandLineArgs = Environment.GetCommandLineArgs();
 		foreach (string text in commandLineArgs)
 		{
 			if (text.StartsWith("--preview="))
