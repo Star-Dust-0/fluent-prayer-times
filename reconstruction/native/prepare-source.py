@@ -33,6 +33,14 @@ for p in source.glob('*.cs'):
   s=s.replace('InitializeComponent();', 'if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") {\n            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs? last = null;\n            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (true) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\\n"); } } catch {} };\n            DebugSettings.XamlResourceReferenceFailed += (sender, e) => { try { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Message+"\\n"); } catch {} };\n        }\n        InitializeComponent();')
  if p.stem == 'MainWindow':
   s=s.replace('private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)\n\t{', 'private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)\n\t{\n        if (PageTimes == null || PageSettings == null || PageAbout == null) return;')
+ if p.stem in ['MainWindow','WidgetWindow']:
+  xaml=(root.parent/'xaml'/(p.stem+'.xaml')).read_text(encoding='utf-8')
+  hooks=[]
+  for tag in re.findall(r'<[^>]+>',xaml):
+   field=re.search(r'x:Name="([^"]+)"',tag)
+   if field:
+    for event,handler in re.findall(r' (SelectionChanged|Click|Checked|Toggled|TextChanged|QuerySubmitted|SuggestionChosen|PointerPressed|PointerMoved|PointerReleased)="([^"]+)"',tag): hooks.append(field[1]+'.'+event+' += '+handler+';')
+  s=s.replace('InitializeComponent();','InitializeComponent();\n        '+'\n        '.join(hooks))
  (root/(p.stem+'.cs')).write_text(s, encoding="utf-8")
 for p in (root.parent/'xaml').glob('*.xaml'):
  s=p.read_text(encoding="utf-8")

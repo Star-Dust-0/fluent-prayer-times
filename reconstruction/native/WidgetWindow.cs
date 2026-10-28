@@ -94,6 +94,11 @@ public sealed partial class WidgetWindow : Window
 	{
 		_s = s;
 		InitializeComponent();
+        Surface.PointerPressed += Surface_PointerPressed;
+        Surface.PointerMoved += Surface_PointerMoved;
+        Surface.PointerReleased += Surface_PointerReleased;
+        BtnPin.Click += Pin_Click;
+        BtnHide.Click += Close_Click;
 		L.Register(base.Content);
 		ApplyLang();
 		base.Title = "Fluent Prayer Times Widget";
