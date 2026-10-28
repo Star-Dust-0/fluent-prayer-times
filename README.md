@@ -1,21 +1,120 @@
-# Fluent Prayer Times
+<p align="center">
+  <img src="docs/app-icon.png" alt="Fluent Prayer Times" width="192" height="192">
+</p>
 
-This branch contains work to reconstruct the shipped Windows app 1.3.6 from its original binary and recovered source. It is not a verified replacement release.
+# 🕌 Fluent Prayer Times
+### مواقيت الصلاة لنظام Windows
 
-- Historical recovered source stays at the root, unchanged except for this status README.
-- `reconstruction/src/` contains the recovered managed implementation, which compiles against the shipped dependencies.
-- `reconstruction/xaml/` contains editable XAML recovered from the original resources.
-- `reconstruction/native/` regenerates native WinUI source and builds on a Windows runner.
-- `reconstruction/tests/` contains differential logic checks. 22,250 cases pass on isolated test copies with Windows bootstrap disabled. That does not verify native startup or UI parity.
+[English](README.en.md) · **العربية**
 
-Native Windows build and original-versus-rebuilt screenshot verification are in progress. No release should be created from this branch until the full verification report is accepted.
+برنامج خفيف لمواقيت الصلاة بتصميم Windows 11 الأصيل (WinUI 3)، يبقى في منطقة الإشعارات ويُذكّرك بالصلاة القادمة والإقامة. الواجهة بـ 11 لغة، وتتبع لغة Windows تلقائيًا.
 
-See [reconstruction/README.md](reconstruction/README.md) and [RECOVERY-STATUS.md](RECOVERY-STATUS.md).
+*brought to you by app.instinct AI* · تطوير: محمد النجار
 
-brought to you by Instinct
+## لقطات الشاشة / Screenshots
 
-## Updates after account migration
+<p align="center" dir="rtl">
+<strong>النافذة الرئيسية بالمظهر الغامق</strong><br><br>
+<img src="docs/screenshots/1-main-dark.jpg" alt="النافذة الرئيسية بالمظهر الغامق: مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة." width="450"><br><br>
+مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة.
+</p>
 
-The app checks `StarsDust01/fluent-prayer-times`. The source repository is private. Anonymous GitHub release API requests currently return 404, so the automatic check logs a failed check without showing an update, and the manual check shows the existing error state. This is not evidence that the installed version is current.
+<table>
+<tr>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>منبه الأذكار</strong><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+عرض الذكر وإعداد فترة التذكير.
+</td>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>محوّل التاريخ</strong><br><br>
+<img src="docs/screenshots/3-date-converter.jpg" alt="محوّل التاريخ: تحويل التاريخ الهجري إلى التاريخ الميلادي." width="280"><br><br>
+تحويل التاريخ الهجري إلى التاريخ الميلادي.
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>التقويم الهجري</strong><br><br>
+<img src="docs/screenshots/4-hijri-calendar.jpg" alt="التقويم الهجري: أيام الشهر والمناسبات الإسلامية مع أسهم التنقل بين الأشهر." width="280"><br><br>
+أيام الشهر والمناسبات الإسلامية، وأسهم الأشهر تنعكس في الواجهات العربية.
+</td>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>الإعدادات</strong><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+اللغة وزر «تطبيق التغييرات»، والمظهر، ولون التطبيق.
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center" dir="rtl">
+<strong>بطاقة التمرير فوق الأيقونة</strong><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+الوقت المتبقي للصلاة القادمة مع المدينة وموعد الصلاة.
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center" dir="rtl">
+<strong>ويدجت سطح المكتب</strong><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+اسم الصلاة القادمة وموعدها والعدّاد التنازلي.
+</td>
+</tr>
+</table>
 
-No access token is included. A public releases-only repository would allow automatic updates; alternatively, an explicit unavailable notice and a browser link can support signed-in manual downloads. These are choices to agree before changing the update flow further.
+## ✨ المميزات
+
+**المواقيت والتذكير**
+- **عدّاد الصلاة القادمة** بصيغة ساعة:دقيقة، مع التاريخ الهجري والميلادي.
+- **الأذان والإقامة**: عند دخول الوقت تظهر عبارة «حان وقت الاذان» لمدة دقيقة، ثم عدّ تنازلي للإقامة، ثم عبارة «حان وقت الاقامة». مدة الإقامة قابلة للضبط لكل صلاة.
+- **أصوات الأذان والإقامة**: افتراضي أو مختصر أو كامل، من إعدادات الإشعارات.
+- **تنبيه بالأذكار**: صفحة «منبه الأذكار» ترسل إشعارًا بذكر قصير كل مدة تحددها (من 1 دقيقة فصاعدًا)، من «حصن المسلم» وكتب الأذكار اليومية، ويمكن تفعيله وإيقافه. نصوص الأذكار بالعربية في كل اللغات.
+- **أي مدينة في العالم**: بحث عن المدينة أو تحديد الموقع تلقائيًا أو إدخال الإحداثيات، مع دعم التوقيت الصيفي.
+
+**التقويم والتاريخ**
+- **التقويم الهجري**: تقويم شهري مع الانتقال بين الأشهر والعودة إلى اليوم. اتجاه أسهم التنقل ينعكس في الواجهات من اليمين إلى اليسار.
+- **أيام ومواعيد المناسبات الإسلامية**: قائمة «المناسبات في هذا الشهر» تعرض المناسبات الإسلامية وتواريخها (مثل المولد النبوي الشريف وذكرى الإسراء والمعراج).
+- **محوّل التاريخ** بين الهجري والميلادي.
+
+**الحضور على سطح المكتب**
+- **أيقونة في منطقة الإشعارات** مع بطاقة تظهر عند التمرير بالفأرة وقائمة بالزر الأيمن. الضغط على الأيقونة يفتح الصفحة الرئيسية دائمًا، وليس آخر صفحة تركتها.
+- **ويدجت سطح المكتب** عائم، يُحرَّك بالسحب ويلتصق بأقرب موضع.
+- نافذة بتصميم Windows 11 الأصيل بارتفاع أكبر يتسع للمحتوى.
+
+**اللغات والاتجاه**
+- **11 لغة**: العربية والإنجليزية والفرنسية والألمانية والإسبانية والتركية والأردية والإندونيسية والروسية والبرتغالية والفارسية. ترجمات اللغات غير العربية والإنجليزية آلية.
+- **اختيار اللغة** من الإعدادات، والخيار «تلقائي» يتبع لغة Windows.
+- **اتجاه كامل من اليمين إلى اليسار** للعربية والأردية والفارسية: القائمة الجانبية على اليمين، وشريط العنوان ينعكس فيصير العنوان على اليمين وزر الإغلاق على اليسار.
+- زر **«تطبيق التغييرات»** في أعلى الإعدادات يعيد تشغيل البرنامج لتفعيل تغيير اللغة أو لون السمة.
+
+**المظهر**
+- خلفية Mica Alt أو Mica أو Acrylic، ومظهر فاتح أو غامق أو بحسب النظام.
+- **لون التطبيق**: ألوان جاهزة ولون مخصص من منتقي الألوان، واستعادة اللون الافتراضي.
+- تشغيل مع Windows، ويعمل دون اتصال بعد أول تحميل للمواقيت.
+
+**التحديثات والتثبيت**
+- **تحقق تلقائي من التحديثات** عند التشغيل ثم كل ست ساعات، مع إشعار ينزّل المثبّت داخل التطبيق مع شريط تقدّم وزر إلغاء، ولا يبدأ التثبيت إلا بعد ضغطك على «تثبيت الآن». يمكن إيقافه من الإعدادات، والتحقق اليدوي متاح من الإعدادات أو من قائمة الأيقونة.
+- **تحديث بتنزيل صغير**: يُنزَّل المثبّت الصغير (بدون .NET) بدل المثبّت الكامل.
+- **مثبّت بواجهة حديثة**: زر تثبيت، وشريط تقدم أخضر، وشاشة إتمام، وتشغيل تلقائي بعد التثبيت، واختصار على سطح المكتب وفي قائمة ابدأ.
+- صفحة **«عن البرنامج»** تعرض رقم الإصدار الفعلي وأيقونة التطبيق ورابط **GitHub Repo Link** لمستودع المشروع.
+
+## 📦 التثبيت
+1. نزّل `FluentPrayerTimes-vX.Y.Z-installer-win-x64.exe` من صفحة [Releases](../../releases/latest) وشغّله.
+2. إذا ظهر SmartScreen فاضغط **More info** ثم **Run anyway** (البرنامج غير موقَّع).
+
+نسخة portable (ملف zip) ومثبّت صغير يتطلب .NET 8 Desktop Runtime متاحان أيضًا في الصفحة نفسها.
+
+**المتطلبات:** Windows 10 (1809 أو أحدث) / Windows 11، بمعمارية x64، و[Windows App Runtime 1.6](https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe) (يُثبَّت مرة واحدة، ويتولى المثبّت الأمر عند الحاجة).
+
+## 🕋 مصدر المواقيت
+تُحسب المواقيت داخل البرنامج بالثواني لطرق الحساب القائمة على الزوايا (الهيئة المصرية العامة للمساحة، رابطة العالم الإسلامي، كراتشي، أمريكا الشمالية، الكويت، والزوايا المخصصة)، ثم تُقرَّب الصلوات لأقرب دقيقة ويُقرَّب الشروق لأسفل. باقي الطرق، والأماكن القطبية التي لا تشرق فيها الشمس أو لا تغيب، والتاريخ الهجري والمنطقة الزمنية من [Aladhan API](https://aladhan.com/prayer-times-api). الطريقة الافتراضية في مصر هي الهيئة المصرية العامة للمساحة.
+
+## 📄 الترخيص
+[MIT](LICENSE) © محمد النجار · brought to you by app.instinct AI
+
+
+## النسخة المستقلة / Self-contained edition
+
+النسخة المستقلة هي النسخة الافتراضية الآن. تتضمن ملفات .NET وWindows App SDK وVisual C++ المطلوبة. اختر الملف الذي يحتوي اسمه على `self-contained`: نسخة محمولة بصيغة ZIP أو مثبت للمستخدم الحالي دون صلاحيات مسؤول. فك ضغط جميع الملفات قبل تشغيل النسخة المحمولة، واحتفظ بها معًا.
+
+تعمل هذه النسخة على Windows 10 الإصدار 1809 أو أحدث وWindows 11 بمعمارية x64. لا يلزم تثبيت Windows App Runtime بشكل منفصل. الإصدارات السابقة محفوظة للأرشفة؛ أُزيلت التنزيلات المعتمدة على بيئة تشغيل خارجية من الإصدار الحالي.
+
+Self-contained is now the default. The portable ZIP and per-user installer bundle .NET, Windows App SDK and VC runtime files. No separate runtime installation is needed. Extract the entire ZIP and keep all files together. Windows 10 1809+ / Windows 11 x64. Older releases remain archived.
