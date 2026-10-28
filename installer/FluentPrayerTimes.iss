@@ -8,6 +8,7 @@ AppPublisherURL=https://instinct.com
 DefaultDirName={autopf}\FluentPrayerTimes
 UsePreviousAppDir=no
 DefaultGroupName=Fluent Prayer Times
+DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
