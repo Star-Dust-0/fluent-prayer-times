@@ -1,0 +1,5 @@
+**/bin/
+**/obj/
+*.user
+original/
+verification-output/
