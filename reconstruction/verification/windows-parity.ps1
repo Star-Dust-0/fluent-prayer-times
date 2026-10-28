@@ -22,10 +22,10 @@ $settings=Join-Path $env:APPDATA 'FluentPrayerTimes'
 $env:FPT_XAML_DIAGNOSTICS='1'
 $results=@()
 $started=Get-Date
-foreach($variant in @('original','rebuilt')) {
+foreach($variant in @('rebuilt')) {
  $dir=if($variant -eq 'original'){$original}else{$rebuilt}
- foreach($language in @('ar','en')) {
-  foreach($part in @('main','calendar','settings','calculation','sounds','about','widget','hover')) {
+ foreach($language in @('ar')) {
+  foreach($part in @('main')) {
    Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
    New-Item -ItemType Directory -Force $settings | Out-Null
    '{"AutoUpdate":false,"Theme":"light","LocationPending":false}' | Set-Content "$settings\settings.json" -Encoding utf8
