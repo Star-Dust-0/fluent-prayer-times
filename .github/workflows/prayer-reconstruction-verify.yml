@@ -55,6 +55,6 @@ jobs:
             native-build.log
             verification-output/launch-results.json
             verification-output/screenshots/
-            verification-output/*crash.log
+            verification-output/*.log
             verification-output/native/
             reconstruction/native/obj/**/output.json

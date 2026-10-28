@@ -20,6 +20,7 @@ public class CaptureNative {
 '@
 $settings=Join-Path $env:APPDATA 'FluentPrayerTimes'
 $results=@()
+$started=Get-Date
 foreach($variant in @('original','rebuilt')) {
  $dir=if($variant -eq 'original'){$original}else{$rebuilt}
  foreach($language in @('ar','en')) {
@@ -27,7 +28,7 @@ foreach($variant in @('original','rebuilt')) {
    Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
    New-Item -ItemType Directory -Force $settings | Out-Null
    '{"AutoUpdate":false,"Theme":"light","LocationPending":false}' | Set-Content "$settings\settings.json" -Encoding utf8
-   $process=Start-Process "$dir\FluentPrayerTimes.exe" -WorkingDirectory $dir -ArgumentList @('--preview=iqama',"--part=$part","--lang=$language") -PassThru
+   $process=Start-Process "$dir\FluentPrayerTimes.exe" -WorkingDirectory $dir -ArgumentList @('--preview=iqama',"--part=$part","--lang=$language") -PassThru -RedirectStandardOutput "$out\$variant-$language-$part-stdout.log" -RedirectStandardError "$out\$variant-$language-$part-stderr.log"
    Start-Sleep -Seconds 9
    $windows=@([CaptureNative]::Windows([uint32]$process.Id))
    $count=0
@@ -44,11 +45,12 @@ foreach($variant in @('original','rebuilt')) {
     $bmp.Save("$out\screenshots\$variant-$language-$part-$count.png")
     $g.Dispose();$bmp.Dispose();$count++
    }
-   $results += [pscustomobject]@{variant=$variant;language=$language;part=$part;processExited=$process.HasExited;visibleCaptures=$count}
+   $results += [pscustomobject]@{variant=$variant;language=$language;part=$part;processExited=$process.HasExited;exitCode=if($process.HasExited){$process.ExitCode}else{$null};visibleCaptures=$count}
    if(Test-Path "$settings\crash.log"){Copy-Item "$settings\crash.log" "$out\$variant-$language-$part-crash.log"}
    Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
   }
  }
 }
+Get-WinEvent -FilterHashtable @{LogName="Application";StartTime=$started} -ErrorAction SilentlyContinue | Where-Object {$_.ProviderName -in @(".NET Runtime","Application Error","Windows Error Reporting")} | Format-List * | Out-File "$out\event-errors.log"
 $results|ConvertTo-Json|Set-Content "$out\launch-results.json"
 if(@($results|Where-Object {$_.visibleCaptures -eq 0}).Count -gt 0){throw 'Some native screens had no visible capture'}
