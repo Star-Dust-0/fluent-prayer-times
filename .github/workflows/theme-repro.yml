@@ -1,0 +1,92 @@
+name: Theme switch check
+on:
+  push:
+    branches: [fix/tray-theme-crash]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  theme:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish
+        shell: pwsh
+        run: |
+          dotnet publish FluentPrayerTimes.csproj -c Release -r win-x64 -p:Platform=x64 --self-contained false -p:DebugType=none -o publish
+          if ($LASTEXITCODE -ne 0) { throw 'publish failed' }
+      - name: Install Windows App Runtime
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe -OutFile wari.exe
+          Start-Process .\wari.exe -ArgumentList '--quiet' -Wait
+      - name: Switch Windows theme while the app runs
+        shell: pwsh
+        run: |
+          Add-Type @"
+          using System; using System.Runtime.InteropServices;
+          public class B {
+            [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern IntPtr SendMessageTimeout(IntPtr h, uint m, IntPtr w, string l, uint f, uint t, out IntPtr r);
+            [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);
+            [StructLayout(LayoutKind.Sequential)] public struct R { public int l,t,r,b; }
+            [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out R r);
+            [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+            delegate bool EP(IntPtr h, IntPtr l);
+            [DllImport("user32.dll")] static extern bool EnumWindows(EP cb, IntPtr l);
+            [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
+            [DllImport("user32.dll", CharSet=CharSet.Unicode)] static extern int GetWindowText(IntPtr h, System.Text.StringBuilder s, int n);
+            public static System.Collections.Generic.List<string> Wins(uint pid) { var r = new System.Collections.Generic.List<string>(); EnumWindows((h,l)=>{ uint p; GetWindowThreadProcessId(h,out p); if(p==pid){ var sb=new System.Text.StringBuilder(256); GetWindowText(h,sb,256); r.Add(h.ToInt64()+"|"+sb); } return true; }, IntPtr.Zero); return r; }
+          }
+          "@
+          function Broadcast { $r=[IntPtr]::Zero; [B]::SendMessageTimeout([IntPtr]0xFFFF, 0x31A, [IntPtr]::Zero, $null, 2, 5000, [ref]$r) | Out-Null; [B]::SendMessageTimeout([IntPtr]0xFFFF, 0x320, [IntPtr]::Zero, $null, 2, 5000, [ref]$r) | Out-Null; [B]::SendMessageTimeout([IntPtr]0xFFFF, 0x1A, [IntPtr]::Zero, 'ImmersiveColorSet', 2, 5000, [ref]$r) | Out-Null }
+          function SetTheme($light) {
+            $k='HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+            if (-not (Test-Path $k)) { New-Item $k -Force | Out-Null }
+            Set-ItemProperty $k AppsUseLightTheme $light -Type DWord; Set-ItemProperty $k SystemUsesLightTheme $light -Type DWord
+            Broadcast
+          }
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          New-Item -ItemType Directory -Force shots | Out-Null
+          function Shot($name) { $b=[System.Windows.Forms.Screen]::PrimaryScreen.Bounds; $bmp=New-Object System.Drawing.Bitmap $b.Width,$b.Height; $g=[System.Drawing.Graphics]::FromImage($bmp); $g.CopyFromScreen($b.Location,[System.Drawing.Point]::Empty,$b.Size); $bmp.Save("shots/$name.png"); $g.Dispose(); $bmp.Dispose() }
+          $bad = @()
+          function WinCrop($pid2, $match, $name) { foreach ($w in [B]::Wins([uint32]$pid2)) { $a=$w.Split('|',2); if ($a[1] -like $match) { $r=New-Object B+R; [B]::GetWindowRect([IntPtr][int64]$a[0],[ref]$r) | Out-Null; $wd=$r.r-$r.l; $ht=$r.b-$r.t; if ($wd -gt 20 -and $ht -gt 20 -and $r.l -gt -5000) { $bmp=New-Object System.Drawing.Bitmap $wd,$ht; $g=[System.Drawing.Graphics]::FromImage($bmp); $g.CopyFromScreen($r.l,$r.t,0,0,(New-Object System.Drawing.Size $wd,$ht)); $bmp.Save("tray-crops/$name.png"); $g.Dispose(); $bmp.Dispose() } } } }
+          function MainHwnd($pid2) { foreach ($w in [B]::Wins([uint32]$pid2)) { $a=$w.Split('|',2); if ($a[1] -like '*Fluent Prayer Times' -and $a[1] -notmatch 'Hover|Menu|Widget') { return [IntPtr][int64]$a[0] } }; return [IntPtr]::Zero }
+          $modes = @(
+            @('tray-widget-acrylic', @('--tray'), '{"WidgetVisible":true,"Backdrop":"acrylic","Accent":"#9FD89F"}'),
+            @('tray-open-window', @('--tray'), '{}', 'open'),
+            @('tray-open-then-close', @('--tray'), '{"WidgetVisible":true}', 'openclose'),
+            @('tray-hover-card', @('--tray'), '{}', 'hover'),
+            @('tray-rightclick-menu', @('--tray'), '{}', 'menu'),
+            @('hover-card-preview', @('--preview=iqama','--part=hover'), '{}', 'win:*Hover'),
+            @('update-toast-preview', @('--preview=iqama','--part=update'), '{}', 'win:*Update'),
+            @('tray-iqama-clock', @('--tray','--e2e-clock=iqama','--e2e-log=C:\\Windows\\Temp\\n.txt'), '{"WidgetVisible":true}'))
+          foreach ($m in $modes) {
+            $dir = Join-Path $env:APPDATA 'FluentPrayerTimes'
+            Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep 2
+            Remove-Item $dir -Recurse -Force -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Force $dir | Out-Null; $m[2] | Set-Content (Join-Path $dir 'settings.json')
+            SetTheme 0
+            $p = Start-Process publish\FluentPrayerTimes.exe -ArgumentList $m[1] -PassThru
+            Start-Sleep 8
+            Get-ChildItem 'HKCU:\Control Panel\NotifyIconSettings' -ErrorAction SilentlyContinue | ForEach-Object { if ((Get-ItemProperty $_.PSPath).ExecutablePath -like '*FluentPrayerTimes.exe') { Set-ItemProperty $_.PSPath IsPromoted 1 -Type DWord } }
+            Start-Sleep 7
+            Shot "$($m[0])-dark-before"
+            foreach ($t in 1,0,1,0) {
+              SetTheme $t; Start-Sleep 4
+              $p.Refresh()
+              if ($p.HasExited) { $bad += "$($m[0]): app exited after switching to light=$t (exit $($p.ExitCode))"; break }
+            }
+            if (-not $p.HasExited) { SetTheme 1; Start-Sleep 4; Shot "$($m[0])-light-after"; $p.Refresh(); if ($p.HasExited) { $bad += "$($m[0]): exited on final switch" } }
+            "== $($m[0]) exited=$($p.HasExited)"
+            $cl = Join-Path $dir 'crash.log'; if (Test-Path $cl) { Get-Content $cl; Copy-Item $cl "shots/crash-$($m[0]).log" }
+            Get-WinEvent -FilterHashtable @{LogName='Application'; Level=2; StartTime=(Get-Date).AddMinutes(-3)} -ErrorAction SilentlyContinue | Where-Object { $_.Message -match 'FluentPrayerTimes' } | Select-Object -First 3 | ForEach-Object { $_.Message } | Tee-Object -FilePath "shots/event-$($m[0]).txt"
+            Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          }
+          if ($bad.Count) { $bad; throw "theme switch failures: $($bad -join '; ')" }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: theme-shots
+          path: shots/

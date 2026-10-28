@@ -1,0 +1,137 @@
+name: Build and Release
+
+# Build a new release:
+#   1) push a tag:      git tag v1.1.1 && git push origin v1.1.1
+#   2) or run manually: Actions > Build and Release > Run workflow (enter a version like 1.1.1)
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number, e.g. 1.1.1 (a tag vX.Y.Z will be created)'
+        required: true
+        default: '1.1.1'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Resolve version
+        id: v
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then VER="${{ github.event.inputs.version }}"; else VER="${GITHUB_REF_NAME#v}"; fi
+          VER="${VER#v}"
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+
+      - name: Publish (WinUI 3, win-x64, framework-dependent)
+        shell: bash
+        run: |
+          dotnet publish FluentPrayerTimes.csproj -c Release -r win-x64 -p:Platform=x64 --self-contained false \
+            -p:DebugType=none -p:Version=${{ steps.v.outputs.version }} \
+            -p:AssemblyVersion=${{ steps.v.outputs.version }}.0 -p:FileVersion=${{ steps.v.outputs.version }}.0 \
+            -o publish
+
+      - name: Verify output structure
+        shell: pwsh
+        run: |
+          Get-ChildItem publish | Select-Object Name, Length | Format-Table -AutoSize | Out-String -Width 200
+          $need = @('FluentPrayerTimes.exe','FluentPrayerTimes.dll','FluentPrayerTimes.runtimeconfig.json','app.ico','Microsoft.WinUI.dll')
+          $missing = $need | Where-Object { -not (Test-Path (Join-Path publish $_)) }
+          if ($missing) { Write-Error "Missing: $missing"; exit 1 }
+          if (-not (Get-ChildItem publish -Filter *.pri)) { Write-Error "No .pri resource file"; exit 1 }
+          Write-Host "Structure OK"
+
+      - name: Smoke test (install Windows App Runtime, launch for 10s)
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe -OutFile wari.exe
+          Start-Process .\wari.exe -ArgumentList '--quiet' -Wait
+          $p = Start-Process publish\FluentPrayerTimes.exe -ArgumentList '--tray' -PassThru
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) { Write-Error "App exited early with code $($p.ExitCode)"; if (Test-Path "$env:APPDATA\FluentPrayerTimes\crash.log") { Get-Content "$env:APPDATA\FluentPrayerTimes\crash.log" }; exit 1 }
+          Write-Host "App still running after 10s"
+          Stop-Process -Id $p.Id -Force
+
+      - name: Package zip
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.v.outputs.version }}"
+          $dir = "FluentPrayerTimes-v$ver"
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          Copy-Item publish\* $dir -Recurse
+          Copy-Item release/README-ar.txt "$dir/اقرأني.txt"
+          Compress-Archive -Path $dir -DestinationPath "FluentPrayerTimes-v$ver-portable-win-x64.zip"
+
+      - name: Build self-contained installer
+        shell: pwsh
+        run: |
+          Compress-Archive -Path publish\* -DestinationPath installer/payload.zip
+          dotnet publish installer/Installer.csproj -c Release -r win-x64 --self-contained true -p:DebugType=none -o setup
+          Copy-Item setup/FluentPrayerTimes-Setup.exe "FluentPrayerTimes-v${{ steps.v.outputs.version }}-installer-win-x64.exe"
+
+      - name: Verify installer and capture actual Windows UI
+        shell: pwsh
+        run: |
+          $p = Start-Process setup/FluentPrayerTimes-Setup.exe -ArgumentList '--preview',"$PWD/installer-screen.png" -PassThru -Wait
+          if ($p.ExitCode -ne 0 -or -not (Test-Path installer-screen.png)) { throw "Installer render failed" }
+          $p = Start-Process setup/FluentPrayerTimes-Setup.exe -ArgumentList '--verify-install' -PassThru -Wait
+          if ($p.ExitCode -ne 0) { throw "Installer integration test failed: $($p.ExitCode)" }
+          $exe = Join-Path $env:ProgramFiles 'FluentPrayerTimes/FluentPrayerTimes.exe'
+          if (-not (Test-Path $exe)) { throw "Installed executable missing" }
+          if (-not (Test-Path "$env:ProgramData/Microsoft/Windows/Start Menu/Programs/Fluent Prayer Times.lnk")) { throw "Start menu shortcut missing" }
+          $p = Start-Process $exe -ArgumentList '--tray' -PassThru
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) { throw "Installed application exited early" }
+          Stop-Process -Id $p.Id -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-ui-check
+          path: |
+            installer-screen.png
+            FluentPrayerTimes-v*-portable-win-x64.zip
+            FluentPrayerTimes-v*-installer-win-x64.exe
+
+      - name: Create GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER="${{ steps.v.outputs.version }}"
+          ZIP="FluentPrayerTimes-v$VER-portable-win-x64.zip"
+          cat > notes.md <<'NOTES'
+          ## Fluent Prayer Times (WinUI 3)
+
+          **المتطلبات:** Windows 10 1809+ / Windows 11 (x64) و **Windows App Runtime 1.6 (x64)**.
+          إذا لم يعمل البرنامج أو طلب بيئة التشغيل (runtime): نزّلها من https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe وثبّتها مرة واحدة.
+
+          Requires the Windows App Runtime 1.6 (x64): https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe
+
+          **الجديد في 1.1.1:** مهلة التمرير الأصلية في Windows وحركة ظهور واختفاء تراعي إعدادات الحركة، ويدجت أكبر بنسبة 20%، ونسختا portable وinstaller.
+
+          **portable:** فك الضغط وشغّل البرنامج. يلزم .NET 8 وVisual C++ x64 وWindows App Runtime 1.6.
+          **installer:** مثبّت ذاتي التشغيل في Program Files، يفحص المتطلبات وينزّل الناقص من Microsoft بعد التحقق من التوقيع الرقمي. يلزم الإنترنت للمتطلبات الناقصة وصلاحيات المسؤول. يُضاف البرنامج إلى قائمة ابدأ وقائمة التطبيقات لإزالته.
+          الحركة تستخدم واجهات Win32 الأصلية؛ ليست نسخة مضمونة مطابقة لحركة Explorer الخاصة في Windows 11.
+
+          فُكّ الضغط وشغّل `FluentPrayerTimes.exe`، ثم ابحث عن أيقونة المئذنة في منطقة الإشعارات. البرنامج غير موقَّع: إذا ظهر SmartScreen فاضغط More info ثم Run anyway.
+          NOTES
+          sed -i 's/^          //' notes.md
+          if gh release view "v$VER" >/dev/null 2>&1; then
+            DRAFT=$(gh release view "v$VER" --json isDraft --jq .isDraft)
+            if [ "$DRAFT" != "true" ]; then echo "Published release exists; refusing replacement" >&2; exit 1; fi
+            gh release upload "v$VER" "$ZIP" "FluentPrayerTimes-v$VER-installer-win-x64.exe" --clobber
+            gh release edit "v$VER" --target "$(git rev-parse HEAD)" --notes-file notes.md
+            exit 0
+          fi
+          gh release create "v$VER" "$ZIP" "FluentPrayerTimes-v$VER-installer-win-x64.exe" --target "$(git rev-parse HEAD)" --title "v$VER" --notes-file notes.md --draft

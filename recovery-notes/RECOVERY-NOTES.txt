@@ -1,0 +1,11 @@
+Fluent Prayer Times - recovery notes
+State: PARTIAL. Last captured change Oct 24 2026. Main window files are missing or older.
+
+This is NOT a repo clone. Files were rebuilt from the text of file writes and file reads that were recorded before the GitHub account was suspended. No Git history, no binary files (icons, images, keystores).
+Status per file is in MANIFEST.csv:
+- READ-VERIFIED: matches a full read of the file at the date shown.
+- EXACT-WRITE: a complete write at the date shown, no later edit found in the records.
+- EDITED-APPLIED: a complete write plus simple later edits that were re-applied by pattern. Not byte-checked.
+- STALE-LATER-EDITS-NOT-APPLIED: later edits exist but could not be re-applied. The file is an older version than the last release.
+Not checked: whether it builds. Treat it as a base to compare against the installed app, not as the latest source.
+Files that were edited but never fully captured (not included): .github/workflows/1-ci.yml, .github/workflows/current-asset-cleanup.yml, .github/workflows/runtime-dependent.yml, .github/workflows/self-contained.yml, .github/workflows/window-hotfix.yml, App.xaml.cs, FluentPrayerTimes.csproj, MainWindow.xaml, MainWindow.xaml.cs, README.en.md, README.md, SelfTest.cs, Settings.cs, Strings.cs, TrayIcon.cs, WidgetWindow.xaml, WidgetWindow.xaml.cs, logo.png, release/CHANGELOG-1.3.4.md, release/CHANGELOG-1.3.6.md, settings.json, tray-dark.ico, tray-white.ico, tray.png

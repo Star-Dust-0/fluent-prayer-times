@@ -1,0 +1,149 @@
+name: Installer upgrade regression (manual, isolated)
+on:
+  workflow_dispatch:
+    inputs:
+      new_installer_url:
+        description: 'Installer under test (default: current published v1.3.4 installer)'
+        required: false
+        default: 'https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/download/v1.3.4/FluentPrayerTimes-v1.3.4-installer-win-x64.exe'
+      source_run_id:
+        description: 'Build and Release run id (publish=false) whose verified-downloads artifact holds the installer under test; overrides new_installer_url'
+        required: false
+        default: ''
+      future_run_id:
+        description: 'Build and Release run id (publish=false, version 1.3.5, CI-only) for the future-version upgrade test'
+        required: false
+        default: ''
+      strict:
+        description: 'Fail when more than one uninstall entry or install folder remains'
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  upgrade:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: custom-1.2.6
+            url: https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/download/v1.2.6/FluentPrayerTimes-v1.2.6-installer-win-x64.exe
+            args: '--verify-install'
+          - name: runtime-dependent-1.3.2
+            url: https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/download/v1.3.2/FluentPrayerTimes-v1.3.2-installer-.NET-runtime-dependent-win-x64.exe
+            args: '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=C:\\inno-old.log'
+          - name: self-contained-1.3.4-published
+            url: https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/download/v1.3.4/FluentPrayerTimes-v1.3.4-installer-win-x64.exe
+            args: '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
+          - name: self-contained-1.3.3
+            url: https://github.com/MohamedElnaggar00/fluent-prayer-times/releases/download/v1.3.3/FluentPrayerTimes-v1.3.3-installer-win-x64.exe
+            args: '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
+    steps:
+      - name: Prerequisites the older installers expect (.NET 8 desktop runtime, VC runtime, Windows App Runtime 1.6)
+        if: matrix.name != 'self-contained-1.3.3'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          function Dep($url, $a) { $f = Join-Path $env:RUNNER_TEMP ([guid]::NewGuid().ToString() + '.exe'); Invoke-WebRequest $url -OutFile $f; $p = Start-Process $f -ArgumentList $a -Wait -PassThru; Write-Host "$url exit $($p.ExitCode)" }
+          Dep 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe' '/install /quiet /norestart'
+          Dep 'https://aka.ms/vc14/vc_redist.x64.exe' '/install /quiet /norestart'
+          Dep 'https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe' '--quiet'
+          Get-ChildItem "$env:ProgramFiles\dotnet\shared\Microsoft.NETCore.App" | Select-Object -ExpandProperty Name
+      - name: Installer under test from a build artifact
+        if: inputs.source_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: verified-downloads
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: under-test
+      - name: Upgrade ${{ matrix.name }} to the installer under test
+        shell: pwsh
+        env:
+          OLD_URL: ${{ matrix.url }}
+          OLD_ARGS: ${{ matrix.args }}
+          NEW_URL: ${{ inputs.new_installer_url }}
+          STRICT: ${{ inputs.strict }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          function Snap($label) {
+            Write-Host "---- $label"
+            $keys = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall','HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall','HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
+            $rows = @()
+            foreach ($k in $keys) {
+              if (-not (Test-Path $k)) { continue }
+              foreach ($item in Get-ChildItem $k) {
+                $props = Get-ItemProperty $item.PSPath
+                if ($props.DisplayName -like 'Fluent Prayer*') {
+                  $rows += [pscustomobject]@{ Hive = $k.Substring(0,4); Key = $item.PSChildName; Name = $props.DisplayName; Version = $props.DisplayVersion; Location = $props.InstallLocation; Uninstall = $props.UninstallString }
+                }
+              }
+            }
+            $rows | Format-List | Out-String | Write-Host
+            $dirs = @("$env:ProgramFiles\FluentPrayerTimes","$env:LOCALAPPDATA\Programs\FluentPrayerTimes-SelfContained","$env:LOCALAPPDATA\Programs\FluentPrayerTimes") | Where-Object { Test-Path "$_\FluentPrayerTimes.exe" }
+            Write-Host ("install folders with exe: " + ($dirs -join '; '))
+            return [pscustomobject]@{ Entries = @($rows).Count; Dirs = @($dirs).Count }
+          }
+          function Install($url, $args_, $file) {
+            Invoke-WebRequest $url -OutFile $file
+            $p = Start-Process $file -ArgumentList $args_ -Wait -PassThru
+            Write-Host "installer exit code $($p.ExitCode)"
+            if ($p.ExitCode -ne 0) { if (Test-Path C:\inno-old.log) { Get-Content C:\inno-old.log -Tail 25 }; throw "installer failed $($p.ExitCode)" }
+            Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
+          }
+          Install $env:OLD_URL $env:OLD_ARGS "$env:RUNNER_TEMP\old.exe"
+          $settings = "$env:APPDATA\FluentPrayerTimes"
+          New-Item -ItemType Directory -Force $settings | Out-Null
+          Set-Content "$settings\regression-marker.txt" 'settings must survive'
+          $before = Snap 'after OLD install'
+          $newInstaller = "$env:RUNNER_TEMP\new.exe"
+          $built = Get-ChildItem under-test -Recurse -Filter '*installer-win-x64.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($built) { Copy-Item $built.FullName $newInstaller; Write-Host "installer under test: $($built.Name)"; $p = Start-Process $newInstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=C:\\inno-new.log' -Wait -PassThru; Write-Host "new installer exit $($p.ExitCode)"; if (Test-Path C:\ProgramData\FluentPrayerTimes-migrate.log) { Get-Content C:\ProgramData\FluentPrayerTimes-migrate.log | Select-Object -Last 25 }; Select-String -Path C:\inno-new.log -Pattern 'Older edition|Migration|runas|Shutting|could not' | ForEach-Object { $_.Line }; if ($p.ExitCode -ne 0) { Get-Content C:\inno-new.log -Tail 30; throw 'new installer failed' }; Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force }
+          else { Install $env:NEW_URL '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' $newInstaller }
+          $after = Snap 'after NEW install'
+          $kept = Test-Path "$settings\regression-marker.txt"
+          Write-Host "settings marker kept: $kept"
+          $line = "${{ matrix.name }}: old entries=$($before.Entries) folders=$($before.Dirs); after upgrade entries=$($after.Entries) folders=$($after.Dirs); settings kept=$kept"
+          Write-Host "RESULT $line"
+          Add-Content $env:GITHUB_STEP_SUMMARY $line
+          if ($env:STRICT -eq 'true' -and ($after.Entries -ne 1 -or $after.Dirs -ne 1 -or -not $kept)) { throw "upgrade left duplicates or lost settings: $line" }
+
+  future-version:
+    if: inputs.source_run_id != '' && inputs.future_run_id != ''
+    runs-on: windows-2022
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: verified-downloads
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: v134
+      - uses: actions/download-artifact@v4
+        with:
+          name: verified-downloads
+          run-id: ${{ inputs.future_run_id }}
+          github-token: ${{ github.token }}
+          path: v135
+      - name: Install corrected 1.3.4, then a CI-only 1.3.5 over it
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $a = (Get-ChildItem v134 -Recurse -Filter '*installer-win-x64.exe' | Select-Object -First 1).FullName
+          $b = (Get-ChildItem v135 -Recurse -Filter '*installer-win-x64.exe' | Select-Object -First 1).FullName
+          Write-Host "A=$a"; Write-Host "B=$b"
+          $settings = "$env:APPDATA\FluentPrayerTimes"; New-Item -ItemType Directory -Force $settings | Out-Null
+          Set-Content "$settings\regression-marker.txt" 'settings must survive'
+          function Snap { $rows = foreach ($k in 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall','HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall','HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall') { if (Test-Path $k) { Get-ChildItem $k | ForEach-Object { $p = Get-ItemProperty $_.PSPath; if ($p.DisplayName -like '*Fluent Prayer Times*') { [pscustomobject]@{ Key = $_.PSChildName; Name = $p.DisplayName; Version = $p.DisplayVersion; Loc = $p.InstallLocation } } } } }; $rows }
+          $p = Start-Process $a -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru; Write-Host "A exit $($p.ExitCode)"
+          Snap | Format-Table -AutoSize | Out-String | Write-Host
+          $exe = "$env:LOCALAPPDATA\Programs\FluentPrayerTimes-SelfContained\FluentPrayerTimes.exe"
+          $run = Start-Process $exe -ArgumentList '--tray' -PassThru; Start-Sleep -Seconds 8
+          $p = Start-Process $b -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=C:\inno-135.log' -Wait -PassThru; Write-Host "B exit $($p.ExitCode)"
+          $rows = @(Snap); $rows | Format-Table -AutoSize | Out-String | Write-Host
+          $dirs = @(Get-ChildItem "$env:LOCALAPPDATA\Programs","$env:ProgramFiles" -Directory -Filter 'FluentPrayerTimes*' -ErrorAction SilentlyContinue)
+          $kept = Test-Path "$settings\regression-marker.txt"
+          $ok = ($p.ExitCode -eq 0) -and ($rows.Count -eq 1) -and ($rows[0].Name -eq 'Fluent Prayer Times') -and ($rows[0].Version -eq '1.3.5') -and ($dirs.Count -eq 1) -and $kept
+          Write-Host "RESULT future-1.3.5: entries=$($rows.Count) name=$($rows[0].Name) version=$($rows[0].Version) folders=$($dirs.Count) settings kept=$kept ok=$ok"
+          if (-not $ok) { throw 'future-version upgrade failed' }
