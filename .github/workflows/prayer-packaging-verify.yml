@@ -2,7 +2,7 @@ name: Prayer packaging verification (no release)
 on:
   push:
     branches: [reverse-engineered-v1.3.6]
-    paths: ['.github/workflows/prayer-packaging-verify.yml']
+    paths: ['.github/workflows/prayer-packaging-verify.yml', 'src/**']
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,12 +16,10 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Regenerate recovered native source
-        run: python reconstruction/native/prepare-source.py
       - name: Publish fully self-contained recovered source
         shell: pwsh
         run: |
-          msbuild reconstruction/native/FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../publish/ /v:minimal
+          msbuild src/FluentPrayerTimes/FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../publish/ /v:minimal
           if ($LASTEXITCODE -ne 0) { throw 'App publish failed' }
           # Ship Microsoft's app-local VC runtime rather than installing a machine-wide redistributable.
           $vs = & "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath
