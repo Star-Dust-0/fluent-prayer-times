@@ -35,4 +35,8 @@
     <Content Include="logo.png" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="tray*.ico" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <Target Name="PublishAppResources" AfterTargets="Publish">
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).pri" DestinationFiles="$(PublishDir)resources.pri" Condition="Exists('$(TargetDir)$(AssemblyName).pri')" />
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).pri" DestinationFiles="$(PublishDir)$(AssemblyName).pri" Condition="Exists('$(TargetDir)$(AssemblyName).pri')" />
+  </Target>
 </Project>

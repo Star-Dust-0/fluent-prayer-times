@@ -43,7 +43,7 @@ jobs:
           Pop-Location
           if ($buildCode -ne 0) { throw 'Native source build failed' }
           Get-ChildItem reconstruction/native/bin,reconstruction/native/obj -Recurse -Include *.pri,*.xbf | Select-Object FullName,Length | Out-File verification-output/resource-files.log
-          $pri = Get-ChildItem reconstruction/native/bin -Recurse -Filter resources.pri | Select-Object -First 1
+          $pri = Get-ChildItem reconstruction/native/bin -Recurse -Filter FluentPrayerTimes.pri | Select-Object -First 1
           if ($pri) { Copy-Item $pri.FullName verification-output/native/resources.pri -Force } else { throw 'Generated resources.pri not found' }
       - name: Build managed recovery with original connectors
         shell: pwsh
