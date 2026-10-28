@@ -121,6 +121,7 @@ jobs:
           $p = Start-Process './old/FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -PassThru -Wait
           if ($p.ExitCode -ne 0 -or -not (Test-Path "$old/FluentPrayerTimes.exe")) { throw 'Original 1.3.6 install failed' }
           $settings = "$env:APPDATA/FluentPrayerTimes/settings.json"
+          New-Item -ItemType Directory -Force (Split-Path $settings) | Out-Null
           '{"Lang":"en","Theme":"dark","AutoUpdate":false,"LocationPending":false}' | Set-Content $settings
           $p = Start-Process "$old/FluentPrayerTimes.exe" -PassThru
           Start-Sleep -Seconds 5
@@ -135,6 +136,7 @@ jobs:
           if (Test-Path "$env:LOCALAPPDATA/Programs/FluentPrayerTimes-SelfContained") { throw 'Old folder remains' }
           if (Test-Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall/FluentPrayerTimes-SelfContained_is1') { throw 'Old uninstall registry entry remains' }
           $settings = "$env:APPDATA/FluentPrayerTimes/settings.json"
+          New-Item -ItemType Directory -Force (Split-Path $settings) | Out-Null
           if ((Get-FileHash $settings).Hash -ne (Get-Content old-settings-hash.txt)) { throw '1.3.6 upgrade changed settings' }
           foreach ($folder in @([Environment]::GetFolderPath('CommonPrograms'),[Environment]::GetFolderPath('CommonDesktopDirectory'))) {
             if (Test-Path "$folder/Fluent Prayer Times (Self-contained).lnk") { throw 'Old shortcut remains' }
@@ -155,6 +157,7 @@ jobs:
         run: |
           $root = "$env:ProgramFiles/FluentPrayerTimes"
           $settings = "$env:APPDATA/FluentPrayerTimes/settings.json"
+          New-Item -ItemType Directory -Force (Split-Path $settings) | Out-Null
           New-Item -ItemType Directory -Force (Split-Path $settings) | Out-Null
           '{"Lang":"en","Theme":"dark","AutoUpdate":false}' | Set-Content $settings
           $running = Start-Process "$root/FluentPrayerTimes.exe" -PassThru
