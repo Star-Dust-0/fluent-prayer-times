@@ -43,3 +43,5 @@ Tested upgrading the formerly published per-user 1.3.6: old folder, old shortcut
 
 - Final candidate build/migration/updater checks: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40773809325
 - Existing v1.3.6 installer and portable assets replaced only after those checks, per owner instruction. No new tag/release.
+
+- Final live updater verification against the corrected published installer: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40775526816 . Download, digest checks, cancellation cleanup, bad-digest and untrusted-host rejection all passed. Live UI inspected at Downloaded and verified.
