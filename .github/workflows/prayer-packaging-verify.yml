@@ -126,6 +126,19 @@ jobs:
           & "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" self-contained.iss
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
           Copy-Item out/*.exe .
+      - name: Capture recovered installer UI
+        shell: pwsh
+        run: |
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -PassThru
+          Start-Sleep -Seconds 5
+          Add-Type -AssemblyName System.Drawing,System.Windows.Forms
+          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bitmap = New-Object System.Drawing.Bitmap $bounds.Width,$bounds.Height
+          $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+          $graphics.CopyFromScreen($bounds.Location,[System.Drawing.Point]::Empty,$bounds.Size)
+          $bitmap.Save("$PWD/installer-self-contained.png")
+          $graphics.Dispose(); $bitmap.Dispose()
+          Stop-Process -Id $p.Id -Force
       - name: Verify installer extraction and installed launch
         shell: pwsh
         run: |
@@ -169,6 +182,7 @@ jobs:
             FluentPrayerTimes-v1.3.6-self-contained-*.zip
             FluentPrayerTimes-v1.3.6-self-contained-*.exe
             app-self-contained.png
+            installer-self-contained.png
             dependency-proof.json
             packaging-proof.txt
             packaging-install.log
