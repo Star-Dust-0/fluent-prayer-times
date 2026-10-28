@@ -45,6 +45,7 @@ for p in source.glob('*.cs'):
 for p in (root.parent/'xaml').glob('*.xaml'):
  s=p.read_text(encoding="utf-8")
  s=re.sub(r'(?<![\w.])Colors\.', 'Microsoft.UI.Colors.', s)
+ s=re.sub(r' (SelectionChanged|Click|Checked|Toggled|TextChanged|QuerySubmitted|SuggestionChosen|PointerPressed|PointerMoved|PointerReleased)="[^"]+"','',s)
  s=re.sub(r'<Color ([^>]*?)Value="([^"]+)"\s*/>',r'<Color \1>\2</Color>',s)
  (root/p.name).write_text(s, encoding="utf-8")
 

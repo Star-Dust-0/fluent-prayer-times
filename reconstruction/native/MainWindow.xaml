@@ -22,7 +22,7 @@
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
                     OpenPaneLength="200"
-                     SelectionChanged="Nav_SelectionChanged">
+                    >
                     <NavigationView.MenuItems>
                         <NavigationViewItem Content="المواقيت" Tag="times">
                             <NavigationViewItem.Icon>
@@ -175,25 +175,25 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <Grid.Children>
                                                                         <TextBlock Text="اللغة / Language" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
-                                                                        <Button x:Name="BtnApply" Grid.Column="1" Content="تطبيق التغييرات" Style="{StaticResource AccentButtonStyle}" Click="ApplyChanges_Click"/>
+                                                                        <Button x:Name="BtnApply" Grid.Column="1" Content="تطبيق التغييرات" Style="{StaticResource AccentButtonStyle}"/>
                                                                     </Grid.Children>
                                                                 </Grid>
-                                                                <ComboBox x:Name="CmbLang" MinWidth="240" SelectionChanged="Lang_Changed"/>
+                                                                <ComboBox x:Name="CmbLang" MinWidth="240"/>
                                                                 <TextBlock Text="المظهر" FontSize="16" FontWeight="SemiBold" Margin="0,8,0,0" />
                                                                 <TextBlock Text="الخلفية" FontWeight="SemiBold" />
                                                                 <StackPanel Orientation="Horizontal" Spacing="14">
                                                                     <StackPanel.Children>
-                                                                        <RadioButton x:Name="RbMicaAlt" GroupName="bd" Content="Mica Alt" Tag="micaalt" MinWidth="0" Checked="Backdrop_Checked"/>
-                                                                        <RadioButton x:Name="RbMica" GroupName="bd" Content="Mica" Tag="mica" MinWidth="0" Checked="Backdrop_Checked"/>
-                                                                        <RadioButton x:Name="RbAcrylic" GroupName="bd" Content="Acrylic" Tag="acrylic" MinWidth="0" Checked="Backdrop_Checked"/>
+                                                                        <RadioButton x:Name="RbMicaAlt" GroupName="bd" Content="Mica Alt" Tag="micaalt" MinWidth="0"/>
+                                                                        <RadioButton x:Name="RbMica" GroupName="bd" Content="Mica" Tag="mica" MinWidth="0"/>
+                                                                        <RadioButton x:Name="RbAcrylic" GroupName="bd" Content="Acrylic" Tag="acrylic" MinWidth="0"/>
                                                                     </StackPanel.Children>
                                                                 </StackPanel>
                                                                 <TextBlock Text="السمة" FontWeight="SemiBold" Margin="0,6,0,0" />
                                                                 <StackPanel Orientation="Horizontal" Spacing="14">
                                                                     <StackPanel.Children>
-                                                                        <RadioButton x:Name="RbThemeSys" GroupName="th" Content="حسب النظام" Tag="system" MinWidth="0" Checked="Theme_Checked"/>
-                                                                        <RadioButton x:Name="RbThemeLight" GroupName="th" Content="فاتح" Tag="light" MinWidth="0" Checked="Theme_Checked"/>
-                                                                        <RadioButton x:Name="RbThemeDark" GroupName="th" Content="غامق" Tag="dark" MinWidth="0" Checked="Theme_Checked"/>
+                                                                        <RadioButton x:Name="RbThemeSys" GroupName="th" Content="حسب النظام" Tag="system" MinWidth="0"/>
+                                                                        <RadioButton x:Name="RbThemeLight" GroupName="th" Content="فاتح" Tag="light" MinWidth="0"/>
+                                                                        <RadioButton x:Name="RbThemeDark" GroupName="th" Content="غامق" Tag="dark" MinWidth="0"/>
                                                                     </StackPanel.Children>
                                                                 </StackPanel>
                                                                 <TextBlock Text="لون التطبيق" FontWeight="SemiBold" Margin="0,6,0,0" />
@@ -216,8 +216,8 @@
                                                                             <StackPanel.Children>
                                                                                 <StackPanel x:Name="AccentPresets" Orientation="Horizontal" Spacing="8" />
                                                                                 <StackPanel x:Name="AccentPresets2" Orientation="Horizontal" Spacing="8" />
-                                                                                <Button x:Name="BtnAccentCustom" Content="لون مخصص…" Click="AccentCustom_Click"/>
-                                                                                <Button x:Name="BtnAccentReset" Content="استعادة اللون الافتراضي" Click="AccentReset_Click"/>
+                                                                                <Button x:Name="BtnAccentCustom" Content="لون مخصص…"/>
+                                                                                <Button x:Name="BtnAccentReset" Content="استعادة اللون الافتراضي"/>
                                                                             </StackPanel.Children>
                                                                         </StackPanel>
                                                                     </Expander.Content>
@@ -238,9 +238,9 @@
                                                             <StackPanel.Children>
                                                                 <TextBlock Text="الموقع" FontSize="16" FontWeight="SemiBold" />
                                                                 <TextBlock Text="الدولة" FontWeight="SemiBold" />
-                                                                <ComboBox x:Name="CmbCountry" HorizontalAlignment="Stretch" SelectionChanged="Country_Changed"/>
+                                                                <ComboBox x:Name="CmbCountry" HorizontalAlignment="Stretch"/>
                                                                 <TextBlock Text="المدن" FontWeight="SemiBold" Margin="0,6,0,0" />
-                                                                <ComboBox x:Name="CmbCity" HorizontalAlignment="Stretch" SelectionChanged="City_Changed"/>
+                                                                <ComboBox x:Name="CmbCity" HorizontalAlignment="Stretch"/>
                                                                 <TextBlock Text="البحث عن أي مدينة أو منطقة (في الدولة المختارة أو في كل العالم)" FontWeight="SemiBold" Margin="0,6,0,0" TextWrapping="Wrap" />
                                                                 <Grid ColumnSpacing="8">
                                                                     <Grid.ColumnDefinitions>
@@ -252,7 +252,7 @@
                                                                         <Button Grid.Column="1" Content="بحث" />
                                                                     </Grid.Children>
                                                                 </Grid>
-                                                                <ListView x:Name="LstPlaces" MaxHeight="200" Visibility="Collapsed" SelectionChanged="Place_Selected"/>
+                                                                <ListView x:Name="LstPlaces" MaxHeight="200" Visibility="Collapsed"/>
                                                                 <StackPanel Orientation="Vertical" Spacing="6" Margin="0,6,0,0">
                                                                     <StackPanel.Children>
                                                                         <Button Content="تحديد موقعي تلقائيًا" />
@@ -285,9 +285,9 @@
                                                                 <TextBlock x:Name="DstTitle" Text="التوقيت الصيفي" FontWeight="SemiBold" />
                                                                 <StackPanel x:Name="DstPanel" Orientation="Vertical" Spacing="2">
                                                                     <StackPanel.Children>
-                                                                        <RadioButton x:Name="RbDstAuto" GroupName="dst" Content="تلقائي" Tag="auto" MinWidth="0" Checked="Dst_Checked"/>
-                                                                        <RadioButton x:Name="RbDstOff" GroupName="dst" Content="إيقاف (UTC+2)" Tag="off" MinWidth="0" Checked="Dst_Checked"/>
-                                                                        <RadioButton x:Name="RbDstOn" GroupName="dst" Content="تشغيل (UTC+3)" Tag="on" MinWidth="0" Checked="Dst_Checked"/>
+                                                                        <RadioButton x:Name="RbDstAuto" GroupName="dst" Content="تلقائي" Tag="auto" MinWidth="0"/>
+                                                                        <RadioButton x:Name="RbDstOff" GroupName="dst" Content="إيقاف (UTC+2)" Tag="off" MinWidth="0"/>
+                                                                        <RadioButton x:Name="RbDstOn" GroupName="dst" Content="تشغيل (UTC+3)" Tag="on" MinWidth="0"/>
                                                                     </StackPanel.Children>
                                                                 </StackPanel>
                                                             </StackPanel.Children>
@@ -305,7 +305,7 @@
                                                             <StackPanel.Children>
                                                                 <TextBlock Text="ويدجت سطح المكتب" FontSize="16" FontWeight="SemiBold" />
                                                                 <TextBlock Text="نافذة صغيرة عائمة تعرض الصلاة القادمة والعدّاد، يمكن تحريكها بالسحب وتثبيتها فوق النوافذ." TextWrapping="Wrap" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <ToggleSwitch x:Name="TglWidget" OnContent="ظاهر" OffContent="مخفي" Toggled="Widget_Toggled"/>
+                                                                <ToggleSwitch x:Name="TglWidget" OnContent="ظاهر" OffContent="مخفي"/>
                                                             </StackPanel.Children>
                                                         </StackPanel>
                                                     </Border.Child>
@@ -321,7 +321,7 @@
                                                             <StackPanel.Children>
                                                                 <TextBlock Text="الإشعارات" FontSize="16" FontWeight="SemiBold" />
                                                                 <TextBlock Text="إشعار عند دخول وقت كل صلاة: حان الآن موعد أذان ..." TextWrapping="Wrap" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <ToggleSwitch x:Name="TglAdhan" OnContent="مفعّل" OffContent="متوقف" Toggled="Adhan_Toggled"/>
+                                                                <ToggleSwitch x:Name="TglAdhan" OnContent="مفعّل" OffContent="متوقف"/>
                                                                 <StackPanel x:Name="PanelSounds" Spacing="10" />
                                                             </StackPanel.Children>
                                                         </StackPanel>
@@ -353,13 +353,13 @@
                                                         <StackPanel Spacing="8">
                                                             <StackPanel.Children>
                                                                 <TextBlock Text="التحديثات" FontSize="16" FontWeight="SemiBold" />
-                                                                <ToggleSwitch x:Name="TglAutoUpdate" Header="البحث التلقائي عن التحديثات" OnContent="مفعّل" OffContent="متوقف" Toggled="AutoUpdate_Toggled"/>
+                                                                <ToggleSwitch x:Name="TglAutoUpdate" Header="البحث التلقائي عن التحديثات" OnContent="مفعّل" OffContent="متوقف"/>
                                                                 <TextBlock Text="يفحص البرنامج أحدث إصدار مستقر على GitHub في الخلفية عند التشغيل ثم كل ست ساعات، ويعرض إشعارًا فيه زر تحميل مباشر عند توفر إصدار أحدث." TextWrapping="Wrap" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                                                 <TextBlock x:Name="TxtUpdateVersion" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <Button x:Name="BtnUpdate" Content="التحقق من التحديثات" HorizontalAlignment="Left" Click="Update_Click"/>
+                                                                <Button x:Name="BtnUpdate" Content="التحقق من التحديثات" HorizontalAlignment="Left"/>
                                                                 <TextBlock x:Name="TxtUpdate" TextWrapping="Wrap" FontSize="13" />
                                                                 <HyperlinkButton x:Name="UpdateLink" Content="فتح صفحة التنزيل" Visibility="Collapsed" HorizontalAlignment="Left" />
-                                                                <Button x:Name="BtnUpdateInstall" Content="تنزيل وتثبيت" Style="{StaticResource AccentButtonStyle}" Visibility="Collapsed" HorizontalAlignment="Left" Click="UpdateInstall_Click"/>
+                                                                <Button x:Name="BtnUpdateInstall" Content="تنزيل وتثبيت" Style="{StaticResource AccentButtonStyle}" Visibility="Collapsed" HorizontalAlignment="Left"/>
                                                             </StackPanel.Children>
                                                         </StackPanel>
                                                     </Border.Child>
@@ -375,7 +375,7 @@
                                                             <StackPanel.Children>
                                                                 <TextBlock Text="التشغيل" FontSize="16" FontWeight="SemiBold" />
                                                                 <TextBlock Text="تشغيل البرنامج مع بدء ويندوز" FontWeight="SemiBold" />
-                                                                <ToggleSwitch x:Name="TglStartup" OnContent="مفعّل" OffContent="متوقف" Toggled="Startup_Toggled"/>
+                                                                <ToggleSwitch x:Name="TglStartup" OnContent="مفعّل" OffContent="متوقف"/>
                                                             </StackPanel.Children>
                                                         </StackPanel>
                                                     </Border.Child>
@@ -452,10 +452,10 @@
                                                                 <TextBlock Text="التحديثات" FontSize="16" FontWeight="SemiBold" />
                                                                 <TextBlock Text="اضغط الزر للتحقق من التحديثات الآن." FontSize="13" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                                                 <TextBlock x:Name="TxtAboutUpdateVersion" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <Button x:Name="BtnAboutUpdate" Content="التحقق من التحديثات" HorizontalAlignment="Left" Click="Update_Click"/>
+                                                                <Button x:Name="BtnAboutUpdate" Content="التحقق من التحديثات" HorizontalAlignment="Left"/>
                                                                 <TextBlock x:Name="TxtAboutUpdate" TextWrapping="Wrap" FontSize="13" />
                                                                 <HyperlinkButton x:Name="AboutUpdateLink" Content="فتح صفحة التنزيل" Visibility="Collapsed" HorizontalAlignment="Left" />
-                                                                <Button x:Name="BtnAboutUpdateInstall" Content="تنزيل وتثبيت" Style="{StaticResource AccentButtonStyle}" Visibility="Collapsed" HorizontalAlignment="Left" Click="UpdateInstall_Click"/>
+                                                                <Button x:Name="BtnAboutUpdateInstall" Content="تنزيل وتثبيت" Style="{StaticResource AccentButtonStyle}" Visibility="Collapsed" HorizontalAlignment="Left"/>
                                                             </StackPanel.Children>
                                                         </StackPanel>
                                                     </Border.Child>
