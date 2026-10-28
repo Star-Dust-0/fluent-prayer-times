@@ -62,7 +62,7 @@ jobs:
         shell: pwsh
         run: |
           @'
-          Fluent Prayer Times 1.3.7 - Windows x64
+          Fluent Prayer Times 1.3.6 - Windows x64
           Windows 10 version 1809 or later / Windows 11 (x64).
           Extract the entire ZIP before running FluentPrayerTimes.exe. Keep all files together.
           .NET, Windows App SDK, and VC runtime files are bundled. No runtime installation is required.
@@ -71,15 +71,15 @@ jobs:
           brought to you by Instinct - https://instinct.com
           '@ | Set-Content publish/README.txt -Encoding utf8
           Copy-Item LICENSE publish/LICENSE.txt
-          Compress-Archive -Path publish/* -DestinationPath 'FluentPrayerTimes-v1.3.7-portable-win-x64.zip'
+          Compress-Archive -Path publish/* -DestinationPath 'FluentPrayerTimes-v1.3.6-portable-win-x64.zip'
           Copy-Item installer/FluentPrayerTimes.iss FluentPrayerTimes.iss
-          & "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" /DAppVersion=1.3.7 FluentPrayerTimes.iss
+          & "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" /DAppVersion=1.3.6 FluentPrayerTimes.iss
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
           Copy-Item out/*.exe .
       - name: Capture recovered installer UI
         shell: pwsh
         run: |
-          $p = Start-Process './FluentPrayerTimes-v1.3.7-installer-win-x64.exe' -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -PassThru
           Start-Sleep -Seconds 5
           Add-Type -AssemblyName System.Drawing,System.Windows.Forms
           $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
@@ -106,7 +106,7 @@ jobs:
       - name: Verify installer extraction and installed launch
         shell: pwsh
         run: |
-          $p = Start-Process './FluentPrayerTimes-v1.3.7-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "Installer failed: $($p.ExitCode)" }
           $root = "$env:LOCALAPPDATA/Programs/FluentPrayerTimes"
           if (-not (Test-Path "$root/FluentPrayerTimes.exe")) { throw 'Per-user install missing' }
@@ -119,7 +119,7 @@ jobs:
             if (-not (Test-Path "$folder/Fluent Prayer Times.lnk")) { throw 'Plain shortcut missing' }
           }
           $entry=Get-ItemProperty 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall/FluentPrayerTimes_is1'
-          if ($entry.DisplayName -ne 'Fluent Prayer Times version 1.3.7') { throw "Wrong display name: $($entry.DisplayName)" }
+          if ($entry.DisplayName -ne 'Fluent Prayer Times') { throw "Wrong display name: $($entry.DisplayName)" }
           $entry | Select-Object DisplayName,DisplayVersion,InstallLocation,UninstallString | ConvertTo-Json | Set-Content installed-entry.json
           $p = Start-Process "$root/FluentPrayerTimes.exe" -PassThru
           Start-Sleep -Seconds 10
@@ -135,7 +135,7 @@ jobs:
           $running = Start-Process "$root/FluentPrayerTimes.exe" -PassThru
           Start-Sleep -Seconds 5
           $hash = (Get-FileHash $settings).Hash
-          $p = Start-Process './FluentPrayerTimes-v1.3.7-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "Upgrade failed: $($p.ExitCode)" }
           Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
           if ((Get-FileHash $settings).Hash -ne $hash) { throw 'Upgrade changed settings' }
@@ -170,8 +170,8 @@ jobs:
         with:
           name: self-contained-verified
           path: |
-            FluentPrayerTimes-v1.3.7-portable-*.zip
-            FluentPrayerTimes-v1.3.7-installer-*.exe
+            FluentPrayerTimes-v1.3.6-portable-*.zip
+            FluentPrayerTimes-v1.3.6-installer-*.exe
             app-self-contained.png
             installer-self-contained.png
             dependency-proof.json

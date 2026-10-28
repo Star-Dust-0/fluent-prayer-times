@@ -1,6 +1,7 @@
 [Setup]
 AppId=FluentPrayerTimes
 AppName=Fluent Prayer Times
+UninstallDisplayName=Fluent Prayer Times
 AppVersion={#AppVersion}
 AppPublisher=Mohamed Elnaggar
 AppPublisherURL=https://instinct.com

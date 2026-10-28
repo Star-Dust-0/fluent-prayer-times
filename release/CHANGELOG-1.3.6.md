@@ -1,4 +1,4 @@
-## 1.3.7
+## 1.3.6
 
 - The app is named Fluent Prayer Times in shortcuts, the installer and installed-apps list.
 - Installation uses the plain FluentPrayerTimes folder name.
