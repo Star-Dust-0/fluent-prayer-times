@@ -10,8 +10,8 @@ A lightweight prayer times app with a native Windows 11 look (WinUI 3). It lives
 ## Screenshots
 
 <p align="center">
-<strong>Main window in light and dark themes</strong><br><br>
-<img src="docs/screenshots/1-main-light-dark.jpg" alt="Main window in light and dark themes: daily prayer times and the countdown to the next prayer." width="700"><br><br>
+<strong>Main window in dark theme</strong><br><br>
+<img src="docs/screenshots/1-main-dark.jpg" alt="Main window in dark theme: daily prayer times and the countdown to the next prayer." width="450"><br><br>
 Daily prayer times and the countdown to the next prayer.
 </p>
 
@@ -19,7 +19,7 @@ Daily prayer times and the countdown to the next prayer.
 <tr>
 <td align="center" valign="top" width="50%">
 <strong>Azkar reminder</strong><br><br>
-<img src="docs/screenshots/2-azkar-reminder.jpg" alt="Azkar reminder: the current dhikr and the reminder interval." width="280"><br><br>
+<em>Original screenshot is not currently available.</em><br><br>
 The current dhikr and the reminder interval.
 </td>
 <td align="center" valign="top" width="50%">
@@ -36,21 +36,21 @@ Days of the month and Islamic occasions. The month arrows mirror in right-to-lef
 </td>
 <td align="center" valign="top" width="50%">
 <strong>Settings</strong><br><br>
-<img src="docs/screenshots/5-settings.jpg" alt="Settings: language picker with the Apply changes button, appearance, and accent color picker." width="280"><br><br>
+<em>Original screenshot is not currently available.</em><br><br>
 Language and the Apply changes button, appearance, and accent color.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center">
 <strong>Tray hover card</strong><br><br>
-<img src="docs/screenshots/6-tray-hover.jpg" alt="Tray hover card: time left to the next prayer, with the city and prayer time." width="540"><br><br>
+<em>Original screenshot is not currently available.</em><br><br>
 Time left to the next prayer, with the city and prayer time.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center">
 <strong>Desktop widget</strong><br><br>
-<img src="docs/screenshots/7-desktop-widget.jpg" alt="Desktop widget: the next prayer name, its time, and the countdown." width="230"><br><br>
+<em>Original screenshot is not currently available.</em><br><br>
 The next prayer name, its time, and the countdown.
 </td>
 </tr>

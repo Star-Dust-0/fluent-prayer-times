@@ -10,8 +10,8 @@
 ## لقطات الشاشة / Screenshots
 
 <p align="center" dir="rtl">
-<strong>النافذة الرئيسية بالمظهرين الفاتح والغامق</strong><br><br>
-<img src="docs/screenshots/1-main-light-dark.jpg" alt="النافذة الرئيسية بالمظهرين الفاتح والغامق: مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة." width="700"><br><br>
+<strong>النافذة الرئيسية بالمظهر الغامق</strong><br><br>
+<img src="docs/screenshots/1-main-dark.jpg" alt="النافذة الرئيسية بالمظهر الغامق: مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة." width="450"><br><br>
 مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة.
 </p>
 
@@ -19,7 +19,7 @@
 <tr>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>منبه الأذكار</strong><br><br>
-<img src="docs/screenshots/2-azkar-reminder.jpg" alt="منبه الأذكار: عرض الذكر وإعداد فترة التذكير." width="280"><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
 عرض الذكر وإعداد فترة التذكير.
 </td>
 <td align="center" valign="top" width="50%" dir="rtl">
@@ -36,21 +36,21 @@
 </td>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>الإعدادات</strong><br><br>
-<img src="docs/screenshots/5-settings.jpg" alt="الإعدادات: اختيار اللغة وزر تطبيق التغييرات، والمظهر، ومنتقي لون التطبيق." width="280"><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
 اللغة وزر «تطبيق التغييرات»، والمظهر، ولون التطبيق.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center" dir="rtl">
 <strong>بطاقة التمرير فوق الأيقونة</strong><br><br>
-<img src="docs/screenshots/6-tray-hover.jpg" alt="بطاقة التمرير فوق الأيقونة: الوقت المتبقي للصلاة القادمة مع المدينة وموعد الصلاة." width="540"><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
 الوقت المتبقي للصلاة القادمة مع المدينة وموعد الصلاة.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center" dir="rtl">
 <strong>ويدجت سطح المكتب</strong><br><br>
-<img src="docs/screenshots/7-desktop-widget.jpg" alt="ويدجت سطح المكتب: اسم الصلاة القادمة وموعدها والعدّاد التنازلي." width="230"><br><br>
+<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
 اسم الصلاة القادمة وموعدها والعدّاد التنازلي.
 </td>
 </tr>
