@@ -19,6 +19,7 @@ public class CaptureNative {
 }
 '@
 $settings=Join-Path $env:APPDATA 'FluentPrayerTimes'
+$env:FPT_XAML_DIAGNOSTICS='1'
 $results=@()
 $started=Get-Date
 foreach($variant in @('original','rebuilt')) {
@@ -47,6 +48,7 @@ foreach($variant in @('original','rebuilt')) {
    }
    $results += [pscustomobject]@{variant=$variant;language=$language;part=$part;processExited=$process.HasExited;exitCode=if($process.HasExited){$process.ExitCode}else{$null};visibleCaptures=$count}
    if(Test-Path "$settings\crash.log"){Copy-Item "$settings\crash.log" "$out\$variant-$language-$part-crash.log"}
+   if(Test-Path "$settings\xaml-diagnostics.log"){Copy-Item "$settings\xaml-diagnostics.log" "$out\$variant-$language-$part-xaml.log"}
    Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
   }
  }

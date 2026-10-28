@@ -28,6 +28,8 @@ for p in source.glob('*.cs'):
      elif s[end]=='}':depth-=1
      end+=1
    s=s[:start]+s[end:]
+ if p.stem == 'App':
+  s=s.replace('InitializeComponent();', 'if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") {\n            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs? last = null;\n            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (e.Exception.GetType().Name.Contains("Xaml") || e.Exception is NullReferenceException) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\\n"); } } catch {} };\n            DebugSettings.XamlResourceReferenceFailed += (sender, e) => { try { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Message+"\\n"); } catch {} };\n        }\n        InitializeComponent();')
  (root/(p.stem+'.cs')).write_text(s, encoding="utf-8")
 for p in (root.parent/'xaml').glob('*.xaml'):
  s=p.read_text(encoding="utf-8")
