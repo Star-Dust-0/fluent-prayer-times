@@ -58,6 +58,12 @@ jobs:
           $bitmap.Save("$PWD/app-self-contained.png")
           $graphics.Dispose(); $bitmap.Dispose()
           Stop-Process -Id $p.Id -Force
+      - name: Verify candidate updater against current public release
+        shell: pwsh
+        run: |
+          $p=Start-Process "$PWD/publish/FluentPrayerTimes.exe" -ArgumentList '--update-e2e' -PassThru -Wait
+          Copy-Item "$env:APPDATA/FluentPrayerTimes/update-e2e.log" candidate-update-e2e.log
+          if ($p.ExitCode -ne 0) { throw 'Candidate updater failed' }
       - name: Package portable archive and per-user installer
         shell: pwsh
         run: |
@@ -87,6 +93,15 @@ jobs:
           $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
           $graphics.CopyFromScreen($bounds.Location,[System.Drawing.Point]::Empty,$bounds.Size)
           $bitmap.Save("$PWD/installer-self-contained.png")
+          Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
+          $cond=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::ProcessIdProperty),$p.Id
+          $window=[System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
+          $nextCondition=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::NameProperty),'Next >'
+          $next=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$nextCondition)
+          $next.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+          Start-Sleep -Seconds 2
+          $graphics.CopyFromScreen($bounds.Location,[System.Drawing.Point]::Empty,$bounds.Size)
+          $bitmap.Save("$PWD/installer-tasks.png")
           $graphics.Dispose(); $bitmap.Dispose()
           Stop-Process -Id $p.Id -Force
       - name: Install published 1.3.6 for real upgrade test
@@ -174,8 +189,10 @@ jobs:
             FluentPrayerTimes-v1.3.6-installer-*.exe
             app-self-contained.png
             installer-self-contained.png
+            installer-tasks.png
             dependency-proof.json
             packaging-proof.txt
+            candidate-update-e2e.log
             installed-entry.json
             installed-shortcut.png
             installed-programs.png
