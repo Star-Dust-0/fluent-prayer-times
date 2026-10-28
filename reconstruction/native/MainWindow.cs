@@ -386,8 +386,7 @@ public sealed partial class MainWindow : Window
 			}
 		}
 		ApplyAccentResources(ParseHex(_s.Accent));
-		if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") { try { var markup=File.ReadAllText(Path.Combine(AppContext.BaseDirectory,"MainWindow.diagnostic.xaml")); Microsoft.UI.Xaml.Markup.XamlReader.Load(markup); } catch(Exception ex) { Directory.CreateDirectory(App.AppData); File.AppendAllText(Path.Combine(App.AppData,"xaml-diagnostics.log"),"XamlReader: "+ex.ToString()+"\n"); } }
-        InitializeComponent();
+		InitializeComponent();
 		L.Register(RootGrid);
 		ApplyFlow();
 		L.Refresh();
