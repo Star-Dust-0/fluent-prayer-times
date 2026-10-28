@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/app-icon.png" alt="Fluent Prayer Times" width="192" height="192">
+</p>
+
 # 🕌 Fluent Prayer Times
 ### مواقيت الصلاة لنظام Windows
 
