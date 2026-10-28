@@ -21,7 +21,7 @@ Reconstructed from the owner's shipped 1.3.6 application and recovered historica
 
 ## Scope limits
 
-This is not a proof of every network response, every Windows version or every interactive path. Anonymous release API access had no latest release to return before publication; live updater download verification must be repeated against the published release.
+This is not a proof of every network response, every Windows version or every interactive path. Live public updater checks passed against the published v1.3.6 installer: asset selection, full download, progress to 100%, size/header/checksum verification, cancellation cleanup, wrong-checksum rejection and untrusted-host rejection. The download UI was inspected at "Downloaded and verified", with Install now/Later controls.
 
 ## Evidence
 
@@ -29,3 +29,8 @@ This is not a proof of every network response, every Windows version or every in
 - Original packaging plus upgrade fix: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40762673696
 - Actual converter/Adhkar navigation: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40764185902
 - Standalone source build and packaging: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40764144288
+
+- Public updater and release download verification: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40767130541
+- Post-cleanup native build/packaging: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40765200522
+
+The release uses the compatible `FluentPrayerTimes-v1.3.6-installer-win-x64.exe` name. Its bytes are self-contained. The identical longer-name installer asset was removed with the owner's approval after live updater verification.

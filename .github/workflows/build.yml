@@ -79,7 +79,7 @@ jobs:
       - name: Capture recovered installer UI
         shell: pwsh
         run: |
-          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -PassThru
           Start-Sleep -Seconds 5
           Add-Type -AssemblyName System.Drawing,System.Windows.Forms
           $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
@@ -92,7 +92,7 @@ jobs:
       - name: Verify installer extraction and installed launch
         shell: pwsh
         run: |
-          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "Installer failed: $($p.ExitCode)" }
           $root = "$env:LOCALAPPDATA/Programs/FluentPrayerTimes-SelfContained"
           if (-not (Test-Path "$root/FluentPrayerTimes.exe")) { throw 'Per-user install missing' }
@@ -110,7 +110,7 @@ jobs:
           $running = Start-Process "$root/FluentPrayerTimes.exe" -PassThru
           Start-Sleep -Seconds 5
           $hash = (Get-FileHash $settings).Hash
-          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "Upgrade failed: $($p.ExitCode)" }
           Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
           if ((Get-FileHash $settings).Hash -ne $hash) { throw 'Upgrade changed settings' }
@@ -130,7 +130,7 @@ jobs:
           name: self-contained-verified
           path: |
             FluentPrayerTimes-v1.3.6-self-contained-*.zip
-            FluentPrayerTimes-v1.3.6-self-contained-*.exe
+            FluentPrayerTimes-v1.3.6-installer-*.exe
             app-self-contained.png
             installer-self-contained.png
             dependency-proof.json
