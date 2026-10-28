@@ -7,7 +7,7 @@ root=Path(__file__).resolve().parent
 source=root.parent/'src'/'FluentPrayerTimes'
 for p in source.glob('*.cs'):
  if p.stem=='Program':continue
- s=p.read_text()
+ s=p.read_text(encoding="utf-8")
  if p.stem in ['App','MainWindow','WidgetWindow']:
   s=re.sub(r'^using FluentPrayerTimes\.FluentPrayerTimes_XamlTypeInfo;\n','',s,flags=re.M)
   s=re.sub(r'^using WinRT\.FluentPrayerTimesVtableClasses;\n','',s,flags=re.M)
@@ -28,8 +28,8 @@ for p in source.glob('*.cs'):
      elif s[end]=='}':depth-=1
      end+=1
    s=s[:start]+s[end:]
- (root/(p.stem+'.cs')).write_text(s)
+ (root/(p.stem+'.cs')).write_text(s, encoding="utf-8")
 for p in (root.parent/'xaml').glob('*.xaml'):
- s=p.read_text()
+ s=p.read_text(encoding="utf-8")
  s=re.sub(r'<Color ([^>]*?)Value="([^"]+)"\s*/>',r'<Color \1>\2</Color>',s)
- (root/p.name).write_text(s)
+ (root/p.name).write_text(s, encoding="utf-8")
