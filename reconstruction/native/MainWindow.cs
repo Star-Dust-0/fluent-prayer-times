@@ -1082,6 +1082,7 @@ public sealed partial class MainWindow : Window
 
 	private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
 	{
+        if (PageTimes == null || PageSettings == null || PageAbout == null) return;
 		string text = (args.SelectedItemContainer?.Tag as string) ?? "times";
 		PageTimes.Visibility = ((!(text == "times")) ? Visibility.Collapsed : Visibility.Visible);
 		PageSettings.Visibility = ((!(text == "settings")) ? Visibility.Collapsed : Visibility.Visible);
