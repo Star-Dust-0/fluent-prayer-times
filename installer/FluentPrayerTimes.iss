@@ -5,10 +5,10 @@ UninstallDisplayName=Fluent Prayer Times
 AppVersion={#AppVersion}
 AppPublisher=Mohamed Elnaggar
 AppPublisherURL=https://instinct.com
-DefaultDirName={localappdata}\Programs\FluentPrayerTimes
+DefaultDirName={autopf}\FluentPrayerTimes
 UsePreviousAppDir=no
 DefaultGroupName=Fluent Prayer Times
-PrivilegesRequired=lowest
+PrivilegesRequired=admin
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=out
@@ -30,7 +30,7 @@ Name: "{autodesktop}\Fluent Prayer Times"; Filename: "{app}\FluentPrayerTimes.ex
 [Run]
 Filename: "{app}\FluentPrayerTimes.exe"; Description: "Launch Fluent Prayer Times"; Flags: nowait postinstall skipifsilent
 [Messages]
-WelcomeLabel2=This edition includes .NET and Windows App Runtime. No runtime download or administrator rights are required.%n%nbrought to you by Instinct
+WelcomeLabel2=This edition includes .NET and Windows App Runtime. Administrator rights are required to install in Program Files.%n%nbrought to you by Instinct
 [Code]
 function OpenEvent(dwDesiredAccess: LongWord; bInheritHandle: Boolean; lpName: String): THandle;
   external 'OpenEventW@kernel32.dll stdcall';
