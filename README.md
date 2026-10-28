@@ -1,90 +1,93 @@
-<div align="center">
+# 🕌 Fluent Prayer Times
+### مواقيت الصلاة لنظام Windows
 
-# Fluent Prayer Times
+[English](README.en.md) · **العربية**
 
-A Windows prayer-times app with a native WinUI 3 interface, a tray countdown and a floating prayer widget.
+برنامج خفيف لمواقيت الصلاة بتصميم Windows 11 الأصيل (WinUI 3)، يبقى في منطقة الإشعارات ويُذكّرك بالصلاة القادمة والإقامة. الواجهة بـ 11 لغة، وتتبع لغة Windows تلقائيًا.
 
-brought to you by **Instinct**
+*brought to you by app.instinct AI* · تطوير: محمد النجار
 
-</div>
+## لقطات الشاشة / Screenshots
 
-## Recovery status
+<p align="center" dir="rtl">
+<strong>النافذة الرئيسية بالمظهرين الفاتح والغامق</strong><br><br>
+<img src="docs/screenshots/1-main-light-dark.jpg" alt="النافذة الرئيسية بالمظهرين الفاتح والغامق: مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة." width="700"><br><br>
+مواقيت الصلاة اليومية والعدّاد التنازلي للصلاة القادمة.
+</p>
 
-This repository is being restored after an account change. The source on `main` is a partial historical recovery, not the verified source of the latest shipped app. Do not build or install it as a replacement yet.
+<table>
+<tr>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>منبه الأذكار</strong><br><br>
+<img src="docs/screenshots/3-azkar-reminder.jpg" alt="منبه الأذكار: عرض الذكر وإعداد فترة التذكير." width="280"><br><br>
+عرض الذكر وإعداد فترة التذكير.
+</td>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>محوّل التاريخ</strong><br><br>
+<img src="docs/screenshots/4-date-converter.jpg" alt="محوّل التاريخ: تحويل التاريخ الهجري إلى التاريخ الميلادي." width="280"><br><br>
+تحويل التاريخ الهجري إلى التاريخ الميلادي.
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>التقويم الهجري</strong><br><br>
+<img src="docs/screenshots/5-hijri-calendar.jpg" alt="التقويم الهجري: أيام الشهر والمناسبات الإسلامية مع أسهم التنقل بين الأشهر." width="280"><br><br>
+أيام الشهر والمناسبات الإسلامية، وأسهم الأشهر تنعكس في الواجهات العربية.
+</td>
+<td align="center" valign="top" width="50%" dir="rtl">
+<strong>الإعدادات</strong><br><br>
+<img src="docs/screenshots/6-settings.jpg" alt="الإعدادات: اختيار اللغة وزر تطبيق التغييرات، والمظهر، ومنتقي لون التطبيق." width="280"><br><br>
+اللغة وزر «تطبيق التغييرات»، والمظهر، ولون التطبيق.
+</td>
+</tr>
+</table>
 
-The original project README was not recovered in full. This English README has been rebuilt from the recovered source, the shipped 1.3.6 app, its bundled README, and recorded project changes. It is not presented as the original wording.
+## ✨ المميزات
 
-Work to recover the full 1.3.6 app and compare it against the original is on `reverse-engineered-v1.3.6`. See `RECOVERY-STATUS.md` for the limits of the historical files on `main`.
+**المواقيت والتذكير**
+- **عدّاد الصلاة القادمة** بصيغة ساعة:دقيقة، مع التاريخ الهجري والميلادي.
+- **الأذان والإقامة**: عند دخول الوقت تظهر عبارة «حان وقت الاذان» لمدة دقيقة، ثم عدّ تنازلي للإقامة، ثم عبارة «حان وقت الاقامة». مدة الإقامة قابلة للضبط لكل صلاة.
+- **أصوات الأذان والإقامة**: افتراضي أو مختصر أو كامل، من إعدادات الإشعارات.
+- **تنبيه بالأذكار**: صفحة «منبه الأذكار» ترسل إشعارًا بذكر قصير كل مدة تحددها (من 1 دقيقة فصاعدًا)، من «حصن المسلم» وكتب الأذكار اليومية، ويمكن تفعيله وإيقافه. نصوص الأذكار بالعربية في كل اللغات.
+- **أي مدينة في العالم**: بحث عن المدينة أو تحديد الموقع تلقائيًا أو إدخال الإحداثيات، مع دعم التوقيت الصيفي.
 
-## Features
+**التقويم والتاريخ**
+- **التقويم الهجري**: تقويم شهري مع الانتقال بين الأشهر والعودة إلى اليوم. اتجاه أسهم التنقل ينعكس في الواجهات من اليمين إلى اليسار.
+- **أيام ومواعيد المناسبات الإسلامية**: قائمة «المناسبات في هذا الشهر» تعرض المناسبات الإسلامية وتواريخها (مثل المولد النبوي الشريف وذكرى الإسراء والمعراج).
+- **محوّل التاريخ** بين الهجري والميلادي.
 
-- Prayer times, a tray countdown, adhan and iqama phases, and a floating widget.
-- Location search, manual coordinates, calculation settings and time-zone/DST controls.
-- Hijri calendar, date converter and Arabic azkar.
-- Arabic and English layout directions, with 11 interface languages. Azkar stay Arabic.
-- Light, dark and system themes, Mica/Mica Alt/Acrylic backgrounds and accent colors.
-- Separate adhan and iqama notifications, sound choices and per-prayer iqama times.
-- Local prayer calculation for supported methods, with online services and cached data for other cases.
+**الحضور على سطح المكتب**
+- **أيقونة في منطقة الإشعارات** مع بطاقة تظهر عند التمرير بالفأرة وقائمة بالزر الأيمن. الضغط على الأيقونة يفتح الصفحة الرئيسية دائمًا، وليس آخر صفحة تركتها.
+- **ويدجت سطح المكتب** عائم، يُحرَّك بالسحب ويلتصق بأقرب موضع.
+- نافذة بتصميم Windows 11 الأصيل بارتفاع أكبر يتسع للمحتوى.
 
-## Requirements and portable use
+**اللغات والاتجاه**
+- **11 لغة**: العربية والإنجليزية والفرنسية والألمانية والإسبانية والتركية والأردية والإندونيسية والروسية والبرتغالية والفارسية. ترجمات اللغات غير العربية والإنجليزية آلية.
+- **اختيار اللغة** من الإعدادات، والخيار «تلقائي» يتبع لغة Windows.
+- **اتجاه كامل من اليمين إلى اليسار** للعربية والأردية والفارسية: القائمة الجانبية على اليمين، وشريط العنوان ينعكس فيصير العنوان على اليمين وزر الإغلاق على اليسار.
+- زر **«تطبيق التغييرات»** في أعلى الإعدادات يعيد تشغيل البرنامج لتفعيل تغيير اللغة أو لون السمة.
 
-The original self-contained 1.3.6 backup targets Windows 10 version 1809 or later and Windows 11, x64.
+**المظهر**
+- خلفية Mica Alt أو Mica أو Acrylic، ومظهر فاتح أو غامق أو بحسب النظام.
+- **لون التطبيق**: ألوان جاهزة ولون مخصص من منتقي الألوان، واستعادة اللون الافتراضي.
+- تشغيل مع Windows، ويعمل دون اتصال بعد أول تحميل للمواقيت.
 
-1. Extract the whole portable ZIP before opening `FluentPrayerTimes.exe`.
-2. Keep all files together. Do not copy the executable alone.
-3. The self-contained edition includes .NET, Windows App SDK and runtime files. It does not need a separate runtime installation.
-4. The original self-contained installer installs for the current user without administrator rights.
+**التحديثات والتثبيت**
+- **تحقق تلقائي من التحديثات** عند التشغيل ثم كل ست ساعات، مع إشعار فيه زر تنزيل مباشر. يمكن إيقافه من الإعدادات، والتحقق اليدوي متاح من الإعدادات أو من قائمة الأيقونة.
+- **تحديث بتنزيل صغير**: يُنزَّل المثبّت الصغير (بدون .NET) بدل المثبّت الكامل.
+- **مثبّت بواجهة حديثة**: زر تثبيت، وشريط تقدم أخضر، وشاشة إتمام، وتشغيل تلقائي بعد التثبيت، واختصار على سطح المكتب وفي قائمة ابدأ.
+- صفحة **«عن البرنامج»** تعرض رقم الإصدار الفعلي وأيقونة التطبيق ورابط **GitHub Repo Link** لمستودع المشروع.
 
-These describe the original distribution. A restored replacement download has not been released from this repository yet.
+## 📦 التثبيت
+1. نزّل `FluentPrayerTimes-vX.Y.Z-installer-win-x64.exe` من صفحة [Releases](../../releases/latest) وشغّله.
+2. إذا ظهر SmartScreen فاضغط **More info** ثم **Run anyway** (البرنامج غير موقَّع).
 
-## Downloads and updates
+نسخة portable (ملف zip) ومثبّت صغير يتطلب .NET 8 Desktop Runtime متاحان أيضًا في الصفحة نفسها.
 
-The update-source and project links are being moved to `StarsDust01/fluent-prayer-times`. While this repository is private, an anonymous in-app GitHub API check cannot read its releases. A failed check must not be read as confirmation that the installed app is current.
+**المتطلبات:** Windows 10 (1809 أو أحدث) / Windows 11، بمعمارية x64، و[Windows App Runtime 1.6](https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe) (يُثبَّت مرة واحدة، ويتولى المثبّت الأمر عند الحاجة).
 
-No token or account password is included in the app. Public availability and the final update flow will be verified before the restored release.
+## 🕋 مصدر المواقيت
+المواقيت من [Aladhan API](https://aladhan.com/prayer-times-api) بطريقة الهيئة المصرية العامة للمساحة (الطريقة 5) افتراضيًا.
 
-## Links
-
-Repository:
-
-```text
-https://github.com/StarsDust01/fluent-prayer-times
-```
-
-Reconstruction branch:
-
-```text
-https://github.com/StarsDust01/fluent-prayer-times/tree/reverse-engineered-v1.3.6
-```
-
-Releases (no restored release yet):
-
-```text
-https://github.com/StarsDust01/fluent-prayer-times/releases
-```
-
-Prayer-time API used by the app:
-
-```text
-https://aladhan.com/prayer-times-api
-```
-
-Place search service used by the app:
-
-```text
-https://open-meteo.com/
-```
-
-Instinct:
-
-```text
-https://instinct.com
-```
-
-## Build status
-
-The historical root project is incomplete. For the reconstruction build instructions and verification notes, open `reconstruction/README.md` on the reconstruction branch. A successful compile alone is not a claim of original-app parity.
-
-## License
-
-The original 1.3.6 backup includes the MIT License, copyright 2026 Mohamed Elnaggar. Its license text will be included with the restored source and downloads. Third-party dependencies keep their own licenses.
+## 📄 الترخيص
+[MIT](LICENSE) © محمد النجار · brought to you by app.instinct AI
