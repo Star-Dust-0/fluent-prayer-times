@@ -58,12 +58,6 @@ jobs:
           $bitmap.Save("$PWD/app-self-contained.png")
           $graphics.Dispose(); $bitmap.Dispose()
           Stop-Process -Id $p.Id -Force
-      - name: Verify candidate updater against current public release
-        shell: pwsh
-        run: |
-          $p=Start-Process "$PWD/publish/FluentPrayerTimes.exe" -ArgumentList '--update-e2e' -PassThru -Wait
-          Copy-Item "$env:APPDATA/FluentPrayerTimes/update-e2e.log" candidate-update-e2e.log
-          if ($p.ExitCode -ne 0) { throw 'Candidate updater failed' }
       - name: Package portable archive and per-user installer
         shell: pwsh
         run: |
@@ -186,6 +180,13 @@ jobs:
           if (Test-Path "$root/FluentPrayerTimes.exe") { throw 'App remains after uninstall' }
           if ((Get-FileHash $settings).Hash -ne $hash) { throw 'Uninstall removed settings' }
           'install, installed launch, upgrade, shortcuts, uninstall, settings retention: PASS' | Set-Content packaging-proof.txt
+      - name: Verify candidate updater against current public release
+        shell: pwsh
+        run: |
+          $p=Start-Process "$PWD/publish/FluentPrayerTimes.exe" -ArgumentList '--update-e2e' -PassThru -Wait
+          Copy-Item "$env:APPDATA/FluentPrayerTimes/update-e2e.log" candidate-update-e2e.log
+          Get-Content candidate-update-e2e.log
+          if ($p.ExitCode -ne 0) { throw 'Candidate updater failed' }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
