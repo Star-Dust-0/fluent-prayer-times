@@ -1,11 +1,12 @@
 [Setup]
-AppId=FluentPrayerTimes-SelfContained
+AppId=FluentPrayerTimes
 AppName=Fluent Prayer Times
 AppVersion={#AppVersion}
 AppPublisher=Mohamed Elnaggar
 AppPublisherURL=https://instinct.com
-DefaultDirName={localappdata}\Programs\FluentPrayerTimes-SelfContained
-DefaultGroupName=Fluent Prayer Times (Self-contained)
+DefaultDirName={localappdata}\Programs\FluentPrayerTimes
+UsePreviousAppDir=no
+DefaultGroupName=Fluent Prayer Times
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
@@ -21,8 +22,8 @@ UninstallDisplayIcon={app}\FluentPrayerTimes.exe
 [Files]
 Source: "publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
-Name: "{autoprograms}\Fluent Prayer Times (Self-contained)"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\Fluent Prayer Times (Self-contained)"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
+Name: "{autoprograms}\Fluent Prayer Times"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
+Name: "{autodesktop}\Fluent Prayer Times"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
 [Run]
 Filename: "{app}\FluentPrayerTimes.exe"; Description: "Launch Fluent Prayer Times"; Flags: nowait postinstall skipifsilent
 [Messages]
@@ -35,7 +36,7 @@ function SetEvent(hEvent: THandle): Boolean;
 function CloseHandle(hObject: THandle): Boolean;
   external 'CloseHandle@kernel32.dll stdcall';
 function PrepareToInstall(var NeedsRestart: Boolean): String;
-var QuitEvent: THandle; Code: Integer;
+var QuitEvent: THandle; Code: Integer; OldDir, OldUninstall: String;
 begin
   Result := '';
   QuitEvent := OpenEvent($0002, False, 'FluentPrayerTimes.Quit');
@@ -44,4 +45,21 @@ begin
     CloseHandle(QuitEvent);
     Sleep(2000);
   end;
+  OldDir := ExpandConstant('{localappdata}\Programs\FluentPrayerTimes-SelfContained');
+  OldUninstall := OldDir + '\unins000.exe';
+  if FileExists(OldUninstall) then begin
+    if not Exec(OldUninstall, '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART', '', SW_HIDE, ewWaitUntilTerminated, Code) or (Code <> 0) then begin
+      Result := 'Could not remove the previous installation. Close Fluent Prayer Times and try again.';
+      exit;
+    end;
+  end;
+  if DirExists(OldDir) then begin
+    if not DelTree(OldDir, True, True, True) then begin
+      Result := 'Could not clean the previous installation folder. Close Fluent Prayer Times and try again.';
+      exit;
+    end;
+  end;
+  DeleteFile(ExpandConstant('{userdesktop}\Fluent Prayer Times (Self-contained).lnk'));
+  DeleteFile(ExpandConstant('{userprograms}\Fluent Prayer Times (Self-contained).lnk'));
+  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\FluentPrayerTimes-SelfContained_is1');
 end;
