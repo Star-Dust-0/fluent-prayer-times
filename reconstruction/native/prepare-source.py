@@ -31,6 +31,8 @@ for p in source.glob('*.cs'):
    s=s[:start]+s[end:]
  if p.stem == 'App':
   s=s.replace('InitializeComponent();', 'if (Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS") == "1") {\n            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs? last = null;\n            AppDomain.CurrentDomain.FirstChanceException += (sender, e) => { try { if (e.Exception.GetType().Name.Contains("Xaml") || e.Exception is NullReferenceException) { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Exception.ToString()+"\\n"); } } catch {} };\n            DebugSettings.XamlResourceReferenceFailed += (sender, e) => { try { Directory.CreateDirectory(AppData); File.AppendAllText(Path.Combine(AppData, "xaml-diagnostics.log"), e.Message+"\\n"); } catch {} };\n        }\n        InitializeComponent();')
+ if p.stem == 'MainWindow':
+  s=s.replace('InitializeComponent();', 'if(Environment.GetEnvironmentVariable("FPT_XAML_DIAGNOSTICS")=="1") { try {Microsoft.UI.Xaml.Markup.XamlReader.Load(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,"MainWindow.diagnostic.xaml")));} catch(Exception ex) {Directory.CreateDirectory(App.AppData);File.AppendAllText(Path.Combine(App.AppData,"xaml-diagnostics.log"),"GridProbe: "+ex.ToString()+"\\n");} }\n        InitializeComponent();')
  (root/(p.stem+'.cs')).write_text(s, encoding="utf-8")
 for p in (root.parent/'xaml').glob('*.xaml'):
  s=p.read_text(encoding="utf-8")
@@ -41,5 +43,6 @@ for p in (root.parent/'xaml').glob('*.xaml'):
 # Runtime-only parser diagnostic, not the app's loaded XAML.
 s=(root/'MainWindow.xaml').read_text(encoding='utf-8')
 s=re.sub(r' x:Class="[^"]*"','',s)
+s=s.replace('<Window ', '<Grid ').replace('</Window>', '</Grid>').replace('<Window.Content>', '').replace('</Window.Content>', '')
 s=re.sub(r' (?:SelectionChanged|Click|Checked|Toggled|TextChanged|QuerySubmitted|SuggestionChosen)="[^"]*"','',s)
 (root/'MainWindow.diagnostic.xaml').write_text(s,encoding='utf-8')

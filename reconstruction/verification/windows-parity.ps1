@@ -19,7 +19,7 @@ public class CaptureNative {
 }
 '@
 $settings=Join-Path $env:APPDATA 'FluentPrayerTimes'
-$env:FPT_XAML_DIAGNOSTICS='0'
+$env:FPT_XAML_DIAGNOSTICS='1'
 $results=@()
 $started=Get-Date
 foreach($variant in @('rebuilt')) {
