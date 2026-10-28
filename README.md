@@ -19,25 +19,39 @@
 <tr>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>منبه الأذكار</strong><br><br>
-<img src="docs/screenshots/3-azkar-reminder.jpg" alt="منبه الأذكار: عرض الذكر وإعداد فترة التذكير." width="280"><br><br>
+<img src="docs/screenshots/2-azkar-reminder.jpg" alt="منبه الأذكار: عرض الذكر وإعداد فترة التذكير." width="280"><br><br>
 عرض الذكر وإعداد فترة التذكير.
 </td>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>محوّل التاريخ</strong><br><br>
-<img src="docs/screenshots/4-date-converter.jpg" alt="محوّل التاريخ: تحويل التاريخ الهجري إلى التاريخ الميلادي." width="280"><br><br>
+<img src="docs/screenshots/3-date-converter.jpg" alt="محوّل التاريخ: تحويل التاريخ الهجري إلى التاريخ الميلادي." width="280"><br><br>
 تحويل التاريخ الهجري إلى التاريخ الميلادي.
 </td>
 </tr>
 <tr>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>التقويم الهجري</strong><br><br>
-<img src="docs/screenshots/5-hijri-calendar.jpg" alt="التقويم الهجري: أيام الشهر والمناسبات الإسلامية مع أسهم التنقل بين الأشهر." width="280"><br><br>
+<img src="docs/screenshots/4-hijri-calendar.jpg" alt="التقويم الهجري: أيام الشهر والمناسبات الإسلامية مع أسهم التنقل بين الأشهر." width="280"><br><br>
 أيام الشهر والمناسبات الإسلامية، وأسهم الأشهر تنعكس في الواجهات العربية.
 </td>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>الإعدادات</strong><br><br>
-<img src="docs/screenshots/6-settings.jpg" alt="الإعدادات: اختيار اللغة وزر تطبيق التغييرات، والمظهر، ومنتقي لون التطبيق." width="280"><br><br>
+<img src="docs/screenshots/5-settings.jpg" alt="الإعدادات: اختيار اللغة وزر تطبيق التغييرات، والمظهر، ومنتقي لون التطبيق." width="280"><br><br>
 اللغة وزر «تطبيق التغييرات»، والمظهر، ولون التطبيق.
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center" dir="rtl">
+<strong>بطاقة التمرير فوق الأيقونة</strong><br><br>
+<img src="docs/screenshots/6-tray-hover.jpg" alt="بطاقة التمرير فوق الأيقونة: الوقت المتبقي للصلاة القادمة مع المدينة وموعد الصلاة." width="540"><br><br>
+الوقت المتبقي للصلاة القادمة مع المدينة وموعد الصلاة.
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center" dir="rtl">
+<strong>ويدجت سطح المكتب</strong><br><br>
+<img src="docs/screenshots/7-desktop-widget.jpg" alt="ويدجت سطح المكتب: اسم الصلاة القادمة وموعدها والعدّاد التنازلي." width="230"><br><br>
+اسم الصلاة القادمة وموعدها والعدّاد التنازلي.
 </td>
 </tr>
 </table>
@@ -73,7 +87,7 @@
 - تشغيل مع Windows، ويعمل دون اتصال بعد أول تحميل للمواقيت.
 
 **التحديثات والتثبيت**
-- **تحقق تلقائي من التحديثات** عند التشغيل ثم كل ست ساعات، مع إشعار فيه زر تنزيل مباشر. يمكن إيقافه من الإعدادات، والتحقق اليدوي متاح من الإعدادات أو من قائمة الأيقونة.
+- **تحقق تلقائي من التحديثات** عند التشغيل ثم كل ست ساعات، مع إشعار ينزّل المثبّت داخل التطبيق مع شريط تقدّم وزر إلغاء، ولا يبدأ التثبيت إلا بعد ضغطك على «تثبيت الآن». يمكن إيقافه من الإعدادات، والتحقق اليدوي متاح من الإعدادات أو من قائمة الأيقونة.
 - **تحديث بتنزيل صغير**: يُنزَّل المثبّت الصغير (بدون .NET) بدل المثبّت الكامل.
 - **مثبّت بواجهة حديثة**: زر تثبيت، وشريط تقدم أخضر، وشاشة إتمام، وتشغيل تلقائي بعد التثبيت، واختصار على سطح المكتب وفي قائمة ابدأ.
 - صفحة **«عن البرنامج»** تعرض رقم الإصدار الفعلي وأيقونة التطبيق ورابط **GitHub Repo Link** لمستودع المشروع.
@@ -87,7 +101,16 @@
 **المتطلبات:** Windows 10 (1809 أو أحدث) / Windows 11، بمعمارية x64، و[Windows App Runtime 1.6](https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe) (يُثبَّت مرة واحدة، ويتولى المثبّت الأمر عند الحاجة).
 
 ## 🕋 مصدر المواقيت
-المواقيت من [Aladhan API](https://aladhan.com/prayer-times-api) بطريقة الهيئة المصرية العامة للمساحة (الطريقة 5) افتراضيًا.
+تُحسب المواقيت داخل البرنامج بالثواني لطرق الحساب القائمة على الزوايا (الهيئة المصرية العامة للمساحة، رابطة العالم الإسلامي، كراتشي، أمريكا الشمالية، الكويت، والزوايا المخصصة)، ثم تُقرَّب الصلوات لأقرب دقيقة ويُقرَّب الشروق لأسفل. باقي الطرق، والأماكن القطبية التي لا تشرق فيها الشمس أو لا تغيب، والتاريخ الهجري والمنطقة الزمنية من [Aladhan API](https://aladhan.com/prayer-times-api). الطريقة الافتراضية في مصر هي الهيئة المصرية العامة للمساحة.
 
 ## 📄 الترخيص
 [MIT](LICENSE) © محمد النجار · brought to you by app.instinct AI
+
+
+## النسخة المستقلة / Self-contained edition
+
+النسخة المستقلة هي النسخة الافتراضية الآن. تتضمن ملفات .NET وWindows App SDK وVisual C++ المطلوبة. اختر الملف الذي يحتوي اسمه على `self-contained`: نسخة محمولة بصيغة ZIP أو مثبت للمستخدم الحالي دون صلاحيات مسؤول. فك ضغط جميع الملفات قبل تشغيل النسخة المحمولة، واحتفظ بها معًا.
+
+تعمل هذه النسخة على Windows 10 الإصدار 1809 أو أحدث وWindows 11 بمعمارية x64. لا يلزم تثبيت Windows App Runtime بشكل منفصل. الإصدارات السابقة محفوظة للأرشفة؛ أُزيلت التنزيلات المعتمدة على بيئة تشغيل خارجية من الإصدار الحالي.
+
+Self-contained is now the default. The portable ZIP and per-user installer bundle .NET, Windows App SDK and VC runtime files. No separate runtime installation is needed. Extract the entire ZIP and keep all files together. Windows 10 1809+ / Windows 11 x64. Older releases remain archived.

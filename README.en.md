@@ -19,25 +19,39 @@ Daily prayer times and the countdown to the next prayer.
 <tr>
 <td align="center" valign="top" width="50%">
 <strong>Azkar reminder</strong><br><br>
-<img src="docs/screenshots/3-azkar-reminder.jpg" alt="Azkar reminder: the current dhikr and the reminder interval." width="280"><br><br>
+<img src="docs/screenshots/2-azkar-reminder.jpg" alt="Azkar reminder: the current dhikr and the reminder interval." width="280"><br><br>
 The current dhikr and the reminder interval.
 </td>
 <td align="center" valign="top" width="50%">
 <strong>Date converter</strong><br><br>
-<img src="docs/screenshots/4-date-converter.jpg" alt="Date converter: Hijri to Gregorian." width="280"><br><br>
+<img src="docs/screenshots/3-date-converter.jpg" alt="Date converter: Hijri to Gregorian." width="280"><br><br>
 Convert a Hijri date to Gregorian.
 </td>
 </tr>
 <tr>
 <td align="center" valign="top" width="50%">
 <strong>Hijri calendar</strong><br><br>
-<img src="docs/screenshots/5-hijri-calendar.jpg" alt="Hijri calendar: days of the month and Islamic occasions, with month arrows." width="280"><br><br>
+<img src="docs/screenshots/4-hijri-calendar.jpg" alt="Hijri calendar: days of the month and Islamic occasions, with month arrows." width="280"><br><br>
 Days of the month and Islamic occasions. The month arrows mirror in right-to-left languages.
 </td>
 <td align="center" valign="top" width="50%">
 <strong>Settings</strong><br><br>
-<img src="docs/screenshots/6-settings.jpg" alt="Settings: language picker with the Apply changes button, appearance, and accent color picker." width="280"><br><br>
+<img src="docs/screenshots/5-settings.jpg" alt="Settings: language picker with the Apply changes button, appearance, and accent color picker." width="280"><br><br>
 Language and the Apply changes button, appearance, and accent color.
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+<strong>Tray hover card</strong><br><br>
+<img src="docs/screenshots/6-tray-hover.jpg" alt="Tray hover card: time left to the next prayer, with the city and prayer time." width="540"><br><br>
+Time left to the next prayer, with the city and prayer time.
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+<strong>Desktop widget</strong><br><br>
+<img src="docs/screenshots/7-desktop-widget.jpg" alt="Desktop widget: the next prayer name, its time, and the countdown." width="230"><br><br>
+The next prayer name, its time, and the countdown.
 </td>
 </tr>
 </table>
@@ -73,7 +87,7 @@ Language and the Apply changes button, appearance, and accent color.
 - Run at Windows startup. Works offline after the first download of the times.
 
 **Updates and installation**
-- **Automatic update check** at launch and every six hours, with a notification that has a direct download button. It can be turned off in Settings. A manual check is available in Settings or from the tray menu.
+- **Automatic update check** at launch and every six hours, with a notification that downloads the installer inside the app, with a progress bar and a cancel button. Installation starts only after you press "Install now". It can be turned off in Settings. A manual check is available in Settings or from the tray menu.
 - **Small update download**: the update uses the small installer (no .NET bundled) instead of the full one.
 - **Modern installer**: an install button, a green progress bar, a done screen, automatic launch after install, and shortcuts on the desktop and in the Start menu.
 - The **About** page shows the actual app version, the app icon, and a **GitHub Repo Link** to the project repository.
@@ -87,7 +101,7 @@ A portable build (zip) and a small installer that needs the .NET 8 Desktop Runti
 **Requirements:** Windows 10 (1809 or later) / Windows 11, x64, and [Windows App Runtime 1.6](https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe) (installed once; the installer handles it when needed).
 
 ## 🕋 Prayer times source
-Times come from the [Aladhan API](https://aladhan.com/prayer-times-api), using the Egyptian General Authority of Survey method (method 5) by default.
+Times are calculated inside the app, with seconds, for angle-based methods (Egyptian General Authority of Survey, Muslim World League, Karachi, ISNA, Kuwait and custom angles). Prayers are then rounded to the nearest minute and sunrise is rounded down. Other methods, polar places where the sun does not rise or set, the Hijri date and the time zone come from the [Aladhan API](https://aladhan.com/prayer-times-api). The Egyptian General Authority of Survey method is the default in Egypt.
 
 ## 📄 License
 [MIT](LICENSE) © Mohamed Elnaggar · brought to you by app.instinct AI
