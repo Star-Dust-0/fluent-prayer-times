@@ -1,8 +1,5 @@
 name: Prayer reconstruction verification (branch only)
 on:
-  push:
-    branches: [reverse-engineered-v1.3.6]
-    paths: ['reconstruction/**', '.github/workflows/prayer-reconstruction-verify.yml']
   workflow_dispatch:
 permissions:
   contents: read
