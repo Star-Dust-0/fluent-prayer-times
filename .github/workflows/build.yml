@@ -98,7 +98,7 @@ jobs:
           $window=[System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
           if (-not $window) { throw 'Setup wizard window missing' }
           $window.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition) | ForEach-Object { $_.Current.Name } | Set-Content installer-controls.txt
-          $nextCondition=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::NameProperty),'Next >'
+          $nextCondition=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::NameProperty),'Next'
           $next=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$nextCondition)
           $next.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
           Start-Sleep -Seconds 2

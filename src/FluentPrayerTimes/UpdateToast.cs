@@ -310,6 +310,7 @@ internal sealed class UpdateToast : Window
 			});
 			Process.Start(new ProcessStartInfo(file)
 			{
+                Verb = "runas",
 				UseShellExecute = true
 			});
 			Close();
