@@ -30,6 +30,7 @@
   <ItemGroup>
     <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Audio\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="app.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="logo.png" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="tray*.ico" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
