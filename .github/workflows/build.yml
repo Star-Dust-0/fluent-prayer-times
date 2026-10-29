@@ -71,7 +71,7 @@ jobs:
           brought to you by Instinct - https://instinct.com
           '@ | Set-Content publish/SELF-CONTAINED-README.txt -Encoding utf8
           Copy-Item LICENSE publish/LICENSE.txt
-          Compress-Archive -Path publish/* -DestinationPath 'FluentPrayerTimes-v1.3.6-self-contained-portable-win-x64.zip'
+          Compress-Archive -Path publish/* -DestinationPath 'FluentPrayerTimes-v1.3.6-portable-win-x64.zip'
           Copy-Item installer/self-contained.iss self-contained.iss
           & "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" /DAppVersion=1.3.6 self-contained.iss
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
@@ -79,7 +79,7 @@ jobs:
       - name: Capture recovered installer UI
         shell: pwsh
         run: |
-          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -PassThru
           Start-Sleep -Seconds 5
           Add-Type -AssemblyName System.Drawing,System.Windows.Forms
           $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
@@ -92,7 +92,7 @@ jobs:
       - name: Verify installer extraction and installed launch
         shell: pwsh
         run: |
-          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "Installer failed: $($p.ExitCode)" }
           $root = "$env:LOCALAPPDATA/Programs/FluentPrayerTimes-SelfContained"
           if (-not (Test-Path "$root/FluentPrayerTimes.exe")) { throw 'Per-user install missing' }
@@ -110,13 +110,13 @@ jobs:
           $running = Start-Process "$root/FluentPrayerTimes.exe" -PassThru
           Start-Sleep -Seconds 5
           $hash = (Get-FileHash $settings).Hash
-          $p = Start-Process './FluentPrayerTimes-v1.3.6-self-contained-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
+          $p = Start-Process './FluentPrayerTimes-v1.3.6-installer-win-x64.exe' -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "Upgrade failed: $($p.ExitCode)" }
           Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
           if ((Get-FileHash $settings).Hash -ne $hash) { throw 'Upgrade changed settings' }
           $programs = [Environment]::GetFolderPath('Programs')
           $desktop = [Environment]::GetFolderPath('Desktop')
-          foreach ($link in @("$programs/Fluent Prayer Times (Self-contained).lnk","$desktop/Fluent Prayer Times (Self-contained).lnk")) {
+          foreach ($link in @("$programs/Fluent Prayer Times.lnk","$desktop/Fluent Prayer Times.lnk")) {
             if (-not (Test-Path $link)) { throw "Missing shortcut: $link" }
           }
           $p = Start-Process "$root/unins000.exe" -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/LOG=packaging-install.log' -Wait -PassThru
@@ -129,8 +129,8 @@ jobs:
         with:
           name: self-contained-verified
           path: |
-            FluentPrayerTimes-v1.3.6-self-contained-*.zip
-            FluentPrayerTimes-v1.3.6-self-contained-*.exe
+            FluentPrayerTimes-v1.3.6-*.zip
+            FluentPrayerTimes-v1.3.6-*.exe
             app-self-contained.png
             installer-self-contained.png
             dependency-proof.json

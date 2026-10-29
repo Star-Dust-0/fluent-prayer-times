@@ -418,7 +418,7 @@
                                                                     FlowDirection="LeftToRight"
                                                                     HorizontalAlignment="Center"
                                                                     Margin="0,4,0,0" />
-                                                                <HyperlinkButton Content="GitHub Repo Link" NavigateUri="https://github.com/StarsDust01/fluent-prayer-times" FlowDirection="LeftToRight" HorizontalAlignment="Center" />
+                                                                <HyperlinkButton Content="GitHub Repo Link" NavigateUri="https://github.com/Star-Dust-0/fluent-prayer-times" FlowDirection="LeftToRight" HorizontalAlignment="Center" />
                                                             </StackPanel.Children>
                                                         </StackPanel>
                                                     </Border.Child>

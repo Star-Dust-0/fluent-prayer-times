@@ -5,12 +5,12 @@ AppVersion={#AppVersion}
 AppPublisher=Mohamed Elnaggar
 AppPublisherURL=https://instinct.com
 DefaultDirName={localappdata}\Programs\FluentPrayerTimes-SelfContained
-DefaultGroupName=Fluent Prayer Times (Self-contained)
+DefaultGroupName=Fluent Prayer Times
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=out
-OutputBaseFilename=FluentPrayerTimes-v{#AppVersion}-self-contained-installer-win-x64
+OutputBaseFilename=FluentPrayerTimes-v{#AppVersion}-installer-win-x64
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -21,8 +21,8 @@ UninstallDisplayIcon={app}\FluentPrayerTimes.exe
 [Files]
 Source: "publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
-Name: "{autoprograms}\Fluent Prayer Times (Self-contained)"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\Fluent Prayer Times (Self-contained)"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
+Name: "{autoprograms}\Fluent Prayer Times"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
+Name: "{autodesktop}\Fluent Prayer Times"; Filename: "{app}\FluentPrayerTimes.exe"; WorkingDir: "{app}"
 [Run]
 Filename: "{app}\FluentPrayerTimes.exe"; Description: "Launch Fluent Prayer Times"; Flags: nowait postinstall skipifsilent
 [Messages]
