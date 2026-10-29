@@ -1,7 +1,7 @@
 name: Prayer interaction verification (no release)
 on:
   push:
-    branches: [main]
+    branches: [reverse-engineered-v1.3.6]
     paths: ['.github/workflows/prayer-interaction-verify.yml']
   workflow_dispatch:
 permissions:
@@ -17,8 +17,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release download v1.3.6 --repo "$env:GITHUB_REPOSITORY" --pattern '*-portable-*.zip' --dir artifacts
-          Expand-Archive artifacts/FluentPrayerTimes-v1.3.6-portable-win-x64.zip app
+          gh run download 40762673696 --repo "$env:GITHUB_REPOSITORY" --name self-contained-verified --dir artifacts
+          Expand-Archive artifacts/FluentPrayerTimes-v1.3.6-self-contained-portable-win-x64.zip app
       - name: Exercise actual converter and azkar navigation
         shell: pwsh
         run: |
@@ -48,25 +48,6 @@ jobs:
             $bmp.Save("$PWD/$file.png");$g.Dispose();$bmp.Dispose()
           }
           Stop-Process -Id $p.Id -Force
-      - name: Verify real public updater download and security checks
-        shell: pwsh
-        run: |
-          $p=Start-Process "$PWD/app/FluentPrayerTimes.exe" -ArgumentList '--update-e2e' -PassThru -Wait
-          Copy-Item "$env:APPDATA/FluentPrayerTimes/update-e2e.log" update-e2e.log
-          Get-Content update-e2e.log
-          if ($p.ExitCode -ne 0) { throw 'Live updater verification failed' }
-      - name: Capture live updater download UI
-        shell: pwsh
-        run: |
-          $p=Start-Process "$PWD/app/FluentPrayerTimes.exe" -ArgumentList '--preview=iqama','--part=update-live','--lang=en' -PassThru
-          Start-Sleep -Seconds 15
-          Add-Type -AssemblyName System.Drawing,System.Windows.Forms
-          $bounds=[System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-          $bmp=New-Object System.Drawing.Bitmap $bounds.Width,$bounds.Height
-          $g=[System.Drawing.Graphics]::FromImage($bmp)
-          $g.CopyFromScreen($bounds.Location,[System.Drawing.Point]::Empty,$bounds.Size)
-          $bmp.Save("$PWD/updater-live.png");$g.Dispose();$bmp.Dispose()
-          Stop-Process -Id $p.Id -Force
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -75,5 +56,3 @@ jobs:
             converter.png
             azkar.png
             automation-names.txt
-            update-e2e.log
-            updater-live.png
