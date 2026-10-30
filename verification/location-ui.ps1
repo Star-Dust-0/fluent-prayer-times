@@ -45,6 +45,8 @@ foreach ($mode in @('ok','fail')) {
   $cond=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::AutomationIdProperty),'BtnDetect'
   $button=$win.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$cond)
   if (-not $button) { throw 'Detect button not wired/named' }
+  $scroll=$null
+  if ($button.TryGetCurrentPattern([System.Windows.Automation.ScrollItemPattern]::Pattern,[ref]$scroll)) { $scroll.ScrollIntoView(); Start-Sleep 1 }
   $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
   Start-Sleep 32
   $names=Names $p

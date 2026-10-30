@@ -249,7 +249,7 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <Grid.Children>
                                                                         <TextBox x:Name="TxtSearch" PlaceholderText="اسم المنطقة أو المدينة" KeyDown="Search_KeyDown"/>
-                                                                        <Button Grid.Column="1" Content="بحث" />
+                                                                        <Button Grid.Column="1" Content="بحث" Click="Search_Click" />
                                                                     </Grid.Children>
                                                                 </Grid>
                                                                 <ListView x:Name="LstPlaces" MaxHeight="200" Visibility="Collapsed"/>
@@ -264,7 +264,7 @@
                                                                     <StackPanel.Children>
                                                                         <TextBox x:Name="TxtLat" Width="110" PlaceholderText="Latitude" />
                                                                         <TextBox x:Name="TxtLon" Width="110" PlaceholderText="Longitude" />
-                                                                        <Button Content="تطبيق" />
+                                                                        <Button Content="تطبيق" Click="Coords_Click" />
                                                                     </StackPanel.Children>
                                                                 </StackPanel>
                                                             </StackPanel.Children>
