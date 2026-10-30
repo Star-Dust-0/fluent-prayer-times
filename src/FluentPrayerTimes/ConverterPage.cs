@@ -59,7 +59,12 @@ internal sealed class ConverterPage : StackPanel
 
 	public ConverterPage()
 	{
-		base.Spacing = 10.0;
+		ControlIds.Set(_day, "ConverterDay");
+        ControlIds.Set(_month, "ConverterMonth");
+        ControlIds.Set(_year, "ConverterYear");
+        ControlIds.Set(_fromLbl, "ConverterFrom");
+        ControlIds.Set(_res, "ConverterResult");
+        base.Spacing = 10.0;
 		base.Children.Add(new TextBlock
 		{
 			Text = L.T("محول التاريخ"),
@@ -104,7 +109,8 @@ internal sealed class ConverterPage : StackPanel
 			HorizontalAlignment = HorizontalAlignment.Center
 		};
 		ToolTipService.SetToolTip(button, L.T("عكس اتجاه التحويل"));
-		button.Click += delegate
+		ControlIds.Set(button, "ConverterSwap");
+        button.Click += delegate
 		{
 			Swap();
 		};

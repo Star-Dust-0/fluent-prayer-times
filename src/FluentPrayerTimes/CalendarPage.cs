@@ -94,7 +94,10 @@ internal sealed class CalendarPage : StackPanel
 				Glyph = (L.Rtl ? "\ue76b" : "\ue76c")
 			}
 		};
-		button.Click += delegate
+		ControlIds.Set(button, "CalendarPrevious");
+        ControlIds.Set(button2, "CalendarNext");
+        ControlIds.Set(_title, "CalendarTitle");
+        button.Click += delegate
 		{
 			Step(-1);
 		};
@@ -119,7 +122,8 @@ internal sealed class CalendarPage : StackPanel
 			Content = L.T("اليوم"),
 			HorizontalAlignment = HorizontalAlignment.Center
 		};
-		button3.Click += delegate
+		ControlIds.Set(button3, "CalendarToday");
+        button3.Click += delegate
 		{
 			(_y, _m, _) = HijriUtil.ToHijri(DateTime.Today);
 			Render();

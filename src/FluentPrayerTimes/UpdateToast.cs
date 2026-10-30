@@ -174,7 +174,8 @@ internal sealed class UpdateToast : Window
 		{
 			button.Style = (Style)Application.Current.Resources["AccentButtonStyle"];
 		}
-		button.Click += delegate
+		ControlIds.Set(button, "UpdateToastButton" + _btns.Children.Count);
+        button.Click += delegate
 		{
 			click();
 		};

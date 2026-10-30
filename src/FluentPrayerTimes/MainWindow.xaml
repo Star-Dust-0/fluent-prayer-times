@@ -24,34 +24,34 @@
                     OpenPaneLength="200"
                     IsPaneOpen="False">
                     <NavigationView.MenuItems>
-                        <NavigationViewItem Content="المواقيت" Tag="times">
+                        <NavigationViewItem AutomationProperties.AutomationId="Nav_times" Content="المواقيت" Tag="times">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
-                        <NavigationViewItem Content="التقويم الهجري" Tag="calendar">
+                        <NavigationViewItem AutomationProperties.AutomationId="Nav_calendar" Content="التقويم الهجري" Tag="calendar">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
-                        <NavigationViewItem Content="محول التاريخ" Tag="convert">
+                        <NavigationViewItem AutomationProperties.AutomationId="Nav_convert" Content="محول التاريخ" Tag="convert">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
-                        <NavigationViewItem Content="منبه الأذكار" Tag="azkar">
+                        <NavigationViewItem AutomationProperties.AutomationId="Nav_azkar" Content="منبه الأذكار" Tag="azkar">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
                     </NavigationView.MenuItems>
                     <NavigationView.FooterMenuItems>
-                        <NavigationViewItem Content="الإعدادات" Tag="settings">
+                        <NavigationViewItem AutomationProperties.AutomationId="Nav_settings" Content="الإعدادات" Tag="settings">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
-                        <NavigationViewItem Content="عن البرنامج" Tag="about">
+                        <NavigationViewItem AutomationProperties.AutomationId="Nav_about" Content="عن البرنامج" Tag="about">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="" />
                             </NavigationViewItem.Icon>
@@ -249,7 +249,7 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <Grid.Children>
                                                                         <TextBox x:Name="TxtSearch" PlaceholderText="اسم المنطقة أو المدينة" KeyDown="Search_KeyDown"/>
-                                                                        <Button Grid.Column="1" Content="بحث" Click="Search_Click" />
+                                                                        <Button x:Name="BtnSearch" Grid.Column="1" Content="بحث" Click="Search_Click" />
                                                                     </Grid.Children>
                                                                 </Grid>
                                                                 <ListView x:Name="LstPlaces" MaxHeight="200" Visibility="Collapsed"/>
@@ -264,7 +264,7 @@
                                                                     <StackPanel.Children>
                                                                         <TextBox x:Name="TxtLat" Width="110" PlaceholderText="Latitude" />
                                                                         <TextBox x:Name="TxtLon" Width="110" PlaceholderText="Longitude" />
-                                                                        <Button Content="تطبيق" Click="Coords_Click" />
+                                                                        <Button x:Name="BtnCoords" Content="تطبيق" Click="Coords_Click" />
                                                                     </StackPanel.Children>
                                                                 </StackPanel>
                                                             </StackPanel.Children>
@@ -418,7 +418,7 @@
                                                                     FlowDirection="LeftToRight"
                                                                     HorizontalAlignment="Center"
                                                                     Margin="0,4,0,0" />
-                                                                <HyperlinkButton Content="GitHub Repo Link" NavigateUri="https://github.com/Star-Dust-0/fluent-prayer-times" FlowDirection="LeftToRight" HorizontalAlignment="Center" />
+                                                                <HyperlinkButton AutomationProperties.AutomationId="RepoLink" Content="GitHub Repo Link" NavigateUri="https://github.com/Star-Dust-0/fluent-prayer-times" FlowDirection="LeftToRight" HorizontalAlignment="Center" />
                                                             </StackPanel.Children>
                                                         </StackPanel>
                                                     </Border.Child>

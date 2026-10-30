@@ -136,7 +136,8 @@ internal sealed class TrayMenuWindow : Window
 			Height = 36.0,
 			CornerRadius = new CornerRadius(4.0)
 		};
-		button.Click += delegate
+		ControlIds.Set(button, "TrayCommand" + cmd);
+        button.Click += delegate
 		{
 			base.AppWindow.Hide();
 			_onCmd(cmd);

@@ -257,7 +257,9 @@ public sealed partial class MainWindow : Window
 		{
 			Content = L.T("تطبيق")
 		};
-		button.Click += delegate
+		ControlIds.Set(zone, "CalculationZone");
+        ControlIds.Set(button, "CalculationZoneApply");
+        button.Click += delegate
 		{
 			string text2 = zone.Text.Trim();
 			try
@@ -295,7 +297,8 @@ public sealed partial class MainWindow : Window
 			{
 				combo.Items.Add(L.T(ar));
 			}
-			combo.SelectedIndex = selected;
+			ControlIds.Set(combo, "CalculationChoice_" + label);
+            combo.SelectedIndex = selected;
 			combo.SelectionChanged += delegate
 			{
 				if (!_loading && combo.SelectedIndex >= 0)
@@ -326,7 +329,8 @@ public sealed partial class MainWindow : Window
 				Maximum = max,
 				SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Compact
 			};
-			numberBox.ValueChanged += delegate(NumberBox _, NumberBoxValueChangedEventArgs e)
+			ControlIds.Set(numberBox, "CalculationNumber_" + label);
+            numberBox.ValueChanged += delegate(NumberBox _, NumberBoxValueChangedEventArgs e)
 			{
 				if (!_loading && !double.IsNaN(e.NewValue))
 				{
@@ -954,7 +958,8 @@ public sealed partial class MainWindow : Window
 				Background = new SolidColorBrush(color),
 				Tag = color
 			};
-			button.Click += delegate(object a, RoutedEventArgs e)
+			ControlIds.Set(button, "AccentPreset" + num);
+            button.Click += delegate(object a, RoutedEventArgs e)
 			{
 				SetAccent((Color)((Button)a).Tag, save: true);
 			};
@@ -973,7 +978,8 @@ public sealed partial class MainWindow : Window
 			IsHexInputVisible = true,
 			FlowDirection = FlowDirection.LeftToRight
 		};
-		colorPicker.ColorChanged += delegate(ColorPicker s2, ColorChangedEventArgs a2)
+		ControlIds.Set(colorPicker, "AccentColorPicker");
+        colorPicker.ColorChanged += delegate(ColorPicker s2, ColorChangedEventArgs a2)
 		{
 			SetAccent(a2.NewColor, save: true);
 		};
@@ -2160,7 +2166,8 @@ public sealed partial class MainWindow : Window
 				FlowDirection = FlowDirection.LeftToRight,
 				Header = null
 			};
-			numberBox.ValueChanged += delegate(NumberBox s2, NumberBoxValueChangedEventArgs a2)
+			ControlIds.Set(numberBox, "IqamaMinutes" + idx);
+            numberBox.ValueChanged += delegate(NumberBox s2, NumberBoxValueChangedEventArgs a2)
 			{
 				if (!_loading)
 				{
@@ -2277,7 +2284,11 @@ public sealed partial class MainWindow : Window
 			FontSize = 12.0,
 			TextWrapping = TextWrapping.Wrap
 		});
-		cmb.SelectionChanged += delegate
+		ControlIds.Set(cmb, "SoundChoice_" + kind);
+        ControlIds.Set(tgl, "SoundToggle_" + kind);
+        ControlIds.Set(test, "SoundTest_" + kind);
+        ControlIds.Set(note, "SoundNote_" + kind);
+        cmb.SelectionChanged += delegate
 		{
 			if (!_loading && cmb.SelectedIndex >= 0)
 			{

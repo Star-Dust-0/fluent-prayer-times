@@ -34,6 +34,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: ./verification/location-ui.ps1
+      - name: Static binding inventory
+        shell: pwsh
+        run: |
+          python tests/Bindings/inventory.py | Set-Content proof/binding-inventory.json
+          if ($LASTEXITCODE -ne 0) { throw 'Static binding audit failed' }
+      - name: Actual app-wide UI control audit
+        shell: pwsh
+        run: ./verification/control-audit.ps1
       - name: Package three app builds
         shell: pwsh
         run: |

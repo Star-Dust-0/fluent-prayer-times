@@ -67,7 +67,11 @@ internal sealed class AzkarPage : StackPanel
 	{
 		_s = s;
 		_changed = changed;
-		base.Spacing = 10.0;
+		ControlIds.Set(_tgl, "AzkarToggle");
+        ControlIds.Set(_cmb, "AzkarPreset");
+        ControlIds.Set(_custom, "AzkarCustom");
+        ControlIds.Set(_text, "AzkarText");
+        base.Spacing = 10.0;
 		base.Children.Add(new TextBlock
 		{
 			Text = L.T("منبه الأذكار"),
@@ -86,7 +90,8 @@ internal sealed class AzkarPage : StackPanel
 			HorizontalAlignment = HorizontalAlignment.Center,
 			Margin = new Thickness(0.0, 6.0, 0.0, 0.0)
 		};
-		button.Click += delegate
+		ControlIds.Set(button, "AzkarAnother");
+        button.Click += delegate
 		{
 			_cur = AzkarData.Random(_cur);
 			Show();
@@ -131,7 +136,8 @@ internal sealed class AzkarPage : StackPanel
 		{
 			Content = L.T("تطبيق")
 		};
-		button2.Click += delegate
+		ControlIds.Set(button2, "AzkarApply");
+        button2.Click += delegate
 		{
 			ApplyCustom();
 		};
