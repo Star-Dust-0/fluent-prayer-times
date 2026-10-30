@@ -212,10 +212,16 @@ try {
  Tray 1;Record TrayOpen ($null -ne (Find TxtCity)) 'Tray opens prayer page'
  Tray 5;Start-Sleep 5;Record TrayUpdate (Find BtnUpdate).Current.IsEnabled 'Tray update check'
  # Language Apply intentionally restarts; locate replacement process afterwards.
- Invoke BtnApply;Start-Sleep 5
+ $oldPid=$p.Id
+ try { Invoke BtnApply } catch {
+  # UIA can return E_UNEXPECTED when the invoked action intentionally exits its provider.
+  if (Get-Process -Id $oldPid -ErrorAction SilentlyContinue) { throw }
+ }
+ Start-Sleep 5
  $script:p=Get-Process FluentPrayerTimes -ErrorAction Stop | Select-Object -First 1
  Record BtnApply (-not $p.HasExited) 'Apply changes restarted app'
- Tray 3;Start-Sleep 2;Record TrayExit (-not (Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue)) 'Tray exit closes process'
+ try {Tray 3} catch {if(Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue){throw}}
+ Start-Sleep 2;Record TrayExit (-not (Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue)) 'Tray exit closes process'
  'Primary UI control audit passed' | Set-Content proof/control-audit/summary.txt
 } catch {
  Shot audit-failure
