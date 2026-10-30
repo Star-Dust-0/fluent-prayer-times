@@ -56,6 +56,10 @@ jobs:
       - name: Actual app-wide UI control audit
         shell: pwsh
         run: ./verification/control-audit.ps1
+      - name: Countdown surfaces and actual notification gates
+        if: ${{ always() && steps.build.outcome == 'success' }}
+        shell: pwsh
+        run: ./verification/countdown-audit.ps1
       - name: Conditional update controls
         if: ${{ always() && steps.build.outcome == 'success' }}
         shell: pwsh
