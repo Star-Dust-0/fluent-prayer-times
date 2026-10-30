@@ -11,6 +11,10 @@ function Capture($name) {
 }
 function StopApp { Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue|Stop-Process -Force }
 try {
+ # Public-link checks open Edge in the previous step. Close that test browser before
+ # capturing flyouts, which intentionally hide when another window takes focus.
+ Get-Process msedge -ErrorAction SilentlyContinue|Stop-Process -Force
+ Start-Sleep 2
  # Real scheduler Tick with controlled clock; hook changes time only, not notification gates.
  foreach($phase in @('adhan','iqama')) {
   foreach($enabled in @($true,$false)) {
@@ -36,9 +40,11 @@ try {
    $p=Start-Process $exe -ArgumentList "--preview=$phase","--part=$surface",'--lang=en' -PassThru
    Start-Sleep 6
    if($p.HasExited){throw "Phase surface exited $phase $surface"}
-   Capture "$phase-$surface"
    $cond=[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,$p.Id)
-   @([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants,$cond))|ForEach-Object{$_.Current.Name}|Set-Content "proof/countdown/$phase-$surface.txt"
+   $elements=@([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants,$cond))
+   $elements|ForEach-Object{$_.Current.Name}|Set-Content "proof/countdown/$phase-$surface.txt"
+   if ($surface -eq 'main' -and -not ($elements|Where-Object {$_.Current.AutomationId -eq 'TxtNextName' -and -not $_.Current.IsOffscreen})) {throw "Main countdown not visible: $phase"}
+   Capture "$phase-$surface"
    $results.Add([pscustomobject]@{phase=$phase;surface=$surface;passed=$true;proof='Actual surface captured with explicit preview phase. State boundary correctness tested separately.'})
   }
  }
