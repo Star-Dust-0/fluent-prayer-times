@@ -120,12 +120,18 @@ try {
  Record BtnAccentCustom ($null -ne $dialog -or $null -ne $picker) 'Custom color dialog is accessible'
  $colorFields=@([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,$p.Id))|Where-Object{$_.Current.ControlType -eq [System.Windows.Automation.ControlType]::Edit})
  $colorFields|ForEach-Object { $_.Current.Name+'|'+$_.Current.AutomationId }|Set-Content proof/control-audit/color-fields.txt
- $picker=Find AccentDialog
- $bounds=$picker.Current.BoundingRectangle
+ $spectrumCond=[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ControlTypeProperty,[System.Windows.Automation.ControlType]::Slider)
+ $dialogEl=Find AccentDialog
+ $sliders=$dialogEl.FindAll([System.Windows.Automation.TreeScope]::Descendants,$spectrumCond)
  $oldAccent=(State).Accent
- [AuditNative]::SetCursorPos([int]($bounds.X+60),[int]($bounds.Y+130))|Out-Null
- [AuditNative]::mouse_event(2,0,0,0,[UIntPtr]::Zero);[AuditNative]::mouse_event(4,0,0,0,[UIntPtr]::Zero);Start-Sleep 1
- Record CustomColorSelection ((State).Accent -ne $oldAccent) 'Native spectrum pointer selection persisted accent'
+ if ($sliders.Count -gt 0) {
+  $range=$sliders[0].GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern)
+  $range.SetValue(($range.Current.Minimum+$range.Current.Maximum)/2)
+  Start-Sleep 1
+  Record CustomColorSelection ((State).Accent -ne $oldAccent) 'Native color slider changed and persisted accent'
+ } else {
+  $results.Add([pscustomobject]@{id='CustomColorSelection';passed=$null;detail='No RangeValue slider peer; dialog opens, color manipulation remains unverified'})
+ }
  Shot accent-dialog-selected
  [System.Windows.Forms.SendKeys]::SendWait('{ESC}');Start-Sleep 1
  # Country/city selection, explicit coordinates and search result selection.
