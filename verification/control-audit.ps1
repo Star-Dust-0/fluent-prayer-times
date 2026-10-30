@@ -125,7 +125,8 @@ try {
  $sliders=$dialogEl.FindAll([System.Windows.Automation.TreeScope]::Descendants,$spectrumCond)
  $oldAccent=(State).Accent
  if ($sliders.Count -gt 0) {
-  $range=$sliders[0].GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern)
+  $brightness=Find ThirdDimensionSlider
+  $range=$brightness.GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern)
   $range.SetValue(($range.Current.Minimum+$range.Current.Maximum)/2)
   Start-Sleep 1
   Record CustomColorSelection ((State).Accent -ne $oldAccent) 'Native color slider changed and persisted accent'
