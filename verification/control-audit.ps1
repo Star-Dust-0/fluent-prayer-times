@@ -220,7 +220,7 @@ try {
  Start-Sleep 5
  $script:p=Get-Process FluentPrayerTimes -ErrorAction Stop | Select-Object -First 1
  Record BtnApply (-not $p.HasExited) 'Apply changes restarted app'
- try {Tray 3} catch {if(Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue){throw}}
+ try {Tray 3} catch {Start-Sleep 2;if(Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue){throw}}
  Start-Sleep 2;Record TrayExit (-not (Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue)) 'Tray exit closes process'
  'Primary UI control audit passed' | Set-Content proof/control-audit/summary.txt
 } catch {

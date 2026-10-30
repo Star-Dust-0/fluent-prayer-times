@@ -22,7 +22,7 @@ public static class L
 
 	private static readonly string[] Cols = new string[10] { "en", "fr", "de", "es", "tr", "ur", "id", "ru", "pt", "fa" };
 
-	private static readonly List<(WeakReference<DependencyObject> el, string prop, string orig)> Tracked = new List<(WeakReference<DependencyObject>, string, string)>();
+	private static readonly List<(DependencyObject el, string prop, string orig)> Tracked = new List<(DependencyObject, string, string)>();
 
 	private static readonly string[] ArMonths = new string[12]
 	{
@@ -195,11 +195,13 @@ public static class L
     private static void Track(DependencyObject d, string prop, string? orig)
     {
         if (string.IsNullOrEmpty(orig) || !HasArabic(orig)) return;
+        // Keep managed wrappers alive while tracked; WinRT can collect unnamed wrappers
+        // even though their native XAML objects are still in the visual tree.
         // A visual may be reached through more than one content path. Preserve its
         // original source text instead of registering a later translated value.
         foreach (var item in Tracked)
-            if (item.prop == prop && item.el.TryGetTarget(out var target) && ReferenceEquals(target, d)) return;
-        Tracked.Add((new WeakReference<DependencyObject>(d), prop, orig));
+            if (item.prop == prop && ReferenceEquals(item.el, d)) return;
+        Tracked.Add((d, prop, orig));
     }
 
     internal static void WriteDiagnostics()
@@ -208,7 +210,7 @@ public static class L
         {
             var lines = new List<string> { "language=" + Lang };
             foreach (var item in Tracked)
-                if (item.el.TryGetTarget(out var target))
+                if (item.el is DependencyObject target)
                     lines.Add(item.prop + "|" + item.orig + "|expected=" + T(item.orig) + "|actual=" + (target is TextBlock tb ? tb.Text : "[control]"));
             System.IO.File.WriteAllLines(System.IO.Path.Combine(App.AppData, "localization-diagnostics.log"), lines);
         }
@@ -231,10 +233,7 @@ public static class L
 	{
 		foreach (var (weakReference, text, ar) in Tracked)
 		{
-			if (!weakReference.TryGetTarget(out var target))
-			{
-				continue;
-			}
+            var target = weakReference;
 			string text2 = T(ar);
 			DependencyObject dependencyObject = target;
 			if (dependencyObject is Expander expander && text == "ExpanderHeader")

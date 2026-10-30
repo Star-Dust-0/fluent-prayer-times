@@ -3,6 +3,12 @@ using System.Text.Json;
 var output=args.Length>0?args[0]:"calculation-results.json";
 var results=new List<object>();int fails=0;int checks=0;
 void Check(string name,bool ok,object? evidence=null){checks++;if(!ok)fails++;results.Add(new {name,passed=ok,evidence});}
+foreach(var place in new[]{("NewBorg",30.8619,29.5845),("Cairo",30.0444,31.2357)}) {
+ var row=SolarCalc.Compute(new DateTime(2026,10,30),place.Item2,place.Item3,2,5,null,null,1,3);
+ Console.WriteLine(place.Item1+" "+string.Join(" ",Times.Keys.Select(k=>row![k])));
+}
+var borg=SolarCalc.Compute(new DateTime(2026,10,30),30.8619,29.5845,2,5,null,null,1,3)!;
+Check("Original Wathkkir New Borg screenshot 30 Oct 2026",string.Join(" ",Times.Keys.Select(k=>borg[k]))=="04:46 06:14 11:45 14:52 17:16 18:35");
 var s=new Settings();
 var t=new Dictionary<string,string>{{"Fajr","04:00"},{"Sunrise","05:30"},{"Dhuhr","12:00"},{"Asr","15:30"},{"Maghrib","18:00"},{"Isha","19:30"}};
 var day=new DateTime(2026,10,30);
