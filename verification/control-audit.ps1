@@ -203,7 +203,7 @@ try {
  Invoke RepoLink;Record RepoLink $true 'Public project link invoked'
  Invoke CreditLink;Record CreditLink $true 'Public credit link invoked'
  Nav settings
- foreach($i in 0..11) {Choose CmbLang $i;Record "Language-$i" $true "Saved language $((State).Lang)";Shot "language-$i"}
+ foreach($i in 0..11) {Choose CmbLang $i;Record "Language-$i" $true "Saved language $((State).Lang)";Shot "language-$i";Copy-Item "$dir/localization-diagnostics.log" "proof/control-audit/localization-$i.log"}
  Choose CmbLang 2 # English
  # Exercise tray commands through actual native callback and UI buttons, not OnMenu calls.
  Tray 4;CheckState TrayWidget WidgetVisible $true

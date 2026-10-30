@@ -1816,6 +1816,7 @@ public sealed partial class MainWindow : Window
 		BuildIqamaAndSounds();
 		_loading = loading;
 		_widget?.ApplyLang();
+        L.WriteDiagnostics();
 		if (_res != null)
 		{
 			ShowDatesAndCity(_res);

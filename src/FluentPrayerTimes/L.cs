@@ -192,13 +192,28 @@ public static class L
 		}
 	}
 
-	private static void Track(DependencyObject d, string prop, string? orig)
-	{
-		if (!string.IsNullOrEmpty(orig) && HasArabic(orig))
-		{
-			Tracked.Add((new WeakReference<DependencyObject>(d), prop, orig));
-		}
-	}
+    private static void Track(DependencyObject d, string prop, string? orig)
+    {
+        if (string.IsNullOrEmpty(orig) || !HasArabic(orig)) return;
+        // A visual may be reached through more than one content path. Preserve its
+        // original source text instead of registering a later translated value.
+        foreach (var item in Tracked)
+            if (item.prop == prop && item.el.TryGetTarget(out var target) && ReferenceEquals(target, d)) return;
+        Tracked.Add((new WeakReference<DependencyObject>(d), prop, orig));
+    }
+
+    internal static void WriteDiagnostics()
+    {
+        try
+        {
+            var lines = new List<string> { "language=" + Lang };
+            foreach (var item in Tracked)
+                if (item.el.TryGetTarget(out var target))
+                    lines.Add(item.prop + "|" + item.orig + "|expected=" + T(item.orig) + "|actual=" + (target is TextBlock tb ? tb.Text : "[control]"));
+            System.IO.File.WriteAllLines(System.IO.Path.Combine(App.AppData, "localization-diagnostics.log"), lines);
+        }
+        catch { }
+    }
 
 	private static bool HasArabic(string s)
 	{
