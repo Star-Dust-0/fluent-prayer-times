@@ -1,0 +1,64 @@
+name: Verify location hotfix
+on:
+  push:
+    branches: [fix/automatic-location-1.3.7]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Location regression tests
+        shell: pwsh
+        run: |
+          dotnet run --project tests/Location/Location.csproj | Tee-Object location-tests.txt
+          if ($LASTEXITCODE -ne 0) { throw 'Location tests failed' }
+      - name: Build bundled Windows app
+        shell: pwsh
+        run: |
+          msbuild src/FluentPrayerTimes/FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../publish/ /v:minimal
+          if ($LASTEXITCODE -ne 0) { throw 'Publish failed' }
+          $vs = & "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath
+          $crt = Get-ChildItem "$vs/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $crt) { throw 'VC runtime missing' }
+          Copy-Item "$($crt.FullName)/*.dll" publish -Force
+      - name: Self tests and actual location UI
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./verification/location-ui.ps1
+      - name: Package three app builds
+        shell: pwsh
+        run: |
+          Copy-Item LICENSE publish/LICENSE.txt
+          Compress-Archive publish/* FluentPrayerTimes-v1.3.7-portable-win-x64.zip
+          Copy-Item installer/self-contained.iss self-contained.iss
+          & "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" /DAppVersion=1.3.7 self-contained.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Installer failed' }
+          Copy-Item out/*.exe .
+          New-Item full -ItemType Directory | Out-Null
+          Copy-Item publish full/App -Recurse
+          Copy-Item out/*.exe full/
+          Copy-Item LICENSE full/LICENSE.txt
+          Compress-Archive full/* FluentPrayerTimes-v1.3.7-full-win-x64.zip
+      - name: Verify upgrade from published 1.3.6
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./verification/location-upgrade.ps1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: location-hotfix-verified
+          path: |
+            FluentPrayerTimes-v1.3.7-*.zip
+            FluentPrayerTimes-v1.3.7-*.exe
+            proof/**
+            location-tests.txt

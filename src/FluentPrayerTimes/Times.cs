@@ -444,66 +444,40 @@ public static class Times
 		}
 	}
 
-	public static async Task<(Place? p, string how)> Detect()
-	{
-		double lat = 0.0;
-		double lon = 0.0;
-		string how = "";
-		bool ok = false;
-		if (OperatingSystem.IsWindows())
-		{
-			try
-			{
-				ProcessStartInfo startInfo = new ProcessStartInfo("powershell.exe", "-NoProfile -NonInteractive -Command \"" + "Add-Type -AssemblyName System.Device; $w=New-Object System.Device.Location.GeoCoordinateWatcher; $w.Start(); $i=0; while(($w.Status -ne 'Ready') -and ($i -lt 60)){Start-Sleep -Milliseconds 250;$i++}; $l=$w.Position.Location; if($l.IsUnknown){exit 2}; [string]::Format([cultureinfo]::InvariantCulture,'{0},{1}',$l.Latitude,$l.Longitude)".Replace("\"", "\\\"") + "\"")
-				{
-					RedirectStandardOutput = true,
-					UseShellExecute = false,
-					CreateNoWindow = true
-				};
-				using Process pr = Process.Start(startInfo);
-				string outp = await pr.StandardOutput.ReadToEndAsync();
-				await pr.WaitForExitAsync();
-				string[] array = outp.Trim().Split(',');
-				if (pr.ExitCode == 0 && array.Length == 2)
-				{
-					lat = double.Parse(array[0], CultureInfo.InvariantCulture);
-					lon = double.Parse(array[1], CultureInfo.InvariantCulture);
-					how = L.T("نظام الموقع في ويندوز");
-					ok = true;
-				}
-			}
-			catch
-			{
-			}
-		}
-		if (!ok)
-		{
-			try
-			{
-				using JsonDocument jsonDocument = JsonDocument.Parse(await Http.GetStringAsync("https://ipwho.is/"));
-				JsonElement rootElement = jsonDocument.RootElement;
-				if (rootElement.GetProperty("success").GetBoolean())
-				{
-					lat = rootElement.GetProperty("latitude").GetDouble();
-					lon = rootElement.GetProperty("longitude").GetDouble();
-					how = L.T("عنوان IP (تقريبي)");
-					ok = true;
-				}
-			}
-			catch
-			{
-			}
-		}
-		if (!ok)
-		{
-			return (p: null, how: "");
-		}
-		(string, string, string)? tuple = await Reverse(lat, lon);
-		if (!tuple.HasValue)
-		{
-			return (p: new Place("موقعك الحالي", lat, lon, "موقعك الحالي"), how: how);
-		}
-		var (text, country, cc) = tuple.Value;
-		return (p: new Place(text, lat, lon, (text == "") ? "موقعك الحالي" : text, country, cc), how: how);
-	}
+    private static async Task<LocationDetection.Fix?> NativeLocation(System.Threading.CancellationToken cancel)
+    {
+        // Called from the foreground UI thread so Windows can show its native permission prompt.
+        var access = await Windows.Devices.Geolocation.Geolocator.RequestAccessAsync().AsTask(cancel);
+        if (access != Windows.Devices.Geolocation.GeolocationAccessStatus.Allowed) return null;
+        var locator = new Windows.Devices.Geolocation.Geolocator
+        {
+            DesiredAccuracy = Windows.Devices.Geolocation.PositionAccuracy.Default
+        };
+        var position = await locator.GetGeopositionAsync(TimeSpan.FromMinutes(2), TimeSpan.FromSeconds(8)).AsTask(cancel);
+        var point = position.Coordinate.Point.Position;
+        return new LocationDetection.Fix(point.Latitude, point.Longitude);
+    }
+
+    public static async Task<(Place? p, string how)> Detect()
+    {
+        var fix = await LocationDetection.DetectAsync(NativeLocation, Http);
+        if (fix == null) return (null, "");
+        var how = L.T(fix.Source == "windows" ? "نظام الموقع في ويندوز" : "عنوان IP (تقريبي)");
+        // IP responses already include a city/country. Reverse lookup is optional, never a
+        // prerequisite for using valid coordinates, and must not block detection indefinitely.
+        var city = fix.City;
+        var country = fix.Country;
+        var cc = fix.Cc;
+        if (city == "" || cc == "")
+        {
+            try
+            {
+                var name = await Reverse(fix.Lat, fix.Lon).WaitAsync(TimeSpan.FromSeconds(4));
+                if (name.HasValue) (city, country, cc) = name.Value;
+            }
+            catch (Exception e) { LocationDetection.Log("reverse", e.GetType().Name); }
+        }
+        if (city == "") city = L.T("موقعك الحالي");
+        return (new Place(city, fix.Lat, fix.Lon, city, country, cc), how);
+    }
 }

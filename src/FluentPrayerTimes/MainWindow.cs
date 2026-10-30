@@ -484,10 +484,6 @@ public sealed partial class MainWindow : Window
 		ApplyAppearance();
 		Nav.SelectedItem = Nav.MenuItems[0];
 		_loading = false;
-		if (_s.LocationPending && App.Preview == null)
-		{
-			AutoLocateFirstRun();
-		}
 		_menu = new TrayMenuWindow(OnMenu);
 		_tray = new TrayIcon(_hwnd, TrayIconPath(), new(int, string)[5]
 		{
@@ -556,6 +552,10 @@ public sealed partial class MainWindow : Window
 		{
 			ShowFlyout(nearCursor: false);
 		}
+        // Request location only after the window has been constructed and activated.
+        // The old startup path ran before activation, so Windows could not show consent.
+        if (_s.LocationPending && App.Preview == null)
+            DispatcherQueue.TryEnqueue(() => { _ = AutoLocateFirstRun(); });
 		StartUpdateWatch();
 	}
 
@@ -2031,8 +2031,12 @@ public sealed partial class MainWindow : Window
 			_loading = false;
 			LocationChanged();
 		}
-		catch
+		catch (Exception ex)
 		{
+            LocationDetection.Log("startup", ex.GetType().Name);
+            _locateFailed = true;
+            TxtDetect.Text = L.T("تعذّر تحديد الموقع");
+            _ = ReloadAsync();
 		}
 	}
 
