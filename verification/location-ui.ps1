@@ -37,6 +37,25 @@ foreach ($mode in @('ok','fail')) {
   if (($names -join '
 ') -notmatch 'location|Location') { throw 'Failure screen missing location controls' }
  }
+ if ($mode -eq 'fail') {
+  # The actual Detect button must invoke its handler after first-run failure.
+  $root=[System.Windows.Automation.AutomationElement]::RootElement
+  $cond=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::ProcessIdProperty),$p.Id
+  $win=$root.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
+  $cond=New-Object System.Windows.Automation.PropertyCondition ([System.Windows.Automation.AutomationElement]::AutomationIdProperty),'BtnDetect'
+  $button=$win.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$cond)
+  if (-not $button) { throw 'Detect button not wired/named' }
+  $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+  Start-Sleep 32
+  $names=Names $p
+  $names | Set-Content proof/detect-button-names.txt
+  Capture detect-button
+  if (-not (Test-Path "$settings/location.log")) { throw 'Detect button did not run actual provider code' }
+  $s=Get-Content "$settings/settings.json" -Raw | ConvertFrom-Json
+  if ($s.LocationPending) { throw 'Detect button did not save its live detected location' }
+  if (-not $button.Current.IsEnabled) { throw 'Detect button did not recover after completion' }
+  'Real UIAutomation Detect click obtained and saved a location after first-run failure' | Set-Content proof/detect-button-result.txt
+ }
  Stop-Process -Id $p.Id -Force
 }
 # Exercise the real provider path (no location fixture). CI has no GPS; IP fallback is approximate.

@@ -255,7 +255,7 @@
                                                                 <ListView x:Name="LstPlaces" MaxHeight="200" Visibility="Collapsed"/>
                                                                 <StackPanel Orientation="Vertical" Spacing="6" Margin="0,6,0,0">
                                                                     <StackPanel.Children>
-                                                                        <Button Content="تحديد موقعي تلقائيًا" />
+                                                                        <Button x:Name="BtnDetect" Content="تحديد موقعي تلقائيًا" Click="Detect_Click" />
                                                                         <TextBlock x:Name="TxtDetect" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                                                     </StackPanel.Children>
                                                                 </StackPanel>

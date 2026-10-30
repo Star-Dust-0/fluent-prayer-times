@@ -2040,28 +2040,34 @@ public sealed partial class MainWindow : Window
 		}
 	}
 
-	private async void Detect_Click(object sender, RoutedEventArgs e)
-	{
-		TxtDetect.Text = L.T("جار\u064d تحديد موقعك...");
-		var (place, text) = await Times.Detect();
-		if (place == null)
-		{
-			TxtDetect.Text = L.T("تعذ\u0651ر تحديد الموقع");
-			return;
-		}
-		_s.Location = new Loc
-		{
-			Name = place.Name,
-			NameAr = place.Name,
-			Lat = place.Lat,
-			Lon = place.Lon,
-			UseCity = false,
-			CountryAr = place.Country,
-			Cc = place.Cc
-		};
-		TxtDetect.Text = L.T("تم: ") + text;
-		LocationChanged();
-	}
+    private async void Detect_Click(object sender, RoutedEventArgs e)
+    {
+        if (!BtnDetect.IsEnabled) return;
+        BtnDetect.IsEnabled = false;
+        TxtDetect.Text = L.T("جارٍ تحديد موقعك...");
+        try
+        {
+            var (place, text) = await Times.Detect();
+            if (place == null)
+            {
+                TxtDetect.Text = L.T("تعذّر تحديد الموقع");
+                return;
+            }
+            _s.Location = new Loc
+            {
+                Name = place.Name, NameAr = place.Name, Lat = place.Lat, Lon = place.Lon,
+                UseCity = false, CountryAr = place.Country, Cc = place.Cc
+            };
+            TxtDetect.Text = L.T("تم: ") + text;
+            LocationChanged();
+        }
+        catch (Exception ex)
+        {
+            LocationDetection.Log("button", ex.GetType().Name);
+            TxtDetect.Text = L.T("تعذّر تحديد الموقع");
+        }
+        finally { BtnDetect.IsEnabled = true; }
+    }
 
 	private async void Coords_Click(object sender, RoutedEventArgs e)
 	{
