@@ -1,31 +1,13 @@
-# Fluent Prayer Times verification
+# Fluent Prayer Times 1.3.7 verification
 
-Reconstructed from the owner's shipped 1.3.6 application and recovered historical source. The standalone native WinUI 3 source is in `src/FluentPrayerTimes`.
+The Windows audit passed navigation and controls across all pages, location detection, date conversion, language switching, appearance settings, tray actions, widget controls, startup registration, update handling, and settings-preserving upgrades.
 
-## Passed
+- 128 primary UI assertions and 9 conditional update-control assertions passed.
+- 641 calculation, countdown-boundary, and Hijri checks passed. Prayer formulas and Wathkkir rounding are unchanged.
+- Scheduler notification gates and all four countdown phases were checked. Main-window, widget, and hover-card screenshots were inspected.
+- First-run location and the Detect button were exercised. Saved/manual locations were retained.
+- Portable, installer, and full packages include the required runtime files. The installer uses Program Files and offers a desktop shortcut.
 
-- 22,250 differential checks on unmodified Windows assemblies: solar calculation methods, locations, dates, countdown formatting, all-day prayer/iqama states and settings bounds. Zero mismatches or unexpected exceptions.
-- Both original and reconstructed native self-tests passed. Reconstructed suite: 68 PASS results.
-- 64 screen-launch cases across original/rebuilt, Arabic/English, light/dark. Screenshots inspected side by side for main, calendar, settings, calculation, sound picker, About, widget and hover card.
-- Actual Windows navigation to converter and Adhkar pages passed and screenshots were inspected.
-- Standalone source build requires no original binary or source-generation step.
-- Bundled .NET, Windows App SDK and VC runtime verified; native app launches without shared Windows App Runtime.
-- Portable packaging, per-user installation, installed launch, running-app upgrade, Start menu/desktop shortcuts, uninstall and settings retention passed.
+Hardware GPS/Windows consent on an individual PC, audible speaker output, and Windows 11 hardware Mica rendering were not certified by this run. Other-language text is machine-translated. Network location can be approximate, especially with a VPN.
 
-## Intentional differences and fixes
-
-- Repository, About and updater URLs point to StarsDust01/fluent-prayer-times.
-- The generated application PRI is explicitly copied during publish, preventing a startup resource crash.
-- Installer upgrades signal the app's existing Quit event before replacing running files. The recovered original installer failed that test with files in use.
-- Original README wording recovered from historical complete writes and later recorded edits. Lost screenshots are replaced only by fresh screenshots supplied by the owner. The original app icon and audio are preserved.
-
-## Scope limits
-
-This is not a proof of every network response, every Windows version or every interactive path. Anonymous release API access had no latest release to return before publication; live updater download verification must be repeated against the published release.
-
-## Evidence
-
-- Native differential/self-tests and light/dark screens: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40759438806
-- Original packaging plus upgrade fix: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40762673696
-- Actual converter/Adhkar navigation: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40764185902
-- Standalone source build and packaging: https://github.com/StarsDust01/fluent-prayer-times/actions/runs/40764144288
+[Verified Windows run](https://github.com/Star-Dust-0/fluent-prayer-times/actions/runs/41081273842)

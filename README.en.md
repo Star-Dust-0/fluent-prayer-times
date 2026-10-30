@@ -23,7 +23,7 @@ Daily prayer times and the countdown to the next prayer.
 <tr>
 <td align="center" valign="top" width="50%">
 <strong>Azkar reminder</strong><br><br>
-<em>Original screenshot is not currently available.</em><br><br>
+<img src="docs/screenshots/2-azkar.png" alt="azkar" width="280"><br><br>
 The current dhikr and the reminder interval.
 </td>
 <td align="center" valign="top" width="50%">
@@ -40,21 +40,21 @@ Days of the month and Islamic occasions. The month arrows mirror in right-to-lef
 </td>
 <td align="center" valign="top" width="50%">
 <strong>Settings</strong><br><br>
-<em>Original screenshot is not currently available.</em><br><br>
+<img src="docs/screenshots/5-settings.png" alt="settings" width="280"><br><br>
 Language and the Apply changes button, appearance, and accent color.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center">
 <strong>Tray hover card</strong><br><br>
-<em>Original screenshot is not currently available.</em><br><br>
+<img src="docs/screenshots/7-hover.png" alt="hover" width="280"><br><br>
 Time left to the next prayer, with the city and prayer time.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center">
 <strong>Desktop widget</strong><br><br>
-<em>Original screenshot is not currently available.</em><br><br>
+<img src="docs/screenshots/6-widget.png" alt="widget" width="280"><br><br>
 The next prayer name, its time, and the countdown.
 </td>
 </tr>
@@ -92,17 +92,22 @@ The next prayer name, its time, and the countdown.
 
 **Updates and installation**
 - **Automatic update check** at launch and every six hours, with a notification that downloads the installer inside the app, with a progress bar and a cancel button. Installation starts only after you press "Install now". It can be turned off in Settings. A manual check is available in Settings or from the tray menu.
-- **Small update download**: the update uses the small installer (no .NET bundled) instead of the full one.
-- **Modern installer**: an install button, a green progress bar, a done screen, automatic launch after install, and shortcuts on the desktop and in the Start menu.
+- **Modern installer**: an install button, a green progress bar, a done screen, automatic launch after install, an optional desktop shortcut, and a Start menu shortcut.
 - The **About** page shows the actual app version, the app icon, and a **GitHub Repo Link** to the project repository.
 
 ## 📦 Installation
 1. Download `FluentPrayerTimes-vX.Y.Z-installer-win-x64.exe` from the [Releases](../../releases/latest) page and run it.
 2. If SmartScreen appears, click **More info** then **Run anyway** (the app is not code-signed).
 
-A portable build (zip) and a small installer that needs the .NET 8 Desktop Runtime are also on the same page.
+- **Installer**: installs in Program Files, with an optional desktop shortcut.
+- **Portable**: extract the entire ZIP and run `FluentPrayerTimes.exe`. Keep the files together.
+- **Full**: the portable app and installer in one download.
 
-**Requirements:** Windows 10 (1809 or later) / Windows 11, x64, and [Windows App Runtime 1.6](https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe) (installed once; the installer handles it when needed).
+All downloads include the required runtime files. No separate .NET installation is needed.
+
+**Requirements:** Windows 10 (1809 or later) / Windows 11, x64.
+
+Network location is approximate and may reflect your VPN or internet provider. You can select a city or enter coordinates manually.
 
 ## 🕋 Prayer times source
 Times are calculated inside the app, with seconds, for angle-based methods (Egyptian General Authority of Survey, Muslim World League, Karachi, ISNA, Kuwait and custom angles). Prayers are then rounded to the nearest minute and sunrise is rounded down. Other methods, polar places where the sun does not rise or set, the Hijri date and the time zone come from the [Aladhan API](https://aladhan.com/prayer-times-api). The Egyptian General Authority of Survey method is the default in Egypt.

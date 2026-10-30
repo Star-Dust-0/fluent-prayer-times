@@ -23,7 +23,7 @@
 <tr>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>منبه الأذكار</strong><br><br>
-<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+<img src="docs/screenshots/2-azkar.png" alt="azkar" width="280"><br><br>
 عرض الذكر وإعداد فترة التذكير.
 </td>
 <td align="center" valign="top" width="50%" dir="rtl">
@@ -40,21 +40,21 @@
 </td>
 <td align="center" valign="top" width="50%" dir="rtl">
 <strong>الإعدادات</strong><br><br>
-<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+<img src="docs/screenshots/5-settings.png" alt="settings" width="280"><br><br>
 اللغة وزر «تطبيق التغييرات»، والمظهر، ولون التطبيق.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center" dir="rtl">
 <strong>بطاقة التمرير فوق الأيقونة</strong><br><br>
-<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+<img src="docs/screenshots/7-hover.png" alt="hover" width="280"><br><br>
 الوقت المتبقي للصلاة القادمة مع المدينة وموعد الصلاة.
 </td>
 </tr>
 <tr>
 <td colspan="2" align="center" dir="rtl">
 <strong>ويدجت سطح المكتب</strong><br><br>
-<em>الصورة الأصلية غير متاحة حاليًا.</em><br><br>
+<img src="docs/screenshots/6-widget.png" alt="widget" width="280"><br><br>
 اسم الصلاة القادمة وموعدها والعدّاد التنازلي.
 </td>
 </tr>
@@ -92,29 +92,25 @@
 
 **التحديثات والتثبيت**
 - **تحقق تلقائي من التحديثات** عند التشغيل ثم كل ست ساعات، مع إشعار ينزّل المثبّت داخل التطبيق مع شريط تقدّم وزر إلغاء، ولا يبدأ التثبيت إلا بعد ضغطك على «تثبيت الآن». يمكن إيقافه من الإعدادات، والتحقق اليدوي متاح من الإعدادات أو من قائمة الأيقونة.
-- **تحديث بتنزيل صغير**: يُنزَّل المثبّت الصغير (بدون .NET) بدل المثبّت الكامل.
-- **مثبّت بواجهة حديثة**: زر تثبيت، وشريط تقدم أخضر، وشاشة إتمام، وتشغيل تلقائي بعد التثبيت، واختصار على سطح المكتب وفي قائمة ابدأ.
+- **مثبّت بواجهة حديثة**: زر تثبيت، وشريط تقدم أخضر، وشاشة إتمام، وتشغيل تلقائي بعد التثبيت، واختصار اختياري على سطح المكتب واختصار في قائمة ابدأ.
 - صفحة **«عن البرنامج»** تعرض رقم الإصدار الفعلي وأيقونة التطبيق ورابط **GitHub Repo Link** لمستودع المشروع.
 
 ## 📦 التثبيت
 1. نزّل `FluentPrayerTimes-vX.Y.Z-installer-win-x64.exe` من صفحة [Releases](../../releases/latest) وشغّله.
 2. إذا ظهر SmartScreen فاضغط **More info** ثم **Run anyway** (البرنامج غير موقَّع).
 
-نسخة portable (ملف zip) ومثبّت صغير يتطلب .NET 8 Desktop Runtime متاحان أيضًا في الصفحة نفسها.
+- **Installer**: تثبيت في Program Files، مع اختيار إنشاء اختصار على سطح المكتب.
+- **Portable**: فك ضغط الملف كاملًا وشغّل `FluentPrayerTimes.exe`، مع إبقاء الملفات معًا.
+- **Full**: النسخة المحمولة والمثبّت في ملف واحد.
 
-**المتطلبات:** Windows 10 (1809 أو أحدث) / Windows 11، بمعمارية x64، و[Windows App Runtime 1.6](https://aka.ms/windowsappsdk/1.6/latest/windowsappruntimeinstall-x64.exe) (يُثبَّت مرة واحدة، ويتولى المثبّت الأمر عند الحاجة).
+كل النسخ تتضمن ملفات التشغيل المطلوبة، ولا تحتاج لتثبيت .NET منفصلًا.
+
+**المتطلبات:** Windows 10 (1809 أو أحدث) / Windows 11، بمعمارية x64.
+
+تحديد الموقع عبر الإنترنت تقريبي، وقد يتأثر بالـ VPN أو مزود الإنترنت. يمكنك اختيار المدينة أو إدخال الإحداثيات يدويًا.
 
 ## 🕋 مصدر المواقيت
 تُحسب المواقيت داخل البرنامج بالثواني لطرق الحساب القائمة على الزوايا (الهيئة المصرية العامة للمساحة، رابطة العالم الإسلامي، كراتشي، أمريكا الشمالية، الكويت، والزوايا المخصصة)، ثم تُقرَّب الصلوات لأقرب دقيقة ويُقرَّب الشروق لأسفل. باقي الطرق، والأماكن القطبية التي لا تشرق فيها الشمس أو لا تغيب، والتاريخ الهجري والمنطقة الزمنية من [Aladhan API](https://aladhan.com/prayer-times-api). الطريقة الافتراضية في مصر هي الهيئة المصرية العامة للمساحة.
 
 ## 📄 الترخيص
 [MIT](LICENSE) © محمد النجار · brought to you by app.instinct AI
-
-
-## النسخة المستقلة / Self-contained edition
-
-النسخة المستقلة هي النسخة الافتراضية الآن. تتضمن ملفات .NET وWindows App SDK وVisual C++ المطلوبة. اختر الملف الذي يحتوي اسمه على `self-contained`: نسخة محمولة بصيغة ZIP أو مثبت للمستخدم الحالي دون صلاحيات مسؤول. فك ضغط جميع الملفات قبل تشغيل النسخة المحمولة، واحتفظ بها معًا.
-
-تعمل هذه النسخة على Windows 10 الإصدار 1809 أو أحدث وWindows 11 بمعمارية x64. لا يلزم تثبيت Windows App Runtime بشكل منفصل. الإصدارات السابقة محفوظة للأرشفة؛ أُزيلت التنزيلات المعتمدة على بيئة تشغيل خارجية من الإصدار الحالي.
-
-Self-contained is now the default. The portable ZIP and per-user installer bundle .NET, Windows App SDK and VC runtime files. No separate runtime installation is needed. Extract the entire ZIP and keep all files together. Windows 10 1809+ / Windows 11 x64. Older releases remain archived.
