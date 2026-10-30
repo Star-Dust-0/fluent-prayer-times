@@ -46,9 +46,18 @@ jobs:
         run: |
           dotnet run --project tests/Calculation/Calculation.csproj -- proof/calculation-matrix.json
           if ($LASTEXITCODE -ne 0) { throw 'Calculation/state matrix failed' }
+      - name: Live updater integrity, progress and cancellation tests
+        shell: pwsh
+        run: |
+          $p=Start-Process "$PWD/publish/FluentPrayerTimes.exe" -ArgumentList '--update-e2e' -PassThru -Wait
+          Copy-Item "$env:APPDATA/FluentPrayerTimes/update-e2e.log" proof/update-e2e.log
+          if ($p.ExitCode -ne 0) { throw 'Live updater verification failed' }
       - name: Actual app-wide UI control audit
         shell: pwsh
         run: ./verification/control-audit.ps1
+      - name: Conditional update controls
+        shell: pwsh
+        run: ./verification/update-controls.ps1
       - name: Package three app builds
         shell: pwsh
         run: |

@@ -163,6 +163,18 @@ try {
  Toggle TglWidget;CheckState TglWidget WidgetVisible $true
  Toggle BtnPin;CheckState BtnPin WidgetPinned $false
  Toggle BtnPin;CheckState BtnPinAgain WidgetPinned $true;Shot widget
+ $widget=Find BtnPin
+ $windowCond=[System.Windows.Automation.AndCondition]::new([System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,$p.Id),[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::NameProperty,'Fluent Prayer Times Widget'))
+ $widgetWindow=[System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children,$windowCond)
+ $rect=$widgetWindow.Current.BoundingRectangle
+ [AuditNative]::SetCursorPos([int]($rect.X+70),[int]($rect.Y+50))|Out-Null
+ [AuditNative]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
+ [AuditNative]::SetCursorPos([int]($rect.X+200),[int]($rect.Y-100))|Out-Null
+ Start-Sleep -Milliseconds 300
+ [AuditNative]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
+ Start-Sleep 1
+ Record WidgetDrag ((State).WidgetSnap -ge 0 -and (State).WidgetSnap -le 7) 'Pointer drag/release completed and valid snap persisted (position proof screenshot)'
+ Shot widget-dragged
  Invoke BtnHide;CheckState BtnHide WidgetVisible $false
  Invoke BtnUpdate;Start-Sleep 5;Record BtnUpdate (Find BtnUpdate).Current.IsEnabled 'Update check completed and recovered';Shot settings-update
  Nav about;Invoke BtnAboutUpdate;Start-Sleep 5;Record BtnAboutUpdate (Find BtnAboutUpdate).Current.IsEnabled 'About update check completed';Shot about-update
@@ -185,7 +197,8 @@ try {
  Tray 3;Start-Sleep 2;Record TrayExit (-not (Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue)) 'Tray exit closes process'
  'Primary UI control audit passed' | Set-Content proof/control-audit/summary.txt
 } catch {
- Record 'AUDIT-STOPPED' $false $_.Exception.Message
+ $results.Add([pscustomobject]@{id='AUDIT-STOPPED';passed=$false;detail=$_.Exception.Message})
+ throw
 } finally {
  $results | ConvertTo-Json -Depth 5 | Set-Content proof/control-audit/results.json
  Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue | Stop-Process -Force
