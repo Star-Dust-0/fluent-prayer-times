@@ -6,7 +6,7 @@ actions={'Button','HyperlinkButton','ToggleButton','ToggleSwitch','RadioButton',
 events={'Click','Command','Toggled','Checked','SelectionChanged','KeyDown','TextChanged','ValueChanged','Expanded','Collapsed'}
 rows=[]; failures=[]
 for f in root.glob('*.xaml'):
- code=f.with_suffix('.cs').read_text() if f.with_suffix('.cs').exists() else ''
+ code=f.with_suffix('.cs').read_text(encoding="utf-8") if f.with_suffix('.cs').exists() else ''
  for el in E.parse(f).iter():
   tag=el.tag.split('}')[-1]
   if tag not in actions:continue
@@ -24,9 +24,9 @@ for f in root.glob('*.xaml'):
   rows.append(dict(file=f.name,type=tag,id=name,bindings=bound,native=native))
 # Every named event-shaped handler must have a reference beyond its declaration.
 for f in root.glob('*.cs'):
- code=f.read_text()
+ code=f.read_text(encoding="utf-8")
  for handler in re.findall(r'\b(?:void|Task)\s+(\w+_(?:Click|Changed|Toggled|Checked|Selected|KeyDown|PointerPressed|PointerMoved|PointerReleased))\s*\(',code):
-  corpus=code+(f.with_suffix('.xaml').read_text() if f.with_suffix('.xaml').exists() else '')
+  corpus=code+(f.with_suffix('.xaml').read_text(encoding="utf-8") if f.with_suffix('.xaml').exists() else '')
   if len(re.findall(r'\b'+handler+r'\b',corpus))<2:failures.append('Unreferenced '+f.name+':'+handler)
-report={'xaml_controls':len(rows),'controls':rows,'failures':failures,'code_created_files':[f.name for f in root.glob('*.cs') if re.search(r'new (Button|ComboBox|NumberBox|ToggleSwitch|ColorPicker)',f.read_text())]}
-print(json.dumps(report,ensure_ascii=False,indent=2));raise SystemExit(bool(failures))
+report={'xaml_controls':len(rows),'controls':rows,'failures':failures,'code_created_files':[f.name for f in root.glob('*.cs') if re.search(r'new (Button|ComboBox|NumberBox|ToggleSwitch|ColorPicker)',f.read_text(encoding="utf-8"))]}
+print(json.dumps(report,ensure_ascii=True,indent=2));raise SystemExit(bool(failures))
