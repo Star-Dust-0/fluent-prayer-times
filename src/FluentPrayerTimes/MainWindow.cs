@@ -996,13 +996,15 @@ public sealed partial class MainWindow : Window
 			DefaultButton = ContentDialogButton.Close,
 			FlowDirection = L.Flow
 		};
+        ControlIds.Set(contentDialog, "AccentDialog");
 		try
 		{
 			await contentDialog.ShowAsync();
 		}
-		catch
-		{
-		}
+        catch (Exception ex)
+        {
+            LocationDetection.Log("accent-dialog", ex.GetType().Name);
+        }
 	}
 
 	private void AccentReset_Click(object sender, RoutedEventArgs e)

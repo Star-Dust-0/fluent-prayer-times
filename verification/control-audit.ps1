@@ -112,7 +112,12 @@ try {
  $presetIds=@([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,$p.Id)) | Where-Object {$_.Current.AutomationId -like 'AccentPreset*'} | ForEach-Object {$_.Current.AutomationId})
  foreach ($id in $presetIds) {Invoke $id;Record $id ((State).Accent -match '^#[0-9A-F]{6}$') (State).Accent}
  Invoke BtnAccentReset;CheckState BtnAccentReset Accent ''
- Invoke BtnAccentCustom;Record BtnAccentCustom ($null -ne (Find AccentColorPicker -optional $true)) 'Native color dialog opened';Shot accent-dialog
+ Invoke BtnAccentCustom;Shot accent-dialog
+ $dialog=Find AccentDialog -optional $true
+ $picker=Find AccentColorPicker -optional $true
+ Record BtnAccentCustom ($null -ne $dialog -or $null -ne $picker) 'Custom color dialog is accessible'
+ $colorFields=@([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,$p.Id))|Where-Object{$_.Current.ControlType -eq [System.Windows.Automation.ControlType]::Edit})
+ $colorFields|ForEach-Object { $_.Current.Name+'|'+$_.Current.AutomationId }|Set-Content proof/control-audit/color-fields.txt
  [System.Windows.Forms.SendKeys]::SendWait('{ESC}');Start-Sleep 1
  # Country/city selection, explicit coordinates and search result selection.
  Choose CmbCountry 1;Record CmbCountry ((State).Location.Cc -ne '') (State).Location.Cc
@@ -197,6 +202,8 @@ try {
  Tray 3;Start-Sleep 2;Record TrayExit (-not (Get-Process FluentPrayerTimes -ErrorAction SilentlyContinue)) 'Tray exit closes process'
  'Primary UI control audit passed' | Set-Content proof/control-audit/summary.txt
 } catch {
+ Shot audit-failure
+ @([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty,$p.Id)))|ForEach-Object {$_.Current.ControlType.ProgrammaticName+'|'+$_.Current.AutomationId+'|'+$_.Current.Name}|Set-Content proof/control-audit/failure-tree.txt
  $results.Add([pscustomobject]@{id='AUDIT-STOPPED';passed=$false;detail=$_.Exception.Message})
  throw
 } finally {

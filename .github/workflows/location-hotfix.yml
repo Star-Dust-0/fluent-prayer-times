@@ -21,6 +21,7 @@ jobs:
           dotnet run --project tests/Location/Location.csproj | Tee-Object location-tests.txt
           if ($LASTEXITCODE -ne 0) { throw 'Location tests failed' }
       - name: Build bundled Windows app
+        id: build
         shell: pwsh
         run: |
           msbuild src/FluentPrayerTimes/FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../publish/ /v:minimal
@@ -56,6 +57,7 @@ jobs:
         shell: pwsh
         run: ./verification/control-audit.ps1
       - name: Conditional update controls
+        if: ${{ always() && steps.build.outcome == 'success' }}
         shell: pwsh
         run: ./verification/update-controls.ps1
       - name: Package three app builds
