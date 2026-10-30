@@ -6,6 +6,7 @@ internal static class Strings
 {
 	public static readonly Dictionary<string, string[]> Table = new Dictionary<string, string[]>
 	{
+        ["رقم اليوم"] = new string[10] { "Day", "Jour", "Tag", "Día", "Gün", "دن", "Hari", "День", "Dia", "روز" },
 		["تنزيل وتثبيت"] = new string[1] { "Download and install" },
 		["جار\u064d تنزيل التحديث"] = new string[1] { "Downloading update" },
 		["إلغاء"] = new string[1] { "Cancel" },

@@ -25,7 +25,7 @@ internal sealed class ConverterPage : StackPanel
 
 	private readonly NumberBox _day = new NumberBox
 	{
-		Header = L.T("اليوم"),
+		Header = L.T("رقم اليوم"),
 		Minimum = 1.0,
 		Maximum = 31.0,
 		SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Compact,
@@ -153,19 +153,21 @@ internal sealed class ConverterPage : StackPanel
 		if (fromHijri)
 		{
 			var (num, num2, num3) = HijriUtil.ToHijri(date);
+            _year.Minimum = double.MinValue;
+            _year.Maximum = HijriUtil.MaxYear;
+            _year.Minimum = HijriUtil.MinYear;
 			_year.Value = num;
 			_month.SelectedIndex = num2 - 1;
 			_day.Value = num3;
-			_year.Minimum = HijriUtil.MinYear;
-			_year.Maximum = HijriUtil.MaxYear;
 		}
 		else
 		{
+            _year.Maximum = double.MaxValue;
+            _year.Minimum = 1901.0;
+            _year.Maximum = 2076.0;
 			_year.Value = date.Year;
 			_month.SelectedIndex = date.Month - 1;
 			_day.Value = date.Day;
-			_year.Minimum = 1901.0;
-			_year.Maximum = 2076.0;
 		}
 		_busy = false;
 		Convert();

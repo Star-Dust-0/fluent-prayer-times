@@ -96,7 +96,9 @@ try {
  Invoke ConverterSwap;Record ConverterSwap ((Find ConverterFrom).Current.Name -ne $before) 'Conversion direction swapped'
  SetValue ConverterDay 15;SetValue ConverterYear 2027;Choose ConverterMonth 4
  Record ConverterInputs ((Find ConverterResult).Current.Name -notmatch 'incorrect|invalid|--') (Find ConverterResult).Current.Name
+ $gregResult=(Find ConverterResult).Current.Name
  Invoke ConverterSwap;Shot converter-swapped
+ Record ConverterRoundTrip ((Find ConverterResult).Current.Name -match '2027') 'Switching Hijri/Gregorian preserves selected 2027 date instead of clamping to 2076'
  Nav azkar
  $before=(Find AzkarText).Current.Name;Invoke AzkarAnother;Record AzkarAnother ((Find AzkarText).Current.Name -ne $before) 'Dhikr changed'
  Toggle AzkarToggle;CheckState AzkarToggle AzkarOn $true
