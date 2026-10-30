@@ -153,7 +153,8 @@ public static class L
 							}
 							else
 							{
-								Register(expander.Header);
+								Track(expander, "ExpanderHeader", expander.Header as string);
+                                Register(expander.Header);
 								Register(expander.Content);
 							}
 							return;
@@ -221,7 +222,12 @@ public static class L
 			}
 			string text2 = T(ar);
 			DependencyObject dependencyObject = target;
-			if (!(dependencyObject is TextBlock textBlock))
+			if (dependencyObject is Expander expander && text == "ExpanderHeader")
+            {
+                expander.Header = text2;
+                continue;
+            }
+            if (!(dependencyObject is TextBlock textBlock))
 			{
 				if (!(dependencyObject is TextBox textBox))
 				{

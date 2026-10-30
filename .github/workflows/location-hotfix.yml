@@ -39,6 +39,8 @@ jobs:
         run: |
           python tests/Bindings/inventory.py | Set-Content proof/binding-inventory.json
           if ($LASTEXITCODE -ne 0) { throw 'Static binding audit failed' }
+          python tests/Bindings/localization.py | Set-Content proof/localization-inventory.json
+          if ($LASTEXITCODE -ne 0) { throw 'Missing localization keys' }
       - name: Calculation and countdown boundary matrix
         shell: pwsh
         run: |
