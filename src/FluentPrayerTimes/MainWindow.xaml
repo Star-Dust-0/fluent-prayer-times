@@ -412,7 +412,7 @@
                                                                     HorizontalAlignment="Center"
                                                                     TextAlignment="Center"
                                                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <HyperlinkButton
+                                                                <HyperlinkButton AutomationProperties.AutomationId="CreditLink"
                                                                     Content="brought to you by Instinct"
                                                                     NavigateUri="https://instinct.com"
                                                                     FlowDirection="LeftToRight"

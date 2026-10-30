@@ -986,6 +986,7 @@ public sealed partial class MainWindow : Window
 		ContentDialog contentDialog = new ContentDialog
 		{
 			XamlRoot = RootGrid.XamlRoot,
+            RequestedTheme = RootGrid.RequestedTheme,
 			Title = L.T("لون مخصص"),
 			Content = new ScrollViewer
 			{
