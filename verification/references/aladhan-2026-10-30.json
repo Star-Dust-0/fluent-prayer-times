@@ -1,0 +1,1958 @@
+[
+  {
+    "request": {
+      "location": "Cairo",
+      "date": "30-10-2026",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "offset": 2,
+      "method": 1,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:46",
+        "Sunrise": "06:07",
+        "Dhuhr": "11:39",
+        "Asr": "14:47",
+        "Maghrib": "17:10",
+        "Isha": "18:31"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=30.0444&longitude=31.2357&method=1&school=0&latitudeAdjustmentMethod=3&timezonestring=Africa%2FCairo",
+    "reference": {
+      "Fajr": "04:46",
+      "Sunrise": "06:07",
+      "Dhuhr": "11:39",
+      "Asr": "14:47",
+      "Sunset": "17:10",
+      "Maghrib": "17:10",
+      "Isha": "18:31",
+      "Imsak": "04:36",
+      "Midnight": "23:39",
+      "Firstthird": "21:29",
+      "Lastthird": "01:48"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": 0,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 30.0444,
+      "longitude": 31.2357,
+      "timezone": "Africa/Cairo",
+      "method": {
+        "id": 1,
+        "name": "University of Islamic Sciences, Karachi",
+        "params": {
+          "Fajr": 18,
+          "Isha": 18
+        },
+        "location": {
+          "latitude": 24.8614622,
+          "longitude": 67.0099388
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "Cairo",
+      "date": "30-10-2026",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "offset": 2,
+      "method": 2,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "05:00",
+        "Sunrise": "06:07",
+        "Dhuhr": "11:39",
+        "Asr": "14:47",
+        "Maghrib": "17:10",
+        "Isha": "18:17"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=30.0444&longitude=31.2357&method=2&school=0&latitudeAdjustmentMethod=3&timezonestring=Africa%2FCairo",
+    "reference": {
+      "Fajr": "05:00",
+      "Sunrise": "06:07",
+      "Dhuhr": "11:39",
+      "Asr": "14:48",
+      "Sunset": "17:10",
+      "Maghrib": "17:10",
+      "Isha": "18:17",
+      "Imsak": "04:50",
+      "Midnight": "23:39",
+      "Firstthird": "21:29",
+      "Lastthird": "01:48"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": 0,
+      "Dhuhr": 0,
+      "Asr": -1,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 30.0444,
+      "longitude": 31.2357,
+      "timezone": "Africa/Cairo",
+      "method": {
+        "id": 2,
+        "name": "Islamic Society of North America (ISNA)",
+        "params": {
+          "Fajr": 15,
+          "Isha": 15
+        },
+        "location": {
+          "latitude": 39.70421229999999,
+          "longitude": -86.39943869999999
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "Cairo",
+      "date": "30-10-2026",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "offset": 2,
+      "method": 3,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:46",
+        "Sunrise": "06:07",
+        "Dhuhr": "11:39",
+        "Asr": "14:47",
+        "Maghrib": "17:10",
+        "Isha": "18:26"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=30.0444&longitude=31.2357&method=3&school=0&latitudeAdjustmentMethod=3&timezonestring=Africa%2FCairo",
+    "reference": {
+      "Fajr": "04:46",
+      "Sunrise": "06:07",
+      "Dhuhr": "11:39",
+      "Asr": "14:48",
+      "Sunset": "17:10",
+      "Maghrib": "17:10",
+      "Isha": "18:26",
+      "Imsak": "04:36",
+      "Midnight": "23:39",
+      "Firstthird": "21:29",
+      "Lastthird": "01:48"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": 0,
+      "Dhuhr": 0,
+      "Asr": -1,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 30.0444,
+      "longitude": 31.2357,
+      "timezone": "Africa/Cairo",
+      "method": {
+        "id": 3,
+        "name": "Muslim World League",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17
+        },
+        "location": {
+          "latitude": 51.5194682,
+          "longitude": -0.1360365
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "Cairo",
+      "date": "30-10-2026",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "offset": 2,
+      "method": 5,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:39",
+        "Sunrise": "06:07",
+        "Dhuhr": "11:39",
+        "Asr": "14:47",
+        "Maghrib": "17:10",
+        "Isha": "18:29"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=30.0444&longitude=31.2357&method=5&school=0&latitudeAdjustmentMethod=3&timezonestring=Africa%2FCairo",
+    "reference": {
+      "Fajr": "04:40",
+      "Sunrise": "06:07",
+      "Dhuhr": "11:39",
+      "Asr": "14:48",
+      "Sunset": "17:10",
+      "Maghrib": "17:10",
+      "Isha": "18:28",
+      "Imsak": "04:30",
+      "Midnight": "23:39",
+      "Firstthird": "21:29",
+      "Lastthird": "01:48"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": 0,
+      "Dhuhr": 0,
+      "Asr": -1,
+      "Maghrib": 0,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 30.0444,
+      "longitude": 31.2357,
+      "timezone": "Africa/Cairo",
+      "method": {
+        "id": 5,
+        "name": "Egyptian General Authority of Survey",
+        "params": {
+          "Fajr": 19.5,
+          "Isha": 17.5
+        },
+        "location": {
+          "latitude": 30.0444196,
+          "longitude": 31.2357116
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "Cairo",
+      "date": "30-10-2026",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "offset": 2,
+      "method": 9,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:46",
+        "Sunrise": "06:07",
+        "Dhuhr": "11:39",
+        "Asr": "14:47",
+        "Maghrib": "17:10",
+        "Isha": "18:29"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=30.0444&longitude=31.2357&method=9&school=0&latitudeAdjustmentMethod=3&timezonestring=Africa%2FCairo",
+    "reference": {
+      "Fajr": "04:46",
+      "Sunrise": "06:07",
+      "Dhuhr": "11:39",
+      "Asr": "14:47",
+      "Sunset": "17:10",
+      "Maghrib": "17:10",
+      "Isha": "18:28",
+      "Imsak": "04:36",
+      "Midnight": "23:39",
+      "Firstthird": "21:29",
+      "Lastthird": "01:48"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": 0,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 30.0444,
+      "longitude": 31.2357,
+      "timezone": "Africa/Cairo",
+      "method": {
+        "id": 9,
+        "name": "Kuwait",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17.5
+        },
+        "location": {
+          "latitude": 29.375859,
+          "longitude": 47.9774052
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "NewYork",
+      "date": "30-10-2026",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "offset": -4,
+      "method": 1,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "05:51",
+        "Sunrise": "07:23",
+        "Dhuhr": "12:40",
+        "Asr": "15:31",
+        "Maghrib": "17:56",
+        "Isha": "19:28"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=40.7128&longitude=-74.006&method=1&school=0&latitudeAdjustmentMethod=3&timezonestring=America%2FNew_York",
+    "reference": {
+      "Fajr": "05:52",
+      "Sunrise": "07:24",
+      "Dhuhr": "12:40",
+      "Asr": "15:31",
+      "Sunset": "17:55",
+      "Maghrib": "17:55",
+      "Isha": "19:27",
+      "Imsak": "05:42",
+      "Midnight": "00:39",
+      "Firstthird": "22:24",
+      "Lastthird": "02:54"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 1,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "timezone": "America/New_York",
+      "method": {
+        "id": 1,
+        "name": "University of Islamic Sciences, Karachi",
+        "params": {
+          "Fajr": 18,
+          "Isha": 18
+        },
+        "location": {
+          "latitude": 24.8614622,
+          "longitude": 67.0099388
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "NewYork",
+      "date": "30-10-2026",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "offset": -4,
+      "method": 2,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "06:07",
+        "Sunrise": "07:23",
+        "Dhuhr": "12:40",
+        "Asr": "15:31",
+        "Maghrib": "17:56",
+        "Isha": "19:12"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=40.7128&longitude=-74.006&method=2&school=0&latitudeAdjustmentMethod=3&timezonestring=America%2FNew_York",
+    "reference": {
+      "Fajr": "06:08",
+      "Sunrise": "07:24",
+      "Dhuhr": "12:40",
+      "Asr": "15:32",
+      "Sunset": "17:55",
+      "Maghrib": "17:55",
+      "Isha": "19:11",
+      "Imsak": "05:58",
+      "Midnight": "00:39",
+      "Firstthird": "22:24",
+      "Lastthird": "02:54"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": -1,
+      "Maghrib": 1,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "timezone": "America/New_York",
+      "method": {
+        "id": 2,
+        "name": "Islamic Society of North America (ISNA)",
+        "params": {
+          "Fajr": 15,
+          "Isha": 15
+        },
+        "location": {
+          "latitude": 39.70421229999999,
+          "longitude": -86.39943869999999
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "NewYork",
+      "date": "30-10-2026",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "offset": -4,
+      "method": 3,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "05:51",
+        "Sunrise": "07:23",
+        "Dhuhr": "12:40",
+        "Asr": "15:31",
+        "Maghrib": "17:56",
+        "Isha": "19:23"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=40.7128&longitude=-74.006&method=3&school=0&latitudeAdjustmentMethod=3&timezonestring=America%2FNew_York",
+    "reference": {
+      "Fajr": "05:52",
+      "Sunrise": "07:24",
+      "Dhuhr": "12:40",
+      "Asr": "15:32",
+      "Sunset": "17:55",
+      "Maghrib": "17:55",
+      "Isha": "19:22",
+      "Imsak": "05:42",
+      "Midnight": "00:39",
+      "Firstthird": "22:24",
+      "Lastthird": "02:54"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": -1,
+      "Maghrib": 1,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "timezone": "America/New_York",
+      "method": {
+        "id": 3,
+        "name": "Muslim World League",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17
+        },
+        "location": {
+          "latitude": 51.5194682,
+          "longitude": -0.1360365
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "NewYork",
+      "date": "30-10-2026",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "offset": -4,
+      "method": 5,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "05:43",
+        "Sunrise": "07:23",
+        "Dhuhr": "12:40",
+        "Asr": "15:31",
+        "Maghrib": "17:56",
+        "Isha": "19:25"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=40.7128&longitude=-74.006&method=5&school=0&latitudeAdjustmentMethod=3&timezonestring=America%2FNew_York",
+    "reference": {
+      "Fajr": "05:44",
+      "Sunrise": "07:24",
+      "Dhuhr": "12:40",
+      "Asr": "15:31",
+      "Sunset": "17:55",
+      "Maghrib": "17:55",
+      "Isha": "19:24",
+      "Imsak": "05:34",
+      "Midnight": "00:39",
+      "Firstthird": "22:24",
+      "Lastthird": "02:54"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 1,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "timezone": "America/New_York",
+      "method": {
+        "id": 5,
+        "name": "Egyptian General Authority of Survey",
+        "params": {
+          "Fajr": 19.5,
+          "Isha": 17.5
+        },
+        "location": {
+          "latitude": 30.0444196,
+          "longitude": 31.2357116
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "NewYork",
+      "date": "30-10-2026",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "offset": -4,
+      "method": 9,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "05:51",
+        "Sunrise": "07:23",
+        "Dhuhr": "12:40",
+        "Asr": "15:31",
+        "Maghrib": "17:56",
+        "Isha": "19:25"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=40.7128&longitude=-74.006&method=9&school=0&latitudeAdjustmentMethod=3&timezonestring=America%2FNew_York",
+    "reference": {
+      "Fajr": "05:52",
+      "Sunrise": "07:24",
+      "Dhuhr": "12:40",
+      "Asr": "15:31",
+      "Sunset": "17:55",
+      "Maghrib": "17:55",
+      "Isha": "19:24",
+      "Imsak": "05:42",
+      "Midnight": "00:39",
+      "Firstthird": "22:24",
+      "Lastthird": "02:54"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 1,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "timezone": "America/New_York",
+      "method": {
+        "id": 9,
+        "name": "Kuwait",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17.5
+        },
+        "location": {
+          "latitude": 29.375859,
+          "longitude": 47.9774052
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "London",
+      "date": "30-10-2026",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "offset": 0,
+      "method": 1,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:57",
+        "Sunrise": "06:49",
+        "Dhuhr": "11:44",
+        "Asr": "14:10",
+        "Maghrib": "16:39",
+        "Isha": "18:31"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=51.5074&longitude=-0.1278&method=1&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FLondon",
+    "reference": {
+      "Fajr": "04:57",
+      "Sunrise": "06:50",
+      "Dhuhr": "11:44",
+      "Asr": "14:10",
+      "Sunset": "16:37",
+      "Maghrib": "16:37",
+      "Isha": "18:30",
+      "Imsak": "04:47",
+      "Midnight": "23:44",
+      "Firstthird": "21:22",
+      "Lastthird": "02:06"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 2,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 51.5074,
+      "longitude": -0.1278,
+      "timezone": "Europe/London",
+      "method": {
+        "id": 1,
+        "name": "University of Islamic Sciences, Karachi",
+        "params": {
+          "Fajr": 18,
+          "Isha": 18
+        },
+        "location": {
+          "latitude": 24.8614622,
+          "longitude": 67.0099388
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "London",
+      "date": "30-10-2026",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "offset": 0,
+      "method": 2,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "05:16",
+        "Sunrise": "06:49",
+        "Dhuhr": "11:44",
+        "Asr": "14:10",
+        "Maghrib": "16:39",
+        "Isha": "18:12"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=51.5074&longitude=-0.1278&method=2&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FLondon",
+    "reference": {
+      "Fajr": "05:17",
+      "Sunrise": "06:50",
+      "Dhuhr": "11:44",
+      "Asr": "14:10",
+      "Sunset": "16:37",
+      "Maghrib": "16:37",
+      "Isha": "18:11",
+      "Imsak": "05:07",
+      "Midnight": "23:44",
+      "Firstthird": "21:22",
+      "Lastthird": "02:06"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 2,
+      "Isha": 1
+    },
+    "hijri": {
+      "date": "19-05-1448",
+      "format": "DD-MM-YYYY",
+      "day": "19",
+      "weekday": {
+        "en": "Al Juma'a",
+        "ar": "الجمعة"
+      },
+      "month": {
+        "number": 5,
+        "en": "Jumādá al-ūlá",
+        "ar": "جُمادى الأولى",
+        "days": 30
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 51.5074,
+      "longitude": -0.1278,
+      "timezone": "Europe/London",
+      "method": {
+        "id": 2,
+        "name": "Islamic Society of North America (ISNA)",
+        "params": {
+          "Fajr": 15,
+          "Isha": 15
+        },
+        "location": {
+          "latitude": 39.70421229999999,
+          "longitude": -86.39943869999999
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "London",
+      "date": "30-10-2026",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "offset": 0,
+      "method": 3,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:57",
+        "Sunrise": "06:49",
+        "Dhuhr": "11:44",
+        "Asr": "14:10",
+        "Maghrib": "16:39",
+        "Isha": "18:25"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=51.5074&longitude=-0.1278&method=3&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FLondon",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "London",
+      "date": "30-10-2026",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "offset": 0,
+      "method": 5,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:47",
+        "Sunrise": "06:49",
+        "Dhuhr": "11:44",
+        "Asr": "14:10",
+        "Maghrib": "16:39",
+        "Isha": "18:28"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=51.5074&longitude=-0.1278&method=5&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FLondon",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "London",
+      "date": "30-10-2026",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "offset": 0,
+      "method": 9,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:57",
+        "Sunrise": "06:49",
+        "Dhuhr": "11:44",
+        "Asr": "14:10",
+        "Maghrib": "16:39",
+        "Isha": "18:28"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=51.5074&longitude=-0.1278&method=9&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FLondon",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "Sydney",
+      "date": "30-10-2026",
+      "lat": -33.8688,
+      "lon": 151.2093,
+      "offset": 11,
+      "method": 1,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:26",
+        "Sunrise": "05:56",
+        "Dhuhr": "12:39",
+        "Asr": "16:20",
+        "Maghrib": "19:21",
+        "Isha": "20:51"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=-33.8688&longitude=151.2093&method=1&school=0&latitudeAdjustmentMethod=3&timezonestring=Australia%2FSydney",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "Sydney",
+      "date": "30-10-2026",
+      "lat": -33.8688,
+      "lon": 151.2093,
+      "offset": 11,
+      "method": 2,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:43",
+        "Sunrise": "05:56",
+        "Dhuhr": "12:39",
+        "Asr": "16:20",
+        "Maghrib": "19:21",
+        "Isha": "20:35"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=-33.8688&longitude=151.2093&method=2&school=0&latitudeAdjustmentMethod=3&timezonestring=Australia%2FSydney",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "Sydney",
+      "date": "30-10-2026",
+      "lat": -33.8688,
+      "lon": 151.2093,
+      "offset": 11,
+      "method": 3,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:26",
+        "Sunrise": "05:56",
+        "Dhuhr": "12:39",
+        "Asr": "16:20",
+        "Maghrib": "19:21",
+        "Isha": "20:46"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=-33.8688&longitude=151.2093&method=3&school=0&latitudeAdjustmentMethod=3&timezonestring=Australia%2FSydney",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "Sydney",
+      "date": "30-10-2026",
+      "lat": -33.8688,
+      "lon": 151.2093,
+      "offset": 11,
+      "method": 5,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:18",
+        "Sunrise": "05:56",
+        "Dhuhr": "12:39",
+        "Asr": "16:20",
+        "Maghrib": "19:21",
+        "Isha": "20:49"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=-33.8688&longitude=151.2093&method=5&school=0&latitudeAdjustmentMethod=3&timezonestring=Australia%2FSydney",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "Sydney",
+      "date": "30-10-2026",
+      "lat": -33.8688,
+      "lon": 151.2093,
+      "offset": 11,
+      "method": 9,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "04:26",
+        "Sunrise": "05:56",
+        "Dhuhr": "12:39",
+        "Asr": "16:20",
+        "Maghrib": "19:21",
+        "Isha": "20:49"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/30-10-2026?latitude=-33.8688&longitude=151.2093&method=9&school=0&latitudeAdjustmentMethod=3&timezonestring=Australia%2FSydney",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 1,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "02:21",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "18:00",
+        "Maghrib": "22:44",
+        "Isha": "00:17"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=1&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FOslo",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 2,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "02:36",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "18:00",
+        "Maghrib": "22:44",
+        "Isha": "00:01"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=2&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FOslo",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 3,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "02:21",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "18:00",
+        "Maghrib": "22:44",
+        "Isha": "00:12"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=3&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FOslo",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 3,
+      "school": 2,
+      "high": 0,
+      "timings": null
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=3&school=1&latitudeAdjustmentMethod=0&timezonestring=Europe%2FOslo",
+    "reference": {
+      "Fajr": "01:19",
+      "Sunrise": "03:54",
+      "Dhuhr": "13:19",
+      "Asr": "19:19",
+      "Sunset": "22:44",
+      "Maghrib": "22:44",
+      "Isha": "01:19",
+      "Imsak": "01:09",
+      "Midnight": "01:19",
+      "Firstthird": "00:27",
+      "Lastthird": "02:10"
+    },
+    "differencesMinutes": {},
+    "hijri": {
+      "date": "06-01-1448",
+      "format": "DD-MM-YYYY",
+      "day": "6",
+      "weekday": {
+        "en": "Al Ahad",
+        "ar": "الاحد"
+      },
+      "month": {
+        "number": 1,
+        "en": "Muḥarram",
+        "ar": "مُحَرَّم",
+        "days": 29
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 59.9139,
+      "longitude": 10.7522,
+      "timezone": "Europe/Oslo",
+      "method": {
+        "id": 3,
+        "name": "Muslim World League",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17
+        },
+        "location": {
+          "latitude": 51.5194682,
+          "longitude": -0.1360365
+        }
+      },
+      "latitudeAdjustmentMethod": "NONE",
+      "midnightMode": "STANDARD",
+      "school": "HANAFI",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 3,
+      "school": 2,
+      "high": 1,
+      "timings": {
+        "Fajr": "01:19",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "19:19",
+        "Maghrib": "22:44",
+        "Isha": "01:19"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=3&school=1&latitudeAdjustmentMethod=1&timezonestring=Europe%2FOslo",
+    "reference": {
+      "Fajr": "01:19",
+      "Sunrise": "03:54",
+      "Dhuhr": "13:19",
+      "Asr": "19:19",
+      "Sunset": "22:44",
+      "Maghrib": "22:44",
+      "Isha": "01:19",
+      "Imsak": "01:09",
+      "Midnight": "01:19",
+      "Firstthird": "00:27",
+      "Lastthird": "02:10"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "06-01-1448",
+      "format": "DD-MM-YYYY",
+      "day": "6",
+      "weekday": {
+        "en": "Al Ahad",
+        "ar": "الاحد"
+      },
+      "month": {
+        "number": 1,
+        "en": "Muḥarram",
+        "ar": "مُحَرَّم",
+        "days": 29
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 59.9139,
+      "longitude": 10.7522,
+      "timezone": "Europe/Oslo",
+      "method": {
+        "id": 3,
+        "name": "Muslim World League",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17
+        },
+        "location": {
+          "latitude": 51.5194682,
+          "longitude": -0.1360365
+        }
+      },
+      "latitudeAdjustmentMethod": "MIDDLE_OF_THE_NIGHT",
+      "midnightMode": "STANDARD",
+      "school": "HANAFI",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 3,
+      "school": 2,
+      "high": 2,
+      "timings": {
+        "Fajr": "03:09",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "19:19",
+        "Maghrib": "22:44",
+        "Isha": "23:28"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=3&school=1&latitudeAdjustmentMethod=2&timezonestring=Europe%2FOslo",
+    "reference": {
+      "Fajr": "03:10",
+      "Sunrise": "03:54",
+      "Dhuhr": "13:19",
+      "Asr": "19:19",
+      "Sunset": "22:44",
+      "Maghrib": "22:44",
+      "Isha": "23:28",
+      "Imsak": "03:00",
+      "Midnight": "01:19",
+      "Firstthird": "00:27",
+      "Lastthird": "02:10"
+    },
+    "differencesMinutes": {
+      "Fajr": -1,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "06-01-1448",
+      "format": "DD-MM-YYYY",
+      "day": "6",
+      "weekday": {
+        "en": "Al Ahad",
+        "ar": "الاحد"
+      },
+      "month": {
+        "number": 1,
+        "en": "Muḥarram",
+        "ar": "مُحَرَّم",
+        "days": 29
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 59.9139,
+      "longitude": 10.7522,
+      "timezone": "Europe/Oslo",
+      "method": {
+        "id": 3,
+        "name": "Muslim World League",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17
+        },
+        "location": {
+          "latitude": 51.5194682,
+          "longitude": -0.1360365
+        }
+      },
+      "latitudeAdjustmentMethod": "ONE_SEVENTH",
+      "midnightMode": "STANDARD",
+      "school": "HANAFI",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 3,
+      "school": 2,
+      "high": 3,
+      "timings": {
+        "Fajr": "02:21",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "19:19",
+        "Maghrib": "22:44",
+        "Isha": "00:12"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=3&school=1&latitudeAdjustmentMethod=3&timezonestring=Europe%2FOslo",
+    "reference": {
+      "Fajr": "02:21",
+      "Sunrise": "03:54",
+      "Dhuhr": "13:19",
+      "Asr": "19:19",
+      "Sunset": "22:44",
+      "Maghrib": "22:44",
+      "Isha": "00:12",
+      "Imsak": "02:11",
+      "Midnight": "01:19",
+      "Firstthird": "00:27",
+      "Lastthird": "02:10"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "06-01-1448",
+      "format": "DD-MM-YYYY",
+      "day": "6",
+      "weekday": {
+        "en": "Al Ahad",
+        "ar": "الاحد"
+      },
+      "month": {
+        "number": 1,
+        "en": "Muḥarram",
+        "ar": "مُحَرَّم",
+        "days": 29
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 59.9139,
+      "longitude": 10.7522,
+      "timezone": "Europe/Oslo",
+      "method": {
+        "id": 3,
+        "name": "Muslim World League",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17
+        },
+        "location": {
+          "latitude": 51.5194682,
+          "longitude": -0.1360365
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "HANAFI",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 5,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "02:13",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "18:00",
+        "Maghrib": "22:44",
+        "Isha": "00:14"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=5&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FOslo",
+    "reference": {
+      "Fajr": "02:13",
+      "Sunrise": "03:54",
+      "Dhuhr": "13:19",
+      "Asr": "18:00",
+      "Sunset": "22:44",
+      "Maghrib": "22:44",
+      "Isha": "00:14",
+      "Imsak": "02:03",
+      "Midnight": "01:19",
+      "Firstthird": "00:27",
+      "Lastthird": "02:10"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "06-01-1448",
+      "format": "DD-MM-YYYY",
+      "day": "6",
+      "weekday": {
+        "en": "Al Ahad",
+        "ar": "الاحد"
+      },
+      "month": {
+        "number": 1,
+        "en": "Muḥarram",
+        "ar": "مُحَرَّم",
+        "days": 29
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 59.9139,
+      "longitude": 10.7522,
+      "timezone": "Europe/Oslo",
+      "method": {
+        "id": 5,
+        "name": "Egyptian General Authority of Survey",
+        "params": {
+          "Fajr": 19.5,
+          "Isha": 17.5
+        },
+        "location": {
+          "latitude": 30.0444196,
+          "longitude": 31.2357116
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  },
+  {
+    "request": {
+      "location": "OsloSummer",
+      "date": "21-06-2026",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "offset": 2,
+      "method": 9,
+      "school": 1,
+      "high": 3,
+      "timings": {
+        "Fajr": "02:21",
+        "Sunrise": "03:53",
+        "Dhuhr": "13:19",
+        "Asr": "18:00",
+        "Maghrib": "22:44",
+        "Isha": "00:14"
+      }
+    },
+    "url": "https://api.aladhan.com/v1/timings/21-06-2026?latitude=59.9139&longitude=10.7522&method=9&school=0&latitudeAdjustmentMethod=3&timezonestring=Europe%2FOslo",
+    "reference": {
+      "Fajr": "02:21",
+      "Sunrise": "03:54",
+      "Dhuhr": "13:19",
+      "Asr": "18:00",
+      "Sunset": "22:44",
+      "Maghrib": "22:44",
+      "Isha": "00:14",
+      "Imsak": "02:11",
+      "Midnight": "01:19",
+      "Firstthird": "00:27",
+      "Lastthird": "02:10"
+    },
+    "differencesMinutes": {
+      "Fajr": 0,
+      "Sunrise": -1,
+      "Dhuhr": 0,
+      "Asr": 0,
+      "Maghrib": 0,
+      "Isha": 0
+    },
+    "hijri": {
+      "date": "06-01-1448",
+      "format": "DD-MM-YYYY",
+      "day": "6",
+      "weekday": {
+        "en": "Al Ahad",
+        "ar": "الاحد"
+      },
+      "month": {
+        "number": 1,
+        "en": "Muḥarram",
+        "ar": "مُحَرَّم",
+        "days": 29
+      },
+      "year": "1448",
+      "designation": {
+        "abbreviated": "AH",
+        "expanded": "Anno Hegirae"
+      },
+      "holidays": [],
+      "adjustedHolidays": [],
+      "method": "HJCoSA"
+    },
+    "meta": {
+      "latitude": 59.9139,
+      "longitude": 10.7522,
+      "timezone": "Europe/Oslo",
+      "method": {
+        "id": 9,
+        "name": "Kuwait",
+        "params": {
+          "Fajr": 18,
+          "Isha": 17.5
+        },
+        "location": {
+          "latitude": 29.375859,
+          "longitude": 47.9774052
+        }
+      },
+      "latitudeAdjustmentMethod": "ANGLE_BASED",
+      "midnightMode": "STANDARD",
+      "school": "STANDARD",
+      "offset": {
+        "Imsak": 0,
+        "Fajr": 0,
+        "Sunrise": 0,
+        "Dhuhr": 0,
+        "Asr": 0,
+        "Maghrib": 0,
+        "Sunset": 0,
+        "Isha": 0,
+        "Midnight": 0
+      }
+    }
+  }
+]

@@ -39,6 +39,11 @@ jobs:
         run: |
           python tests/Bindings/inventory.py | Set-Content proof/binding-inventory.json
           if ($LASTEXITCODE -ne 0) { throw 'Static binding audit failed' }
+      - name: Calculation and countdown boundary matrix
+        shell: pwsh
+        run: |
+          dotnet run --project tests/Calculation/Calculation.csproj -- proof/calculation-matrix.json
+          if ($LASTEXITCODE -ne 0) { throw 'Calculation/state matrix failed' }
       - name: Actual app-wide UI control audit
         shell: pwsh
         run: ./verification/control-audit.ps1

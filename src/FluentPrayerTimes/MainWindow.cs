@@ -2528,7 +2528,7 @@ public sealed partial class MainWindow : Window
 		_s.Save();
 		try
 		{
-			using RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", writable: true);
+			using RegistryKey registryKey = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", writable: true);
 			if (_s.RunAtStartup)
 			{
 				registryKey?.SetValue("FluentPrayerTimes", "\"" + Environment.ProcessPath + "\" --tray");
