@@ -1,6 +1,6 @@
 $ErrorActionPreference='Stop'
 New-Item proof/lifecycle -ItemType Directory -Force | Out-Null
-$exe="$PWD/publish/FluentPrayerTimes.exe"
+$exe=(Resolve-Path "$PWD/publish/FluentPrayerTimes.exe").Path
 $directory="$env:APPDATA/FluentPrayerTimes"
 New-Item $directory -ItemType Directory -Force | Out-Null
 function SaveSettings($startup) {
