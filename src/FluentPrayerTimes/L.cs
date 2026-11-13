@@ -288,21 +288,12 @@ public static class L
 		}
 	}
 
-	public static string CountryName(string cc, string ar)
-	{
-		if (Lang == "ar")
-		{
-			return Array.Find(Countries.All, country => country.Cc == cc)?.Ar ?? ar;
-		}
-		try
-		{
-			return new RegionInfo(cc).DisplayName;
-		}
-		catch
-		{
-			return ar;
-		}
-	}
+    public static string CountryName(string cc, string ar)
+    {
+        int language = Array.IndexOf(Codes, Lang);
+        if (language >= 0 && CountryNames.All.TryGetValue(cc.ToUpperInvariant(), out var names)) return names[language];
+        return T(ar);
+    }
 
 	public static string LocHijri(string h)
 	{
