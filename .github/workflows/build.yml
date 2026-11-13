@@ -49,6 +49,14 @@ jobs:
           $crt = Get-ChildItem "$vs/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
           if (-not $crt) { throw 'VC runtime missing' }
           Copy-Item "$($crt.FullName)/*.dll" publish -Force
+      - name: Compare unchanged calculation and formatting with published app
+        shell: pwsh
+        run: |
+          Invoke-WebRequest 'https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/v1.3.7/FluentPrayerTimes-v1.3.7-portable-win-x64.zip' -OutFile baseline.zip
+          Expand-Archive baseline.zip baseline -Force
+          $original = Get-ChildItem baseline -Recurse -Filter FluentPrayerTimes.dll | Select-Object -First 1
+          dotnet run --project tests/Parity/Parity.csproj -- $original.FullName "$PWD/publish/FluentPrayerTimes.dll" --calculation-only | Set-Content parity-results.json
+          if ($LASTEXITCODE -ne 0) { throw 'Calculation parity failed' }
       - name: Self tests and actual location UI
         shell: pwsh
         env:
@@ -114,5 +122,6 @@ jobs:
             FluentPrayerTimes-v${{ env.APP_VERSION }}-*.zip
             FluentPrayerTimes-v${{ env.APP_VERSION }}-*.exe
             SHA256SUMS.txt
+            parity-results.json
             proof/**
             location-tests.txt

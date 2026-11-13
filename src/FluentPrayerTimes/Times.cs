@@ -205,7 +205,7 @@ public static class Times
         var calendar = new UmAlQuraCalendar();
         string[] months = { "محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة" };
         string hijri = calendar.GetDayOfMonth(date) + " " + months[calendar.GetMonth(date) - 1] + " " + calendar.GetYear(date) + " هـ";
-        return new Day(times, hijri, zone, method, school, highLatitude);
+        return new Day(times, hijri, zone, method, school, highLatitude, Local: true);
     }
 
 	private static async Task<Day> Get(Settings s, DateTime d, Dictionary<string, Day> cache)
@@ -227,12 +227,14 @@ public static class Times
         bool offline = false;
         async Task<Day?> DayFor(DateTime requested)
         {
-            try { return await Get(s, requested, cache); }
+            try { var loaded = await Get(s, requested, cache); offline |= loaded.Local; return loaded; }
             catch (Exception e)
             {
                 offline = true;
                 Log.Write("times", "Network lookup failed: " + e.GetType().Name);
-                return LocalDay(s, requested, lastKnown);
+                var local = LocalDay(s, requested, lastKnown);
+                if (local != null) cache[CK(s, requested)] = local;
+                return local;
             }
         }
         Day? today = await DayFor(date);
@@ -246,9 +248,16 @@ public static class Times
         Day? tomorrow = await DayFor(date.AddDays(1));
         cache.TryGetValue(CK(s, date.AddDays(-1)), out var yesterday);
         yesterday ??= LocalDay(s, date.AddDays(-1), lastKnown);
-        // Retain seven days of history for the selected settings, including yesterday's late iqama.
+        // Keep a week ahead for local methods without issuing extra network requests.
+        for (int ahead = 2; ahead <= 7; ahead++)
+        {
+            DateTime future = date.AddDays(ahead);
+            if (!cache.ContainsKey(CK(s, future)) && LocalDay(s, future, lastKnown) is Day computed) cache[CK(s, future)] = computed;
+        }
+        // Retain a week of history and a week ahead, including yesterday's late iqama.
         var retained = cache.Where(item => item.Key.StartsWith(prefix, StringComparison.Ordinal) &&
-            string.CompareOrdinal(item.Key[^10..], date.AddDays(-7).ToString("yyyy-MM-dd")) >= 0).ToDictionary(item => item.Key, item => item.Value);
+            string.CompareOrdinal(item.Key[^10..], date.AddDays(-7).ToString("yyyy-MM-dd")) >= 0 &&
+            string.CompareOrdinal(item.Key[^10..], date.AddDays(7).ToString("yyyy-MM-dd")) <= 0).ToDictionary(item => item.Key, item => item.Value);
         try { Storage.Write(CacheFile, JsonSerializer.Serialize(retained)); }
         catch (Exception e) { Log.Error("cache-save", e); }
         return new Result(today, tomorrow, offline, yesterday);
