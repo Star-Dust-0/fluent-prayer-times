@@ -63,7 +63,7 @@ public static class L
 		try
 		{
 			string text = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-						if (text == "in")
+			if (text == "in")
 			{
 				text = "id";
 			}

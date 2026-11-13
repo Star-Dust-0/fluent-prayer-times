@@ -52,7 +52,7 @@ try {
  SaveSettings $false
  $sentinel="$env:TEMP/fpt-untrusted-hook.log"
  Remove-Item $sentinel -ErrorAction SilentlyContinue
- $normal=StartApp "--tray --preview=adhan --e2e-set=off --e2e-log=$sentinel"
+ $normal=StartApp "--tray --preview=adhan --e2e-set=AdhanNotify=false --e2e-log=$sentinel"
  if(Test-Path $sentinel){throw 'Production launch honored test log hook'}
  if((Get-Content "$directory/settings.json" -Raw|ConvertFrom-Json).AdhanNotify -eq $false){throw 'Production launch honored test settings hook'}
  StopApp
