@@ -287,7 +287,7 @@ internal sealed class UpdateToast : Window
 			try
 			{
 				Directory.CreateDirectory(App.AppData);
-				File.AppendAllText(Path.Combine(App.AppData, "update.log"), DateTime.Now.ToString() + " download: " + ex2.Message + "\n");
+				Log.Error("update", ex);
 			}
 			catch
 			{
@@ -319,7 +319,7 @@ internal sealed class UpdateToast : Window
 		{
 			try
 			{
-				File.AppendAllText(Path.Combine(App.AppData, "update.log"), DateTime.Now.ToString() + " install: " + ex.Message + "\n");
+				Log.Error("update", ex);
 			}
 			catch
 			{

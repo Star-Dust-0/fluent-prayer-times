@@ -142,8 +142,9 @@ public partial class App : Application
 			thread.Name = "QuitListener";
 			thread.Start();
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Error("app", error);
 		}
 	}
 }

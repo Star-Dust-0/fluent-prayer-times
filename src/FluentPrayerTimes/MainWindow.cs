@@ -801,7 +801,8 @@ public sealed partial class MainWindow : Window
 		{
 			base.AppWindow.Show();
 		}
-		Activate();
+		Tick();
+        Activate();
 		SetForegroundWindow(_hwnd);
 		if (!isVisible)
 		{
@@ -1079,7 +1080,7 @@ public sealed partial class MainWindow : Window
 			try
 			{
 				Directory.CreateDirectory(App.AppData);
-				File.AppendAllText(Path.Combine(App.AppData, "update.log"), DateTime.Now.ToString() + " auto: " + ex.Message + "\n");
+				Log.Error("update", ex);
 			}
 			catch
 			{
@@ -1482,14 +1483,17 @@ public sealed partial class MainWindow : Window
 			title = ((d.Idx == 1) ? L.T("باقي على الشروق") : (L.T("باقي على صلاة ") + text));
 			break;
 		}
+        if (AppWindow.IsVisible)
+        {
 		TxtNextLabel.Text = text3;
 		TxtNextName.Text = text;
 		TxtNextTime.Text = text2;
 		SetMainCount(text4, unit, color, msg);
+        }
 		PushWidget(text, text2, text4, text3, color, msg, unit);
 		SetHover(title, text4, unit, text + " " + text2 + "  -  " + _s.Location.Display, color, msg);
 		int num = (d.Tomorrow ? (-1) : d.Idx);
-		if (num != _hl)
+		if (AppWindow.IsVisible && num != _hl)
 		{
 			_hl = num;
 			for (int i = 0; i < 6; i++)
@@ -1681,7 +1685,7 @@ public sealed partial class MainWindow : Window
 		_wHeader = header;
 		_wColor = color;
 		_wMsg = msg;
-		_widget?.SetInfo(n, t, c, header, color, msg, unit);
+		if (_s.WidgetVisible) _widget?.SetInfo(n, t, c, header, color, msg, unit);
 	}
 
 	private void LoadSettingsUi()
@@ -2476,7 +2480,7 @@ public sealed partial class MainWindow : Window
 			try
 			{
 				Directory.CreateDirectory(App.AppData);
-				File.AppendAllText(Path.Combine(App.AppData, "update.log"), DateTime.Now.ToString() + " " + ex.Message + "\n");
+				Log.Error("update", ex);
 			}
 			catch
 			{

@@ -145,8 +145,9 @@ internal sealed class TrayIcon : IDisposable
 				return true;
 			}
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Error("trayicon", error);
 		}
 		if (_lastX != int.MinValue)
 		{
@@ -291,8 +292,9 @@ internal sealed class TrayIcon : IDisposable
 				}
 			}
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Error("trayicon", error);
 		}
 	}
 
