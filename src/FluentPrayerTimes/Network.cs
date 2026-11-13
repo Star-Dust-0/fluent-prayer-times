@@ -9,10 +9,10 @@ namespace FluentPrayerTimes;
 
 internal static class Network
 {
-    private sealed class RetryHandler : DelegatingHandler
+    internal sealed class RetryHandler : DelegatingHandler
     {
         private static readonly ConcurrentDictionary<string, DateTimeOffset> RetryAt = new();
-        internal RetryHandler() : base(new SocketsHttpHandler { PooledConnectionLifetime = TimeSpan.FromMinutes(10) }) { }
+        internal RetryHandler(HttpMessageHandler? handler = null) : base(handler ?? new SocketsHttpHandler { PooledConnectionLifetime = TimeSpan.FromMinutes(10) }) { }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancel)
         {
             string host = request.RequestUri!.Host;

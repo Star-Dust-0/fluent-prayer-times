@@ -70,6 +70,37 @@ Check("long Maghrib iqama never hides Isha", Times.State(date.AddHours(19), time
 var late = new Dictionary<string,string>(times) { ["Isha"]="23:50" };
 Check("late Isha iqama survives midnight", Times.State(date.AddDays(1).AddMinutes(2), times, times, settings, late) is { Phase:Times.Phase.Iqama, Idx:5 });
 Check("no tomorrow data means no invented next time", Times.Next(date.AddHours(23), times, null) == null);
+
+string offlineCache = Path.Combine(Path.GetTempPath(), "fpt-offline-" + Guid.NewGuid() + ".json");
+try
+{
+    int requests = 0;
+    Task<Day> Failure(Settings _, DateTime __) { requests++; throw new HttpRequestException("offline"); }
+    var offlineSettings = new Settings { CalculationMethod = 5, Location = new Loc { Tz = "Africa/Cairo" } };
+    var offlineResult = await Times.LoadCore(offlineSettings, Failure, offlineCache);
+    Check("fresh offline load calculates today and tomorrow", offlineResult.Offline && offlineResult.Today != null && offlineResult.Tomorrow != null);
+    Check("offline failure has only two attempts", requests == 2);
+    var saved = Storage.Read<Dictionary<string,Day>>(offlineCache)!;
+    Check("offline cache stores week ahead", saved.Count >= 8);
+    requests = 0;
+    var online = await Times.LoadCore(offlineSettings, (_, _) => { requests++; return Task.FromResult(offlineResult.Today! with { Local = false }); }, offlineCache);
+    Check("returning network replaces local fallback", !online.Offline && requests == 2 && !online.Today!.Local);
+}
+finally { foreach (var file in Directory.GetFiles(Path.GetDirectoryName(offlineCache)!, Path.GetFileName(offlineCache) + "*")) File.Delete(file); }
+var rateLimit = new RateLimit();
+using (var limited = new HttpClient(new Network.RetryHandler(rateLimit)))
+{
+    using var response = await limited.GetAsync("https://rate-limit-test.invalid/test");
+    Check("429 returned without retry storm", response.StatusCode == System.Net.HttpStatusCode.TooManyRequests && rateLimit.Requests == 1);
+    bool held = false;
+    try { await limited.GetAsync("https://rate-limit-test.invalid/test"); } catch (HttpRequestException) { held = true; }
+    Check("Retry-After prevents another request", held && rateLimit.Requests == 1);
+}
+
+var afterMidnight = new Dictionary<string,string>(times) { ["Isha"] = "00:12" };
+Check("00:12 Isha belongs to next civil day", Times.PrayerAt(date, afterMidnight, 5) == date.AddDays(1).AddMinutes(12));
+Check("late-night next prayer is Isha before tomorrow Fajr", Times.Next(date.AddHours(23), afterMidnight, times)?.idx == 5);
+Check("00:12 Isha adhan after midnight", Times.State(date.AddDays(1).AddMinutes(12), times, times, settings, afterMidnight) is { Phase: Times.Phase.Adhan, Idx: 5 });
 Console.WriteLine($"{checks} resilience checks passed");
 
 sealed class Clock : TimeProvider
@@ -80,4 +111,16 @@ sealed class Clock : TimeProvider
     public override long GetTimestamp() => seconds;
     public override DateTimeOffset GetUtcNow() => Wall;
     internal void Advance(long value) => seconds += value;
+}
+
+sealed class RateLimit : HttpMessageHandler
+{
+    internal int Requests;
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancel)
+    {
+        Requests++;
+        var response = new HttpResponseMessage(System.Net.HttpStatusCode.TooManyRequests);
+        response.Headers.RetryAfter = new System.Net.Http.Headers.RetryConditionHeaderValue(TimeSpan.FromMinutes(2));
+        return Task.FromResult(response);
+    }
 }

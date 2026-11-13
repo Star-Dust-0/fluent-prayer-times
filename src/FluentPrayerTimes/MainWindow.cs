@@ -1386,7 +1386,7 @@ public sealed partial class MainWindow : Window
                 for (int i = 0; i < Times.Keys.Length; i++)
                 {
                     if (i == 1) continue;
-                    DateTime adhan = Times.At(source.day, source.times[Times.Keys[i]]);
+                    DateTime adhan = Times.PrayerAt(source.day, source.times, i);
                     DateTime following = Times.FollowingPrayer(source.day, source.times, source.next, i);
                     string key = source.day.ToString("yyyyMMdd") + "-" + i;
                     if (_s.AdhanOn && dateTime >= adhan && (dateTime - adhan).TotalSeconds < 90 && key != _lastAdhan)

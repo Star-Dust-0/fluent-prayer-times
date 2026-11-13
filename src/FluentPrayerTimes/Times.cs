@@ -208,26 +208,28 @@ public static class Times
         return new Day(times, hijri, zone, method, school, highLatitude, Local: true);
     }
 
-	private static async Task<Day> Get(Settings s, DateTime d, Dictionary<string, Day> cache)
+	private static async Task<Day> Get(Settings s, DateTime d, Dictionary<string, Day> cache, Func<Settings, DateTime, Task<Day>>? fetch = null)
 	{
 		string k = CK(s, d);
 		if (cache.TryGetValue(k, out Day value) && !value.Local)
 		{
 			return value;
 		}
-		return cache[k] = await Fetch(s, d);
+		return cache[k] = await (fetch ?? Fetch)(s, d);
 	}
 
-    public static async Task<Result> Load(Settings s)
+    public static Task<Result> Load(Settings s) => LoadCore(s);
+
+    internal static async Task<Result> LoadCore(Settings s, Func<Settings, DateTime, Task<Day>>? fetch = null, string? cacheFile = null)
     {
-        var cache = Read();
+        var cache = cacheFile == null ? Read() : Storage.Read<Dictionary<string, Day>>(cacheFile) ?? new();
         DateTime date = Now(s.TzParam ?? s.Location.Tz).Date;
         string prefix = CK(s, date)[..^10];
         Day? lastKnown = cache.Where(item => item.Key.StartsWith(prefix, StringComparison.Ordinal)).OrderByDescending(item => item.Key).Select(item => item.Value).FirstOrDefault();
         bool offline = false;
         async Task<Day?> DayFor(DateTime requested)
         {
-            try { var loaded = await Get(s, requested, cache); offline |= loaded.Local; return loaded; }
+            try { var loaded = await Get(s, requested, cache, fetch); offline |= loaded.Local; return loaded; }
             catch (Exception e)
             {
                 offline = true;
@@ -258,7 +260,7 @@ public static class Times
         var retained = cache.Where(item => item.Key.StartsWith(prefix, StringComparison.Ordinal) &&
             string.CompareOrdinal(item.Key[^10..], date.AddDays(-7).ToString("yyyy-MM-dd")) >= 0 &&
             string.CompareOrdinal(item.Key[^10..], date.AddDays(7).ToString("yyyy-MM-dd")) <= 0).ToDictionary(item => item.Key, item => item.Value);
-        try { Storage.Write(CacheFile, JsonSerializer.Serialize(retained)); }
+        try { Storage.Write(cacheFile ?? CacheFile, JsonSerializer.Serialize(retained)); }
         catch (Exception e) { Log.Error("cache-save", e); }
         return new Result(today, tomorrow, offline, yesterday);
     }
@@ -272,6 +274,12 @@ public static class Times
         return day.Date.AddDays(add).Add(time);
     }
 
+    internal static DateTime PrayerAt(DateTime date, Dictionary<string,string> times, int index)
+    {
+        DateTime value = At(date, times[Keys[index]]);
+        return index == 5 && value < At(date, times[Keys[4]]) ? value.AddDays(1) : value;
+    }
+
 	public static string F12(string hm)
 	{
 		return At(DateTime.Today, hm).ToString("h:mm tt", CultureInfo.InvariantCulture);
@@ -281,7 +289,7 @@ public static class Times
 	{
 		for (int i = 0; i < Keys.Length; i++)
 		{
-			DateTime dateTime = At(now, today[Keys[i]]);
+			DateTime dateTime = PrayerAt(now, today, i);
 			if (dateTime > now)
 			{
 				return (i, dateTime, false);
@@ -313,7 +321,7 @@ public static class Times
 
     internal static DateTime FollowingPrayer(DateTime date, Dictionary<string, string> today, Dictionary<string, string>? tomorrow, int index)
     {
-        if (index < 5) return At(date, today[Keys[index == 0 ? 2 : index + 1]]);
+        if (index < 5) return PrayerAt(date, today, index == 0 ? 2 : index + 1);
         return tomorrow != null ? At(date.AddDays(1), tomorrow[Keys[0]]) : DateTime.MaxValue;
     }
 
@@ -326,10 +334,10 @@ public static class Times
             for (int i = Keys.Length - 1; i >= 0; i--)
             {
                 if (i == 1) continue;
-                DateTime adhan = At(source.day, source.times[Keys[i]]);
+                DateTime adhan = PrayerAt(source.day, source.times, i);
                 if (now < adhan) continue;
                 DateTime nextPrayer = DateTime.MaxValue;
-                if (i < 5) nextPrayer = At(source.day, source.times[Keys[i == 0 ? 2 : i + 1]]);
+                if (i < 5) nextPrayer = PrayerAt(source.day, source.times, i == 0 ? 2 : i + 1);
                 else if (source.day < now.Date) nextPrayer = At(now, today[Keys[0]]);
                 else if (tomorrow != null) nextPrayer = At(now.AddDays(1), tomorrow[Keys[0]]);
                 if (now >= nextPrayer) break;
