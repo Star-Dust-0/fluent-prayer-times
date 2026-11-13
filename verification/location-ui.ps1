@@ -6,6 +6,7 @@ New-Item $settings -ItemType Directory -Force | Out-Null
 $exe="$PWD/publish/FluentPrayerTimes.exe"
 $p=Start-Process $exe -ArgumentList '--selftest' -PassThru -Wait
 Copy-Item "$settings/selftest.log" proof/selftest.log
+Get-Content proof/selftest.log
 if ($p.ExitCode -ne 0) { throw 'App selftest failed' }
 function Capture($name) {
  $bounds=[System.Windows.Forms.Screen]::PrimaryScreen.Bounds
