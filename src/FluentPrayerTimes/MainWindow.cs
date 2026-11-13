@@ -1378,54 +1378,38 @@ public sealed partial class MainWindow : Window
 			PushWidget("--", "", "--:--", L.T("الصلاة القادمة"), null, msg: false);
 			return;
 		}
-		if (_s.NotifyAdhan)
-		{
-			for (int i = 0; i < Times.Keys.Length; i++)
-			{
-				if (i == 1)
-				{
-					continue;
-				}
-				DateTime dateTime2 = Times.At(dateTime, _res.Today.T[Times.Keys[i]]);
-				string text = dateTime.ToString("yyyyMMdd") + "-" + i;
-				if (_s.AdhanOn && dateTime >= dateTime2 && (dateTime - dateTime2).TotalSeconds < 90.0 && text != _lastAdhan)
-				{
-					_lastAdhan = text;
-					bool flag = _s.AdhanSound == "none";
-					bool flag2 = Sounds.Available("adhan", _s.AdhanSound);
-					try
-					{
-						Notify2("adhan", L.T("مواقيت الصلاة"), L.T("حان الآن موعد أذان ") + Times.Names[i], flag2 || flag);
-					}
-					catch
-					{
-					}
-					if (flag2)
-					{
-						Sounds.Play("adhan", _s.AdhanSound);
-					}
-				}
-				DateTime dateTime3 = dateTime2.AddMinutes(_s.IqamaFor(i));
-				string text2 = dateTime.ToString("yyyyMMdd") + "-i" + i;
-				if (_s.IqamaOn && dateTime >= dateTime3 && (dateTime - dateTime3).TotalSeconds < 90.0 && text2 != _lastIqama)
-				{
-					_lastIqama = text2;
-					bool flag3 = _s.IqamaSound == "none";
-					bool flag4 = Sounds.Available("iqama", _s.IqamaSound);
-					try
-					{
-						Notify2("iqama", L.T("مواقيت الصلاة"), L.T("حان وقت إقامة صلاة ") + Times.Names[i], flag4 || flag3);
-					}
-					catch
-					{
-					}
-					if (flag4)
-					{
-						Sounds.Play("iqama", _s.IqamaSound);
-					}
-				}
-			}
-		}
+        if (_s.NotifyAdhan)
+        {
+            foreach (var source in new[] { (day: dateTime.Date.AddDays(-1), times: _res.Yesterday?.T, next: _res.Today.T), (day: dateTime.Date, times: _res.Today.T, next: _res.Tomorrow?.T) })
+            {
+                if (source.times == null) continue;
+                for (int i = 0; i < Times.Keys.Length; i++)
+                {
+                    if (i == 1) continue;
+                    DateTime adhan = Times.At(source.day, source.times[Times.Keys[i]]);
+                    DateTime following = Times.FollowingPrayer(source.day, source.times, source.next, i);
+                    string key = source.day.ToString("yyyyMMdd") + "-" + i;
+                    if (_s.AdhanOn && dateTime >= adhan && (dateTime - adhan).TotalSeconds < 90 && key != _lastAdhan)
+                    {
+                        _lastAdhan = key;
+                        bool audio = Sounds.Available("adhan", _s.AdhanSound);
+                        try { Notify2("adhan", L.T("مواقيت الصلاة"), L.T("حان الآن موعد أذان ") + Times.Names[i], audio || _s.AdhanSound == "none"); }
+                        catch (Exception error) { Log.Error("adhan-notification", error); }
+                        if (audio) Sounds.Play("adhan", _s.AdhanSound);
+                    }
+                    DateTime iqama = adhan.AddMinutes(_s.IqamaFor(i));
+                    if (_s.IqamaOn && iqama < following && dateTime < following && dateTime >= iqama && (dateTime - iqama).TotalSeconds < 90 && key != _lastIqama)
+                    {
+                        _lastIqama = key;
+                        bool audio = Sounds.Available("iqama", _s.IqamaSound);
+                        try { Notify2("iqama", L.T("مواقيت الصلاة"), L.T("حان وقت إقامة صلاة ") + Times.Names[i], audio || _s.IqamaSound == "none"); }
+                        catch (Exception error) { Log.Error("iqama-notification", error); }
+                        if (audio) Sounds.Play("iqama", _s.IqamaSound);
+                    }
+                }
+            }
+        }
+
 		Times.Disp disp = Times.State(dateTime, _res.Today.T, _res.Tomorrow?.T, _s, _res.Yesterday?.T);
 		if (disp == null)
 		{

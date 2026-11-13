@@ -302,6 +302,12 @@ public static class Times
 		return (num: $"{s.Seconds:00}", unit: L.T("ثانية"));
 	}
 
+    internal static DateTime FollowingPrayer(DateTime date, Dictionary<string, string> today, Dictionary<string, string>? tomorrow, int index)
+    {
+        if (index < 5) return At(date, today[Keys[index == 0 ? 2 : index + 1]]);
+        return tomorrow != null ? At(date.AddDays(1), tomorrow[Keys[0]]) : DateTime.MaxValue;
+    }
+
     public static Disp? State(DateTime now, Dictionary<string, string> today, Dictionary<string, string>? tomorrow, Settings s, Dictionary<string, string>? yesterday = null)
     {
         // Newer prayer takes priority over any unusually long preceding iqama.
