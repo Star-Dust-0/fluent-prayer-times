@@ -64,20 +64,13 @@ internal static class SelfTest
 			Check("custom angles invariant", Times.CalculationQuery(s).Contains("methodSettings=19.5,null,17.5"));
 			Check("custom settings round trip", JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(s)).FajrAngle == 19.5);
 			Check("newer stable release gives installer url", MainWindow.UpdateDownload(Rel(Rj("v9.0.0", draft: false, pre: false, "FluentPrayerTimes-v9.0.0-installer-win-x64.exe")), new Version(1, 1, 1)) != null);
-			Check("runtime-dependent installer accepted", MainWindow.UpdateDownload(Rel(Rj("v9.0.0", draft: false, pre: false, "FluentPrayerTimes-v9.0.0-installer-.NET-runtime-dependent-win-x64.exe")), new Version(1, 1, 1)) != null);
+			Check("obsolete runtime-dependent installer rejected", MainWindow.UpdateDownload(Rel(Rj("v9.0.0", draft: false, pre: false, "FluentPrayerTimes-v9.0.0-installer-.NET-runtime-dependent-win-x64.exe")), new Version(1, 1, 1)) == null);
 			Check("update found when GitHub reports canonical repo casing", MainWindow.UpdateDownload(Rel(Rc("v9.0.0", "FluentPrayerTimes-v9.0.0-installer-win-x64.exe")), new Version(1, 1, 1)) == "https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/v9.0.0/FluentPrayerTimes-v9.0.0-installer-win-x64.exe");
-			bool ok = false;
-			try
-			{
-				MainWindow.UpdateDownload(Rel("{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v9.0.0\",\"assets\":[{\"name\":\"FluentPrayerTimes-v9.0.0-installer-win-x64.exe\",\"browser_download_url\":\"https://github.com/someone-else/other/releases/download/v9.0.0/FluentPrayerTimes-v9.0.0-installer-win-x64.exe\"}]}"), new Version(1, 1, 1));
-			}
-			catch (InvalidOperationException)
-			{
-				ok = true;
-			}
-			Check("foreign repository download url is still rejected", ok);
-			UpdateAsset updateAsset = MainWindow.UpdateAssetFor(Rel("{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v9.0.0\",\"assets\":[{\"name\":\"FluentPrayerTimes-v9.0.0-installer-win-x64.exe\",\"size\":1234,\"digest\":\"sha256:ABCDEF\",\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/v9.0.0/FluentPrayerTimes-v9.0.0-installer-win-x64.exe\"}]}"), new Version(1, 1, 1));
-			Check("update asset carries size and sha256 digest", updateAsset != null && updateAsset.Size == 1234 && updateAsset.Sha256 == "ABCDEF");
+            bool foreignRejected = MainWindow.UpdateDownload(Rel("{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v9.0.0\",\"assets\":[{\"name\":\"FluentPrayerTimes-v9.0.0-installer-win-x64.exe\",\"browser_download_url\":\"https://github.com/someone-else/other/releases/download/v9.0.0/test.exe\"}]}"), new Version(1,1,1)) == null;
+            Check("foreign repository download URL rejected", foreignRejected);
+
+			UpdateAsset updateAsset = MainWindow.UpdateAssetFor(Rel("{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v9.0.0\",\"assets\":[{\"name\":\"FluentPrayerTimes-v9.0.0-installer-win-x64.exe\",\"size\":1234,\"digest\":\"sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/v9.0.0/FluentPrayerTimes-v9.0.0-installer-win-x64.exe\"}]}"), new Version(1, 1, 1));
+			Check("update asset carries size and sha256 digest", updateAsset != null && updateAsset.Size == 1234 && updateAsset.Sha256 == "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 			Check("download host: github.com and its asset hosts only", UpdateInstaller.IsTrustedSource(new Uri("https://github.com/a/b")) && UpdateInstaller.IsTrustedSource(new Uri("https://release-assets.githubusercontent.com/x")) && !UpdateInstaller.IsTrustedSource(new Uri("https://evil.example/x")) && !UpdateInstaller.IsTrustedSource(new Uri("http://github.com/a")) && !UpdateInstaller.IsTrustedSource(new Uri("https://githubusercontent.com.evil.example/x")));
 			string tmp = Path.Combine(Path.GetTempPath(), "fpt-verify-" + Guid.NewGuid().ToString("N"));
 			byte[] array = new byte[4096];
@@ -172,16 +165,8 @@ internal static class SelfTest
 			settings11.TimeZoneOverride = "Etc/GMT+5";
 			Check("manual UTC-5 offset", Times.OffsetHours(settings11, null, new DateTime(2026, 12, 1)) == -5.0);
 			Check("DST transition changes local times by an hour", RowX(new DateTime(2026, 10, 30), 30.8619, 29.5845, 2, 5, 1, 3).StartsWith("04:") && RowX(new DateTime(2026, 10, 29), 30.8619, 29.5845, 3, 5, 1, 3).StartsWith("05:"));
-			bool ok2 = false;
-			try
-			{
-				MainWindow.UpdateDownload(Rel(Rj("v9.0.0", draft: false, pre: false, "other.zip")), new Version(1, 1, 1));
-			}
-			catch (InvalidOperationException)
-			{
-				ok2 = true;
-			}
-			Check("missing installer asset reports error", ok2);
+            Check("missing installer means release not ready", MainWindow.UpdateDownload(Rel(Rj("v9.0.0", false, false, "other.zip")), new Version(1,1,1)) == null);
+
 			Times.Disp D(string hm, int sec = 0)
 			{
 				return Times.State(day.Date.AddHours(int.Parse(hm.Substring(0, 2))).AddMinutes(int.Parse(hm.Substring(3))).AddSeconds(sec), t, tom, s);
@@ -223,7 +208,7 @@ internal static class SelfTest
 		}
 		static string Rc(string tag, string asset)
 		{
-			return "{\"draft\":false,\"prerelease\":false,\"tag_name\":\"" + tag + "\",\"assets\":[{\"name\":\"" + asset + "\",\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/" + tag + "/" + asset + "\"}]}";
+			return "{\"draft\":false,\"prerelease\":false,\"tag_name\":\"" + tag + "\",\"assets\":[{\"name\":\"" + asset + "\",\"digest\":\"sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/" + tag + "/" + asset + "\"}]}";
 		}
 		static JsonElement Rel(string json)
 		{
@@ -231,7 +216,7 @@ internal static class SelfTest
 		}
 		static string Rj(string tag, bool draft, bool pre, string asset)
 		{
-			return "{\"draft\":" + (draft ? "true" : "false") + ",\"prerelease\":" + (pre ? "true" : "false") + ",\"tag_name\":\"" + tag + "\",\"assets\":[{\"name\":\"" + asset + "\",\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/" + tag + "/" + asset + "\"}]}";
+			return "{\"draft\":" + (draft ? "true" : "false") + ",\"prerelease\":" + (pre ? "true" : "false") + ",\"tag_name\":\"" + tag + "\",\"assets\":[{\"name\":\"" + asset + "\",\"digest\":\"sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/" + tag + "/" + asset + "\"}]}";
 		}
 		static string Row(DateTime dd, int off, int method = 5)
 		{

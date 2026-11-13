@@ -2362,6 +2362,7 @@ public sealed partial class MainWindow : Window
 	}
 
 
+    internal static string? UpdateDownload(JsonElement release, Version installed) => UpdateCatalog.Select(release, installed)?.Url;
     internal static UpdateAsset? UpdateAssetFor(JsonElement release, Version installed) => UpdateCatalog.Select(release, installed);
 
 	private void Update_Click(object sender, RoutedEventArgs e)
