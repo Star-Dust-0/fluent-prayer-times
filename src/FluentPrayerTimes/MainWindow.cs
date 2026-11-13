@@ -191,7 +191,7 @@ public sealed partial class MainWindow : Window
 	{
 		bool loading = _loading;
 		_loading = true;
-		CalculationControls.Children.Clear();
+		L.Clear(CalculationControls);
 		Label("ت\u064fختار الإعدادات تلقائي\u064bا حسب الموقع. يمكنك تعديل كل خيار أو إعادته إلى الوضع التلقائي.");
 		string text = ((_res?.Today == null) ? null : Methods.FirstOrDefault(((int Id, string Ar) m) => m.Id == _res.Today.Method).Ar);
 		if (_s.CalculationMethod == -1 && text != null)
@@ -1297,7 +1297,7 @@ public sealed partial class MainWindow : Window
 		{
 			return;
 		}
-		if (generation != _reloadGeneration)
+		if (_quit || generation != _reloadGeneration)
 		{
 			return;
 		}
@@ -1828,11 +1828,11 @@ public sealed partial class MainWindow : Window
 		FillLocationCombos();
 		SyncCitySelection();
 		LoadCalculationUi();
-		PanelCalendar.Children.Clear();
+		L.Clear(PanelCalendar);
 		PanelCalendar.Children.Add(new CalendarPage());
-		PanelConvert.Children.Clear();
+		L.Clear(PanelConvert);
 		PanelConvert.Children.Add(new ConverterPage());
-		PanelAzkar.Children.Clear();
+		L.Clear(PanelAzkar);
 		PanelAzkar.Children.Add(new AzkarPage(_s, OnAzkarChanged));
 		BuildIqamaAndSounds();
 		_loading = loading;
@@ -2157,7 +2157,7 @@ public sealed partial class MainWindow : Window
 
 	private void BuildIqamaAndSounds()
 	{
-		PanelIqama.Children.Clear();
+		L.Clear(PanelIqama);
 		int[] array = new int[5] { 0, 2, 3, 4, 5 };
 		foreach (int num in array)
 		{
@@ -2210,7 +2210,7 @@ public sealed partial class MainWindow : Window
 			grid.Children.Add(numberBox);
 			PanelIqama.Children.Add(grid);
 		}
-		PanelSounds.Children.Clear();
+		L.Clear(PanelSounds);
 		PanelSounds.Children.Add(SoundRow(L.T("صوت الأذان"), "adhan", new string[4]
 		{
 			L.T("الافتراضي (صوت الإشعار)"),

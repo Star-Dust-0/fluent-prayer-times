@@ -228,9 +228,22 @@ public static class L
     public static void Unregister(object? root)
     {
         if (root is DependencyObject target) Tracked.RemoveAll(item => ReferenceEquals(item.el, target));
-        if (root is Panel panel) foreach (var child in panel.Children) Unregister(child);
+        if (root is NavigationView navigation)
+        {
+            foreach (var item in navigation.MenuItems) Unregister(item);
+            foreach (var item in navigation.FooterMenuItems) Unregister(item);
+            Unregister(navigation.Content);
+        }
+        else if (root is Expander expander) { Unregister(expander.Header); Unregister(expander.Content); }
+        else if (root is Panel panel) foreach (var child in panel.Children) Unregister(child);
         else if (root is Border border) Unregister(border.Child);
         else if (root is ContentControl content) Unregister(content.Content);
+    }
+
+    public static void Clear(Panel panel)
+    {
+        foreach (var child in panel.Children) Unregister(child);
+        panel.Children.Clear();
     }
 
 	public static void Refresh()
