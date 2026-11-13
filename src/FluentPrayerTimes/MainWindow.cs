@@ -391,9 +391,7 @@ public sealed partial class MainWindow : Window
 		}
 		ApplyAccentResources(ParseHex(_s.Accent));
 		InitializeComponent();
-        var stopSound = new Button { Content = L.T("إيقاف الصوت"), HorizontalAlignment = HorizontalAlignment.Center };
-        stopSound.Click += (_, _) => Sounds.Stop();
-        RowsPanel.Children.Add(stopSound);
+        BtnStopAudio.Click += (_, _) => { Sounds.Stop(); BtnStopAudio.Visibility = Visibility.Collapsed; };
 
         Nav.SelectionChanged += Nav_SelectionChanged;
         BtnApply.Click += ApplyChanges_Click;
@@ -1353,6 +1351,7 @@ public sealed partial class MainWindow : Window
 
 	private void Tick()
 	{
+        BtnStopAudio.Visibility = Sounds.Playing ? Visibility.Visible : Visibility.Collapsed;
 		if (DateTime.Now >= _azkarNext)
 		{
 			_azkarNext = DateTime.Now.AddMinutes(Math.Max(1, _s.AzkarMinutes));

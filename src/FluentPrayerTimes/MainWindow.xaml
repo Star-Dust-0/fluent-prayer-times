@@ -115,6 +115,7 @@
                                                                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                                                                     </StackPanel.Children>
                                                                 </StackPanel>
+                                                                <Button x:Name="BtnStopAudio" Content="إيقاف الصوت" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                                                 <TextBlock x:Name="TxtStatus" TextWrapping="Wrap" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                                             </StackPanel.Children>
                                                         </StackPanel>

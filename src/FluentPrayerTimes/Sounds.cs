@@ -10,6 +10,7 @@ internal static class Sounds
     private static readonly object Gate = new();
     private static MediaPlayer? _player;
     private static readonly string[] Extensions = { ".mp3", ".wav", ".m4a", ".wma", ".aac" };
+    internal static bool Playing { get { lock (Gate) return _player != null; } }
     public static string Dir => Path.Combine(AppContext.BaseDirectory, "Audio");
     private static string? FindFile(string name)
     {
