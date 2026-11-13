@@ -1255,7 +1255,7 @@ public sealed partial class MainWindow : Window
         catch (Exception e) { Log.Error("reload", e); }
         finally
         {
-            _reload.Finish(_res?.Today != null);
+            _reload.Finish(_res?.Today != null && !_res.Offline);
             if (_reloadAgain && !_quit) { _reloadAgain = false; _ = ReloadAsync(); }
         }
     }
@@ -1355,7 +1355,7 @@ public sealed partial class MainWindow : Window
 			}
 		}
 		DateTime dateTime = Times.Now(_s.TzParam ?? _s.Location.Tz);
-		if ((_loadedDay != dateTime.Date || _res?.Today == null) && !_s.LocationPending && _reload.Due)
+		if ((_loadedDay != dateTime.Date || _res?.Today == null || _res.Offline) && !_s.LocationPending && _reload.Due)
 		{
 			ReloadAsync();
 		}

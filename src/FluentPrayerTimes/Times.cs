@@ -211,7 +211,7 @@ public static class Times
 	private static async Task<Day> Get(Settings s, DateTime d, Dictionary<string, Day> cache)
 	{
 		string k = CK(s, d);
-		if (cache.TryGetValue(k, out Day value))
+		if (cache.TryGetValue(k, out Day value) && !value.Local)
 		{
 			return value;
 		}
