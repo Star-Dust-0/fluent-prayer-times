@@ -1,46 +1,45 @@
 using System;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+
 namespace FluentPrayerTimes;
+
 internal static class UpdateCatalog
 {
-	internal static UpdateAsset? Select(JsonElement release, Version installed)
-	{
-		if (release.GetProperty("draft").GetBoolean() || release.GetProperty("prerelease").GetBoolean())
-		{
-			return null;
-		}
-		Version? version = Version.TryParse(release.GetProperty("tag_name").GetString()?.TrimStart('v', 'V'), out var parsed) ? parsed : null;
-		if (version == null || version <= installed)
-		{
-			return null;
-		}
-		string[] array = { "installer-win-x64.exe" };
-		foreach (string text in array)
-		{
-			foreach (JsonElement item in release.GetProperty("assets").EnumerateArray())
-			{
-				string text2 = item.GetProperty("name").GetString();
-				if (text2 != "FluentPrayerTimes-v" + version.ToString(3) + "-" + text)
-				{
-					continue;
-				}
-				string text3 = item.GetProperty("browser_download_url").GetString();
-				if (Uri.TryCreate(text3, UriKind.Absolute, out Uri result) && result.Scheme == "https" && result.Host == "github.com" && result.AbsolutePath.StartsWith("/Star-Dust-0/fluent-prayer-times/releases/download/", StringComparison.OrdinalIgnoreCase))
-				{
-					JsonElement value;
-					long size = ((item.TryGetProperty("size", out value) && value.ValueKind == JsonValueKind.Number) ? value.GetInt64() : 0);
-					string sha = null;
-					if (item.TryGetProperty("digest", out var value2) && value2.ValueKind == JsonValueKind.String && (value2.GetString() ?? "").StartsWith("sha256:", StringComparison.OrdinalIgnoreCase))
-					{
-						sha = value2.GetString().Substring(7);
-					}
-					if (sha == null || !System.Text.RegularExpressions.Regex.IsMatch(sha, "^[0-9a-fA-F]{64}$")) { Log.Write("update", "Installer checksum unavailable"); return null; }
-                    return new UpdateAsset(text3, text2, size, sha);
-				}
-			}
-		}
-		Log.Write("update", "Release installer not yet available");
-        return null;
-	}
+    internal static UpdateAsset? Select(JsonElement release, Version installed)
+    {
+        if (release.ValueKind != JsonValueKind.Object ||
+            !release.TryGetProperty("draft", out var draft) || draft.ValueKind != JsonValueKind.False ||
+            !release.TryGetProperty("prerelease", out var prerelease) || prerelease.ValueKind != JsonValueKind.False ||
+            !release.TryGetProperty("tag_name", out var tag) || tag.ValueKind != JsonValueKind.String ||
+            !Version.TryParse(tag.GetString()?.TrimStart('v', 'V'), out var version) || version.Build < 0 || version <= installed ||
+            !release.TryGetProperty("assets", out var assets) || assets.ValueKind != JsonValueKind.Array)
+            return null;
 
+        string expectedName = "FluentPrayerTimes-v" + version.ToString(3) + "-installer-win-x64.exe";
+        foreach (var asset in assets.EnumerateArray())
+        {
+            if (asset.ValueKind != JsonValueKind.Object ||
+                !asset.TryGetProperty("name", out var name) || name.ValueKind != JsonValueKind.String || name.GetString() != expectedName ||
+                !asset.TryGetProperty("browser_download_url", out var url) || url.ValueKind != JsonValueKind.String ||
+                !Uri.TryCreate(url.GetString(), UriKind.Absolute, out var source) || source.Scheme != "https" ||
+                source.Host != "github.com" ||
+                !source.AbsolutePath.StartsWith("/Star-Dust-0/fluent-prayer-times/releases/download/", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            string? checksum = null;
+            if (asset.TryGetProperty("digest", out var digest) && digest.ValueKind == JsonValueKind.String &&
+                (digest.GetString() ?? "").StartsWith("sha256:", StringComparison.OrdinalIgnoreCase))
+                checksum = digest.GetString()![7..];
+            if (checksum == null || !Regex.IsMatch(checksum, "^[0-9a-fA-F]{64}$"))
+            {
+                Log.Write("update", "Installer checksum unavailable");
+                return null;
+            }
+            long size = asset.TryGetProperty("size", out var length) && length.ValueKind == JsonValueKind.Number && length.TryGetInt64(out var bytes) ? bytes : 0;
+            return new UpdateAsset(source.AbsoluteUri, expectedName, size, checksum);
+        }
+        Log.Write("update", "Release installer not yet available");
+        return null;
+    }
 }

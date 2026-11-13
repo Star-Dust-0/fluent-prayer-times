@@ -65,9 +65,7 @@ internal static class UpdateInstaller
 			{
 				File.Delete(path);
 			}
-			catch
-			{
-			}
+            catch (Exception error) { Log.Write("update-cleanup", error.GetType().Name); }
 		}
 		string target = Path.Combine(Dir, asset.Name);
 		string part = target + ".part";
@@ -115,9 +113,7 @@ internal static class UpdateInstaller
 			{
 				File.Delete(part);
 			}
-			catch
-			{
-			}
+            catch (Exception error) { Log.Write("update-cleanup", error.GetType().Name); }
 			throw;
 		}
 	}

@@ -41,6 +41,11 @@ try
     string Release(string assets) => "{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v1.3.8\",\"assets\":" + assets + "}";
     using var empty = JsonDocument.Parse(Release("[]"));
     Check("incomplete release not an exception", UpdateCatalog.Select(empty.RootElement, new Version(1,3,7)) == null);
+    foreach (string unfinished in new[] { "{}", "{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v1.4.0\"}", "{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v1.4\",\"assets\":[]}" })
+    {
+        using var partial = JsonDocument.Parse(unfinished);
+        Check("unfinished release metadata rejected safely", UpdateCatalog.Select(partial.RootElement, new Version(1,3,7)) == null);
+    }
     string ReleaseAsset(string digest) => "[{\"name\":\"FluentPrayerTimes-v1.3.8-installer-win-x64.exe\",\"size\":128,\"browser_download_url\":\"https://github.com/Star-Dust-0/fluent-prayer-times/releases/download/v1.3.8/setup.exe\"" + digest + "}]";
     using var noDigest = JsonDocument.Parse(Release(ReleaseAsset("")));
     Check("digestless release refused", UpdateCatalog.Select(noDigest.RootElement, new Version(1,3,7)) == null);
