@@ -7,7 +7,7 @@ void Check(bool ok, string label) { checks++; if (!ok) throw new Exception(label
 var good = """{"success":true,"latitude":30.04,"longitude":31.23,"city":"Cairo","country":"Egypt","country_code":"EG"}""";
 var other = """{"loc":"30.04,31.23","city":"Cairo","country":"EG"}""";
 Check(LocationDetection.Parse(good,"ipwho") is { Cc: "EG", City: "Cairo" }, "primary JSON metadata");
-Check(LocationDetection.Parse(other,"ipinfo") is { Cc: "EG" }, "secondary JSON metadata");
+Check(LocationDetection.Parse(other,"ipinfo") is { Cc: "EG", Country: "" }, "secondary metadata does not use country code as name");
 foreach (var body in new[] { "{}", "{\"success\":false}", "{\"success\":true,\"latitude\":91,\"longitude\":0}", "{\"success\":true,\"latitude\":30,\"longitude\":181}", "{\"success\":true,\"latitude\":\"bad\",\"longitude\":0}" }) Check(LocationDetection.Parse(body,"ipwho") == null, "reject invalid primary " + body);
 Check(!LocationDetection.Valid(double.NaN,0) && !LocationDetection.Valid(0,double.PositiveInfinity), "reject nonfinite");
 Check(LocationDetection.Valid(0,0), "equator/Greenwich valid");
