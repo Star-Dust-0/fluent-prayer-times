@@ -1,6 +1,6 @@
 # Fluent Prayer Times source
 
-Native WinUI 3 app for Windows x64. Build with Visual Studio MSBuild and .NET 8:
+Native WinUI 3 app for Windows x64. Build with Visual Studio MSBuild and .NET 10:
 
 ```powershell
 msbuild FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../publish/

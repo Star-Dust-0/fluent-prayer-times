@@ -18,7 +18,7 @@ jobs:
       - uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
       - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Read app version
         shell: pwsh
         run: |
@@ -43,7 +43,7 @@ jobs:
         id: build
         shell: pwsh
         run: |
-          msbuild src/FluentPrayerTimes/FluentPrayerTimes.csproj /restore /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:Platform=x64 /p:PublishDir=../../publish/ /v:minimal
+          dotnet publish src/FluentPrayerTimes/FluentPrayerTimes.csproj -c Release -r win-x64 -p:Platform=x64 -p:PublishDir=../../publish/ -v:minimal
           if ($LASTEXITCODE -ne 0) { throw 'Publish failed' }
           $vs = & "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath
           $crt = Get-ChildItem "$vs/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
