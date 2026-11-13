@@ -21,11 +21,13 @@ try {
    StopApp
    $s=@{Lang='en';Theme='dark';AutoUpdate=$false;LocationPending=$false;NotifyAdhan=$true;AdhanNotify=$enabled;IqamaNotify=$enabled;AdhanSound='none';IqamaSound='none';Location=@{Name='New Borg El Arab';NameAr='برج العرب الجديدة';Lat=30.8619;Lon=29.5845;Cc='EG';UseCity=$false}}
    $s|ConvertTo-Json -Depth 4|Set-Content "$dir/settings.json"
-   $log="$PWD/proof/countdown/$phase-$enabled.log"
+   $log="$env:TEMP/FluentPrayerTimes-$phase-$enabled.log"
+   Remove-Item $log -ErrorAction SilentlyContinue
    $p=Start-Process $exe -ArgumentList "--e2e-clock=$phase","--e2e-log=$log" -PassThru
    Start-Sleep 20
    if($p.HasExited){throw 'Scheduler app exited'}
    $lines=@(Get-Content $log -ErrorAction SilentlyContinue)
+   Copy-Item $log "$PWD/proof/countdown/$phase-$enabled.log" -ErrorAction SilentlyContinue
    $matches=@($lines|Where-Object{$_ -like "$phase|*"})
    $pass=if($enabled){$matches.Count -eq 1}else{$matches.Count -eq 0}
    $results.Add([pscustomobject]@{phase=$phase;enabled=$enabled;notifications=$matches.Count;passed=$pass})

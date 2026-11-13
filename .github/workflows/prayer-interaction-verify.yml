@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
   actions: read
+env:
+  FPT_E2E: '1'
+
 jobs:
   interaction:
     runs-on: windows-2022
@@ -48,7 +51,7 @@ jobs:
             $bmp.Save("$PWD/$file.png");$g.Dispose();$bmp.Dispose()
           }
           Stop-Process -Id $p.Id -Force
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: prayer-interaction

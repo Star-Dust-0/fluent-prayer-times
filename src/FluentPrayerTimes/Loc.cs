@@ -24,10 +24,10 @@ public class Loc
 	{
 		get
 		{
-			string text = L.T(NameAr);
+			string text = L.IsArabic ? NameAr : (!string.IsNullOrEmpty(Name) ? Name : NameAr);
 			if (!L.IsArabic && !UseCity && Regex.IsMatch(text, "[\u0600-ۿ]"))
 			{
-				text = "";
+				text = string.IsNullOrEmpty(Name) ? NameAr : Name;
 			}
 			string text2 = (string.IsNullOrEmpty(Cc) ? L.T(CountryAr) : L.CountryName(Cc, CountryAr));
 			if (!(text == ""))

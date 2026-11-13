@@ -1,5 +1,5 @@
 namespace FluentPrayerTimes {
-public static class L { public static string T(string s)=>s; public static bool IsArabic=>false;public static string CountryName(string c,string a)=>c; }
+public static class L { public static string Lang=>"en"; public static string T(string s)=>s; public static bool IsArabic=>false;public static string CountryName(string c,string a)=>c; }
 internal static class LocationDetection { internal record Fix(double Lat,double Lon,string City="",string Country="",string Cc="",string Source="windows");internal static void Log(string s,string t){} internal static Task<Fix?> DetectAsync(Func<CancellationToken,Task<Fix?>> f,HttpClient h)=>Task.FromResult<Fix?>(null); }
 }
 namespace Windows.Devices.Geolocation {

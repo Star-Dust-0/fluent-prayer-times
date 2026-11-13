@@ -1,5 +1,4 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -141,7 +140,8 @@ public sealed partial class MainWindow : Window
 
 	private DateTime _loadedDay = DateTime.MinValue;
 
-	private DateTime _lastTry = DateTime.MinValue;
+	private readonly ReloadPolicy _reload = new();
+    private bool _reloadAgain;
 
 	private bool _loading = true;
 
@@ -391,6 +391,10 @@ public sealed partial class MainWindow : Window
 		}
 		ApplyAccentResources(ParseHex(_s.Accent));
 		InitializeComponent();
+        var stopSound = new Button { Content = L.T("إيقاف الصوت"), HorizontalAlignment = HorizontalAlignment.Center };
+        stopSound.Click += (_, _) => Sounds.Stop();
+        RowsPanel.Children.Add(stopSound);
+
         Nav.SelectionChanged += Nav_SelectionChanged;
         BtnApply.Click += ApplyChanges_Click;
         CmbLang.SelectionChanged += Lang_Changed;
@@ -413,6 +417,8 @@ public sealed partial class MainWindow : Window
         TglAutoUpdate.Toggled += AutoUpdate_Toggled;
         BtnUpdate.Click += Update_Click;
         BtnUpdateInstall.Click += UpdateInstall_Click;
+        StartupRegistration.Refresh(_s);
+        TglStartup.IsOn = _s.RunAtStartup && StartupRegistration.Enabled;
         TglStartup.Toggled += Startup_Toggled;
         BtnAboutUpdate.Click += Update_Click;
         BtnAboutUpdateInstall.Click += UpdateInstall_Click;
@@ -650,26 +656,19 @@ public sealed partial class MainWindow : Window
 		}
 	}
 
-	private void ApplyChanges_Click(object sender, RoutedEventArgs e)
-	{
-		try
-		{
-			_s.Save();
-			string processPath = Environment.ProcessPath;
-			if (!string.IsNullOrEmpty(processPath))
-			{
-				Process.Start(new ProcessStartInfo("cmd.exe", "/c ping 127.0.0.1 -n 3 >nul & start \"\" \"" + processPath + "\"")
-				{
-					CreateNoWindow = true,
-					UseShellExecute = false
-				});
-			}
-		}
-		catch
-		{
-		}
-		Quit();
-	}
+    private void ApplyChanges_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _s.Save();
+            if (string.IsNullOrEmpty(Environment.ProcessPath)) return;
+            Process.Start(new ProcessStartInfo(Environment.ProcessPath, "--restarted") { UseShellExecute = false });
+            Quit();
+        }
+        catch (Exception error) { Log.Error("restart", error); }
+    }
+
+    public void RequestShow() => DispatcherQueue.TryEnqueue(() => ShowFlyout(nearCursor: false));
 
 	public void RequestQuit()
 	{
@@ -679,15 +678,24 @@ public sealed partial class MainWindow : Window
 		}
 	}
 
-	private void Quit()
-	{
-		_quit = true;
-		_hover.Hide();
-		_timer.Stop();
-		_tray.Dispose();
-		Application.Current.Exit();
-		Environment.Exit(0);
-	}
+    private void Quit()
+    {
+        if (_quit) return;
+        _quit = true;
+        _timer.Stop();
+        _updFirst?.Stop();
+        _updTimer?.Stop();
+        Sounds.Stop();
+        _widget?.Shutdown();
+        _toast?.Close();
+        _hover.Close();
+        _menu.Close();
+        _tray.Dispose();
+        _s.Save();
+        App.ReleaseInstance();
+        Application.Current.Exit();
+        _ = Task.Run(async () => { await Task.Delay(8000); Environment.Exit(0); });
+    }
 
 	private void HideFromTaskbar()
 	{
@@ -1045,12 +1053,7 @@ public sealed partial class MainWindow : Window
 		}
 		try
 		{
-			using HttpClient http = new HttpClient
-			{
-				Timeout = TimeSpan.FromSeconds(20.0)
-			};
-			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes/" + (typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
-			http.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
+			HttpClient http = Network.Http;
 			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/Star-Dust-0/fluent-prayer-times/releases/latest");
 			response.EnsureSuccessStatusCode();
 			using JsonDocument jsonDocument = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -1065,10 +1068,11 @@ public sealed partial class MainWindow : Window
 			{
 				return;
 			}
-			_s.UpdateSeen = text;
-			_s.Save();
+			_toast?.Close();
 			_toast = new UpdateToast(text, updateAsset, "https://github.com/Star-Dust-0/fluent-prayer-times/releases/latest", _s.Theme);
 			_toast.ShowToast();
+            _s.UpdateSeen = text;
+            _s.Save();
 		}
 		catch (Exception ex)
 		{
@@ -1242,7 +1246,20 @@ public sealed partial class MainWindow : Window
 		}
 	}
 
-	private async Task ReloadAsync()
+    private async Task ReloadAsync()
+    {
+        if (_quit) return;
+        if (!_reload.Begin()) { _reloadAgain = true; ++_reloadGeneration; return; }
+        try { await ReloadCoreAsync(); }
+        catch (Exception e) { Log.Error("reload", e); }
+        finally
+        {
+            _reload.Finish(_res?.Today != null);
+            if (_reloadAgain && !_quit) { _reloadAgain = false; _ = ReloadAsync(); }
+        }
+    }
+
+	private async Task ReloadCoreAsync()
 	{
 		int generation = ++_reloadGeneration;
 		if (_s.LocationPending)
@@ -1256,7 +1273,6 @@ public sealed partial class MainWindow : Window
 			return;
 		}
 		Settings s = JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(_s));
-		_lastTry = DateTime.Now;
 		Times.Result result;
 		try
 		{
@@ -1278,7 +1294,7 @@ public sealed partial class MainWindow : Window
 		_res = result;
 		if (result.Today != null)
 		{
-			_loadedDay = Times.Now(_s.Location.Tz).Date;
+			_loadedDay = Times.Now(_s.TzParam ?? _s.Location.Tz).Date;
 			for (int i = 0; i < 6; i++)
 			{
 				_rowTime[i].Text = Times.F12(result.Today.T[Times.Keys[i]]);
@@ -1306,10 +1322,10 @@ public sealed partial class MainWindow : Window
 	private void ShowDatesAndCity(Times.Result r)
 	{
 		TxtCity.Text = _s.Location.Display;
-		DateTime dateTime = Times.Now(_s.Location.Tz);
+		DateTime dateTime = Times.Now(_s.TzParam ?? _s.Location.Tz);
 		string text = (L.IsArabic ? dateTime.ToString("dddd d MMMM yyyy", new CultureInfo("ar-EG")) : (HijriUtil.Days[(int)dateTime.DayOfWeek] + " " + dateTime.Day + " " + HijriUtil.GMonths[dateTime.Month - 1] + " " + dateTime.Year));
 		TxtDates.Text = ((r.Today != null) ? (text + "  -  " + L.LocHijri(r.Today.Hijri)) : text);
-		TxtStatus.Text = ((r.Today == null) ? L.T("لا يوجد اتصال ولا مواقيت محفوظة") : (r.Offline ? L.T("دون اتصال - من آخر بيانات محفوظة") : ""));
+		TxtStatus.Text = ((r.Today == null) ? L.T("لا تتوفر مواقيت دون اتصال لهذه الطريقة أو المنطقة الزمنية. اتصل بالإنترنت لتحميلها.") : (r.Offline ? L.T("دون اتصال - حساب محلي أو بيانات محفوظة") : ""));
 	}
 
 	private void Notify2(string kind, string title, string body, bool silent)
@@ -1337,8 +1353,8 @@ public sealed partial class MainWindow : Window
 			{
 			}
 		}
-		DateTime dateTime = Times.Now(_s.Location.Tz);
-		if ((_loadedDay != dateTime.Date || _res?.Today == null) && !_s.LocationPending && (dateTime - _lastTry).TotalSeconds > (double)((_res?.Today == null) ? 300 : 5))
+		DateTime dateTime = Times.Now(_s.TzParam ?? _s.Location.Tz);
+		if ((_loadedDay != dateTime.Date || _res?.Today == null) && !_s.LocationPending && _reload.Due)
 		{
 			ReloadAsync();
 		}
@@ -1409,7 +1425,7 @@ public sealed partial class MainWindow : Window
 				}
 			}
 		}
-		Times.Disp disp = Times.State(dateTime, _res.Today.T, _res.Tomorrow?.T, _s);
+		Times.Disp disp = Times.State(dateTime, _res.Today.T, _res.Tomorrow?.T, _s, _res.Yesterday?.T);
 		if (disp == null)
 		{
 			TxtNextLabel.Text = L.T("الصلاة القادمة");
@@ -2345,48 +2361,8 @@ public sealed partial class MainWindow : Window
 		return result;
 	}
 
-	internal static string? UpdateDownload(JsonElement release, Version installed)
-	{
-		return UpdateAssetFor(release, installed)?.Url;
-	}
 
-	internal static UpdateAsset? UpdateAssetFor(JsonElement release, Version installed)
-	{
-		if (release.GetProperty("draft").GetBoolean() || release.GetProperty("prerelease").GetBoolean())
-		{
-			return null;
-		}
-		Version version = ReleaseVersion(release.GetProperty("tag_name").GetString());
-		if (version == null || version <= installed)
-		{
-			return null;
-		}
-		string[] array = new string[2] { "installer-.NET-runtime-dependent-win-x64.exe", "installer-win-x64.exe" };
-		foreach (string text in array)
-		{
-			foreach (JsonElement item in release.GetProperty("assets").EnumerateArray())
-			{
-				string text2 = item.GetProperty("name").GetString();
-				if (text2 != "FluentPrayerTimes-v" + version.ToString(3) + "-" + text)
-				{
-					continue;
-				}
-				string text3 = item.GetProperty("browser_download_url").GetString();
-				if (Uri.TryCreate(text3, UriKind.Absolute, out Uri result) && result.Scheme == "https" && result.Host == "github.com" && result.AbsolutePath.StartsWith("/Star-Dust-0/fluent-prayer-times/releases/download/", StringComparison.OrdinalIgnoreCase))
-				{
-					JsonElement value;
-					long size = ((item.TryGetProperty("size", out value) && value.ValueKind == JsonValueKind.Number) ? value.GetInt64() : 0);
-					string sha = null;
-					if (item.TryGetProperty("digest", out var value2) && value2.ValueKind == JsonValueKind.String && (value2.GetString() ?? "").StartsWith("sha256:", StringComparison.OrdinalIgnoreCase))
-					{
-						sha = value2.GetString().Substring(7);
-					}
-					return new UpdateAsset(text3, text2, size, sha);
-				}
-			}
-		}
-		throw new InvalidOperationException("New release has no supported installer.");
-	}
+    internal static UpdateAsset? UpdateAssetFor(JsonElement release, Version installed) => UpdateCatalog.Select(release, installed);
 
 	private void Update_Click(object sender, RoutedEventArgs e)
 	{
@@ -2397,8 +2373,7 @@ public sealed partial class MainWindow : Window
 	{
 		try
 		{
-			using HttpClient http = new HttpClient();
-			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes-ci");
+			HttpClient http = Network.Http;
 			using JsonDocument jsonDocument = JsonDocument.Parse(await http.GetStringAsync("https://api.github.com/repos/Star-Dust-0/fluent-prayer-times/releases/latest"));
 			UpdateAsset updateAsset = UpdateAssetFor(jsonDocument.RootElement, new Version(1, 3, 3));
 			if (updateAsset == null)
@@ -2485,18 +2460,13 @@ public sealed partial class MainWindow : Window
 		RefreshUpdateCards();
 		try
 		{
-			using HttpClient http = new HttpClient
-			{
-				Timeout = TimeSpan.FromSeconds(20.0)
-			};
-			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes/" + (typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
-			http.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
+			HttpClient http = Network.Http;
 			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/Star-Dust-0/fluent-prayer-times/releases/latest");
 			response.EnsureSuccessStatusCode();
 			using JsonDocument jsonDocument = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 			Version installed = ReleaseVersion(typeof(MainWindow).Assembly.GetName().Version?.ToString(3)) ?? new Version(0, 0, 0);
 			_manualUpdateAsset = UpdateAssetFor(jsonDocument.RootElement, installed);
-			_manualUpdateUrl = _manualUpdateAsset?.Url;
+			_manualUpdateUrl = ReleaseVersion(jsonDocument.RootElement.GetProperty("tag_name").GetString()) > installed ? "https://github.com/Star-Dust-0/fluent-prayer-times/releases/latest" : null;
 			_manualUpdateVersion = jsonDocument.RootElement.GetProperty("tag_name").GetString();
 			_updateState = ((_manualUpdateUrl == null) ? "current" : "available");
 		}
@@ -2530,20 +2500,6 @@ public sealed partial class MainWindow : Window
 		}
 		_s.RunAtStartup = TglStartup.IsOn;
 		_s.Save();
-		try
-		{
-			using RegistryKey registryKey = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", writable: true);
-			if (_s.RunAtStartup)
-			{
-				registryKey?.SetValue("FluentPrayerTimes", "\"" + Environment.ProcessPath + "\" --tray");
-			}
-			else
-			{
-				registryKey?.DeleteValue("FluentPrayerTimes", throwOnMissingValue: false);
-			}
-		}
-		catch
-		{
-		}
-	}
+        StartupRegistration.Set(_s.RunAtStartup);
+    }
 }

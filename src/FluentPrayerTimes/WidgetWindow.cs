@@ -1,5 +1,4 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Dispatching;
@@ -41,6 +40,9 @@ public sealed partial class WidgetWindow : Window
 	private readonly nint _hwnd;
 
 	private bool _wantVisible;
+    private bool _shutdown;
+    private bool _suppressed;
+    [DllImport("shell32.dll")] private static extern int SHQueryUserNotificationState(out int state);
 
 	private DispatcherQueueTimer? _keep;
 
@@ -94,6 +96,7 @@ public sealed partial class WidgetWindow : Window
 	{
 		_s = s;
 		InitializeComponent();
+        Closed += (_, _) => L.Unregister(Content);
         Surface.PointerPressed += Surface_PointerPressed;
         Surface.PointerMoved += Surface_PointerMoved;
         Surface.PointerReleased += Surface_PointerReleased;
@@ -130,7 +133,7 @@ public sealed partial class WidgetWindow : Window
 		BtnPin.IsChecked = _s.WidgetPinned;
 		base.AppWindow.Closing += delegate(AppWindow a, AppWindowClosingEventArgs e)
 		{
-			e.Cancel = true;
+			e.Cancel = !_shutdown;
 			a.Hide();
 		};
 		long num3 = GetWindowLongPtr(num, -20);
@@ -138,7 +141,7 @@ public sealed partial class WidgetWindow : Window
 		base.AppWindow.Resize(new SizeInt32(width, height));
 		ApplySnap(Math.Clamp(_s.WidgetSnap, 0, 7));
 		_keep = base.DispatcherQueue.CreateTimer();
-		_keep.Interval = TimeSpan.FromMilliseconds(400.0);
+		_keep.Interval = TimeSpan.FromSeconds(4);
 		_keep.Tick += delegate
 		{
 			KeepAlive();
@@ -154,9 +157,12 @@ public sealed partial class WidgetWindow : Window
 		}
 		try
 		{
-			if (IsIconic(_hwnd) || !IsWindowVisible(_hwnd))
+			bool fullscreen = SHQueryUserNotificationState(out int state) == 0 && (state == 2 || state == 3 || state == 4);
+            if (fullscreen) { if (!_suppressed) base.AppWindow.Hide(); _suppressed = true; return; }
+            if (_suppressed || IsIconic(_hwnd) || !IsWindowVisible(_hwnd))
 			{
-				ShowWindow(_hwnd, 4);
+				_suppressed = false;
+                ShowWindow(_hwnd, 4);
 				WindowChrome.Apply(_hwnd);
 			}
 			if (_s.WidgetPinned)
@@ -248,6 +254,14 @@ public sealed partial class WidgetWindow : Window
 		base.AppWindow.Show();
 		WindowChrome.Apply(_hwnd);
 	}
+
+    public void Shutdown()
+    {
+        _wantVisible = false;
+        _shutdown = true;
+        _keep?.Stop();
+        Close();
+    }
 
 	public void HideWidget()
 	{

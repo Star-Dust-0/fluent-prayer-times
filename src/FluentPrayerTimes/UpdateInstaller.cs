@@ -36,7 +36,8 @@ internal static class UpdateInstaller
 		{
 			throw new InvalidDataException("Downloaded file is not a Windows installer.");
 		}
-		if (asset.Sha256 != null)
+		if (string.IsNullOrWhiteSpace(asset.Sha256) || !System.Text.RegularExpressions.Regex.IsMatch(asset.Sha256, "^[a-fA-F0-9]{64}$")) throw new InvalidDataException("Installer checksum is required.");
+        if (asset.Sha256 != null)
 		{
 			fileStream.Position = 0L;
 			if (!Convert.ToHexString(SHA256.HashData(fileStream)).Equals(asset.Sha256, StringComparison.OrdinalIgnoreCase))
@@ -72,11 +73,7 @@ internal static class UpdateInstaller
 		string part = target + ".part";
 		try
 		{
-			using HttpClient http = new HttpClient
-			{
-				Timeout = Timeout.InfiniteTimeSpan
-			};
-			http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes/" + (typeof(UpdateInstaller).Assembly.GetName().Version?.ToString(3) ?? "0.0.0"));
+			HttpClient http = Network.Downloads;
 			using HttpResponseMessage response = await http.GetAsync(result, HttpCompletionOption.ResponseHeadersRead, cancel);
 			response.EnsureSuccessStatusCode();
 			if (!IsTrustedSource(response.RequestMessage?.RequestUri))

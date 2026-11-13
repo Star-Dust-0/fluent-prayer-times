@@ -20,10 +20,6 @@ public class Settings
 
 	public int WidgetSnap { get; set; } = 2;
 
-	public int WidgetX { get; set; } = int.MinValue;
-
-	public int WidgetY { get; set; } = int.MinValue;
-
 	public bool NotifyAdhan { get; set; } = true;
 
 	public string Accent { get; set; } = "";
@@ -133,35 +129,15 @@ public class Settings
 	}
 
 	public static Settings Load()
-	{
-		try
-		{
-			if (!File.Exists(F))
-			{
-				return new Settings
-				{
-					LocationPending = true
-				};
-			}
-			return JsonSerializer.Deserialize<Settings>(File.ReadAllText(F)) ?? new Settings();
-		}
-		catch
-		{
-			return new Settings();
-		}
-	}
+    {
+        return Storage.Read<Settings>(F) ?? new Settings { LocationPending = true };
+    }
 
-	public void Save()
-	{
-		try
-		{
-			Directory.CreateDirectory(Dir);
-			File.WriteAllText(F, JsonSerializer.Serialize(this));
-		}
-		catch
-		{
-		}
-	}
+    public void Save()
+    {
+        try { Storage.Write(F, JsonSerializer.Serialize(this)); }
+        catch (Exception e) { Log.Error("settings-save", e); }
+    }
 
 	public bool DstApplies()
 	{

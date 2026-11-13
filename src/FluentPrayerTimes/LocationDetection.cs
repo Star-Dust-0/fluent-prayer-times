@@ -46,7 +46,7 @@ internal static class LocationDetection
             if (parts.Length != 2 || !double.TryParse(parts[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out lat)
                 || !double.TryParse(parts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out lon)) return null;
         }
-        return Valid(lat, lon) ? new Fix(lat, lon, S("city"), S("country"), S(provider == "ipwho" ? "country_code" : "country").ToUpperInvariant(), "ip") : null;
+        return Valid(lat, lon) ? new Fix(lat, lon, S("city"), provider == "ipinfo" ? "" : S("country"), S(provider == "ipwho" ? "country_code" : "country").ToUpperInvariant(), "ip") : null;
     }
 
     internal static async Task<Fix?> DetectAsync(Func<CancellationToken, Task<Fix?>> native, HttpClient http,

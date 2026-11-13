@@ -114,3 +114,15 @@ Times are calculated inside the app, with seconds, for angle-based methods (Egyp
 
 ## 📄 License
 [MIT](LICENSE) © Mohamed Elnaggar · brought to you by app.instinct AI
+
+## Privacy
+
+Your settings and selected location are stored on your device. There is no user account or advertising tracking.
+
+- Aladhan receives coordinates, date and calculation settings to fetch prayer times and time zone.
+- BigDataCloud receives coordinates and interface language to find place names.
+- Open-Meteo receives the city search text, interface language and optional country filter.
+- Windows requests location permission. If unavailable, ipwho.is then ipinfo.io estimate location from your IP address.
+- GitHub checks releases and downloads updates.
+
+Each contacted service sees the connection's IP address. You can choose a location manually. Supported local calculation methods work offline when coordinates, time zone and calculation settings are known; other methods require downloaded data.

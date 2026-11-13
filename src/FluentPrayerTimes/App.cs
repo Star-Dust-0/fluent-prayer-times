@@ -1,5 +1,4 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -35,23 +34,22 @@ public partial class App : Application
 	public App()
 	{
 		InitializeComponent();
-		base.UnhandledException += delegate(object s, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-		{
-			try
-			{
-				Directory.CreateDirectory(AppData);
-				File.AppendAllText(Path.Combine(AppData, "crash.log"), DateTime.Now.ToString() + "\n" + e.Exception?.ToString() + "\n\n");
-			}
-			catch
-			{
-			}
-		};
-	}
+        base.UnhandledException += (_, error) => Log.Error("ui-unhandled", error.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (_, error) => Log.Write("unhandled", (error.ExceptionObject as Exception)?.GetType().Name ?? "Fatal error");
+        System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (_, error) => { Log.Error("unobserved-task", error.Exception); error.SetObserved(); };
+    }
+
+    internal static bool TestMode => Environment.GetEnvironmentVariable("FPT_E2E") == "1";
+    internal static void ReleaseInstance()
+    {
+        try { _mutex?.ReleaseMutex(); _mutex?.Dispose(); _mutex = null; }
+        catch (Exception e) { Log.Error("instance-release", e); }
+    }
 
 	protected override void OnLaunched(LaunchActivatedEventArgs args)
 	{
 		string[] commandLineArgs = Environment.GetCommandLineArgs();
-		foreach (string text in commandLineArgs)
+		foreach (string text in TestMode ? commandLineArgs : Array.Empty<string>())
 		{
 			if (text.StartsWith("--preview="))
 			{
@@ -75,34 +73,59 @@ public partial class App : Application
 			}
 			if (text.StartsWith("--e2e-log="))
 			{
-				E2ELog = text.Substring(10);
+				string candidate = Path.GetFullPath(text.Substring(10));
+                string temp = Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                if (candidate.StartsWith(temp, StringComparison.OrdinalIgnoreCase)) E2ELog = candidate;
 			}
 			if (text.StartsWith("--e2e-set="))
 			{
 				E2ESet = text.Substring(10);
 			}
 		}
-		if (Environment.GetCommandLineArgs().Any((string a) => a == "--selftest"))
+		if (TestMode && commandLineArgs.Contains("--selftest"))
 		{
 			SelfTest.Run();
 			return;
 		}
-		if (Environment.GetCommandLineArgs().Any((string a) => a == "--update-e2e"))
+		if (TestMode && commandLineArgs.Contains("--update-e2e"))
 		{
 			SelfTest.RunUpdateE2E();
 			return;
 		}
 		L.Set(PreviewLang ?? Settings.Load().Lang);
 		_mutex = new Mutex(initiallyOwned: true, "FluentPrayerTimes.SingleInstance", out var createdNew);
-		if (!createdNew)
-		{
-			Environment.Exit(0);
-			return;
-		}
+        if (!createdNew && commandLineArgs.Contains("--restarted"))
+        {
+            try { createdNew = _mutex.WaitOne(TimeSpan.FromSeconds(15)); }
+            catch (AbandonedMutexException) { createdNew = true; }
+        }
+        if (!createdNew)
+        {
+            try { using var show = EventWaitHandle.OpenExisting("FluentPrayerTimes.Show"); show.Set(); }
+            catch (Exception e) { Log.Error("instance-show", e); }
+            Exit();
+            return;
+        }
+
 		bool startHidden = Environment.GetCommandLineArgs().Any((string a) => a.Equals("--tray", StringComparison.OrdinalIgnoreCase)) || Preview != null;
 		_window = new MainWindow(startHidden);
 		StartQuitListener(_window);
+        StartShowListener(_window);
 	}
+
+    private static void StartShowListener(MainWindow window)
+    {
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                using var show = new EventWaitHandle(false, EventResetMode.AutoReset, "FluentPrayerTimes.Show");
+                while (true) { show.WaitOne(); window.RequestShow(); }
+            }
+            catch (Exception e) { Log.Error("show-listener", e); }
+        }) { IsBackground = true, Name = "ShowListener" };
+        thread.Start();
+    }
 
 	private static void StartQuitListener(MainWindow window)
 	{

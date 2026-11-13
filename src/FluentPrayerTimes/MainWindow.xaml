@@ -237,6 +237,7 @@
                                                         <StackPanel Spacing="10">
                                                             <StackPanel.Children>
                                                                 <TextBlock Text="الموقع" FontSize="16" FontWeight="SemiBold" />
+                                                                <TextBlock Text="خصوصية الموقع: تُرسل الإحداثيات لخدمات المواقيت وتسمية الموقع، ويُستخدم عنوان IP عند تعذر موقع ويندوز." TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
                                                                 <TextBlock Text="الدولة" FontWeight="SemiBold" />
                                                                 <ComboBox x:Name="CmbCountry" HorizontalAlignment="Stretch"/>
                                                                 <TextBlock Text="المدن" FontWeight="SemiBold" Margin="0,6,0,0" />

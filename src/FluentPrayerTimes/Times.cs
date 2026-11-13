@@ -13,7 +13,7 @@ namespace FluentPrayerTimes;
 
 public static class Times
 {
-	public record Result(Day? Today, Day? Tomorrow, bool Offline);
+	public record Result(Day? Today, Day? Tomorrow, bool Offline, Day? Yesterday = null);
 
 	public enum Phase
 	{
@@ -31,22 +31,24 @@ public static class Times
 
 	private static readonly string Dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FluentPrayerTimes");
 
-	public static readonly HttpClient Http = new HttpClient
-	{
-		Timeout = TimeSpan.FromSeconds(15.0)
-	};
+	public static readonly HttpClient Http = Network.Http;
 
 	private static readonly Regex Diac = new Regex("[\u064b-\u0652\u0670]");
 
-	public static string[] Names => new string[6]
-	{
-		L.T("الفجر"),
-		L.T("الشروق"),
-		L.T("الظهر"),
-		L.T("العصر"),
-		L.T("المغرب"),
-		L.T("العشاء")
-	};
+    private static string? _namesLanguage;
+    private static string[] _names = Array.Empty<string>();
+    public static string[] Names
+    {
+        get
+        {
+            if (_namesLanguage != L.Lang)
+            {
+                _names = new[] { L.T("الفجر"), L.T("الشروق"), L.T("الظهر"), L.T("العصر"), L.T("المغرب"), L.T("العشاء") };
+                _namesLanguage = L.Lang;
+            }
+            return _names;
+        }
+    }
 
 	private static string CacheFile => Path.Combine(Dir, "cache3.json");
 
@@ -86,17 +88,7 @@ public static class Times
 		return CacheKey(s, d);
 	}
 
-	private static Dictionary<string, Day> Read()
-	{
-		try
-		{
-			return JsonSerializer.Deserialize<Dictionary<string, Day>>(File.ReadAllText(CacheFile)) ?? new Dictionary<string, Day>();
-		}
-		catch
-		{
-			return new Dictionary<string, Day>();
-		}
-	}
+    private static Dictionary<string, Day> Read() => Storage.Read<Dictionary<string, Day>>(CacheFile) ?? new();
 
 	private static async Task<Day> Fetch(Settings s, DateTime d)
 	{
@@ -168,28 +160,53 @@ public static class Times
 		return new Day(dictionary, hijri, text3, num, num2, num3);
 	}
 
-	internal static double? OffsetHours(Settings s, string? zone, DateTime d)
-	{
-		string text = s.TzParam ?? zone;
-		if (string.IsNullOrEmpty(text))
-		{
-			return null;
-		}
-		Match match = Regex.Match(text, "^Etc/GMT([+-])(\\d{1,2})$");
-		if (match.Success)
-		{
-			int num = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
-			return (match.Groups[1].Value == "-") ? num : (-num);
-		}
-		try
-		{
-			return TimeZoneInfo.FindSystemTimeZoneById(text).GetUtcOffset(new DateTime(d.Year, d.Month, d.Day, 12, 0, 0)).TotalHours;
-		}
-		catch
-		{
-			return null;
-		}
-	}
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, TimeZoneInfo> Zones = new();
+    internal static TimeZoneInfo? ResolveZone(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return null;
+        if (Zones.TryGetValue(name, out var cached)) return cached;
+        try
+        {
+            var fixedOffset = Regex.Match(name, "^Etc/GMT([+-])(\\d{1,2})$");
+            TimeZoneInfo zone;
+            if (fixedOffset.Success)
+            {
+                int hours = int.Parse(fixedOffset.Groups[2].Value, CultureInfo.InvariantCulture);
+                if (hours > 14) return null;
+                if (fixedOffset.Groups[1].Value == "+") hours = -hours;
+                zone = TimeZoneInfo.CreateCustomTimeZone(name, TimeSpan.FromHours(hours), name, name);
+            }
+            else zone = TimeZoneInfo.FindSystemTimeZoneById(name);
+            return Zones.GetOrAdd(name, zone);
+        }
+        catch (TimeZoneNotFoundException) { Log.Write("timezone", "Unknown zone"); return null; }
+        catch (InvalidTimeZoneException e) { Log.Error("timezone", e); return null; }
+    }
+
+    internal static double? OffsetHours(Settings s, string? zone, DateTime d) =>
+        ResolveZone(s.TzParam ?? zone)?.GetUtcOffset(new DateTime(d.Year, d.Month, d.Day, 12, 0, 0)).TotalHours;
+
+    internal static Day? LocalDay(Settings s, DateTime date, Day? lastKnown)
+    {
+        int method = s.CalculationMethod >= 0 ? s.CalculationMethod : lastKnown?.Method ?? (s.Location.Cc == "EG" ? 5 : -1);
+        var zone = s.TzParam ?? s.Location.Tz ?? lastKnown?.Tz;
+        double? offset = OffsetHours(s, zone, date);
+        if (method < 0 || !offset.HasValue) return null;
+        int school = s.AsrSchool >= 0 ? s.AsrSchool : lastKnown?.School ?? 0;
+        int highLatitude = s.HighLatitude >= 0 ? s.HighLatitude : lastKnown?.HighLatitude ?? 3;
+        var times = SolarCalc.Compute(date, s.Location.Lat, s.Location.Lon, offset.Value, method,
+            method == 99 ? s.FajrAngle : null, method == 99 ? s.IshaAngle : null, school == 1 ? 2 : 1, highLatitude);
+        if (times == null) return null;
+        if (method == 99)
+        {
+            if (s.CustomRule == 2 || s.CustomRule == 3) times["Fajr"] = At(date, times["Sunrise"]).AddMinutes(-s.FajrMinutes).ToString("HH:mm", CultureInfo.InvariantCulture);
+            if (s.CustomRule == 1 || s.CustomRule == 2) times["Isha"] = At(date, times["Maghrib"]).AddMinutes(s.IshaMinutes).ToString("HH:mm", CultureInfo.InvariantCulture);
+        }
+        var calendar = new UmAlQuraCalendar();
+        string[] months = { "محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة" };
+        string hijri = calendar.GetDayOfMonth(date) + " " + months[calendar.GetMonth(date) - 1] + " " + calendar.GetYear(date) + " هـ";
+        return new Day(times, hijri, zone, method, school, highLatitude);
+    }
 
 	private static async Task<Day> Get(Settings s, DateTime d, Dictionary<string, Day> cache)
 	{
@@ -201,77 +218,50 @@ public static class Times
 		return cache[k] = await Fetch(s, d);
 	}
 
-	public static async Task<Result> Load(Settings s)
-	{
-		Dictionary<string, Day> cache = Read();
-		DateTime now = Now(s.Location.Tz);
-		DateTime tom = now.Date.AddDays(1.0);
-		Day today = null;
-		Day value = null;
-		bool off = false;
-		try
-		{
-			today = await Get(s, now, cache);
-		}
-		catch
-		{
-			off = true;
-		}
-		if (today?.Tz != null && today.Tz != s.Location.Tz)
-		{
-			s.Location.Tz = today.Tz;
-			now = Now(s.Location.Tz);
-			tom = now.Date.AddDays(1.0);
-			try
-			{
-				today = await Get(s, now, cache);
-			}
-			catch
-			{
-				off = true;
-			}
-		}
-		try
-		{
-			value = await Get(s, tom, cache);
-		}
-		catch
-		{
-			cache.TryGetValue(CK(s, tom), out value);
-		}
-		Dictionary<string, Day> value2 = cache.Where<KeyValuePair<string, Day>>((KeyValuePair<string, Day> kv) => kv.Key == CK(s, now) || kv.Key == CK(s, tom)).ToDictionary((KeyValuePair<string, Day> kv) => kv.Key, (KeyValuePair<string, Day> kv) => kv.Value);
-		try
-		{
-			Directory.CreateDirectory(Dir);
-			File.WriteAllText(CacheFile, JsonSerializer.Serialize(value2));
-		}
-		catch
-		{
-		}
-		return new Result(today, value, off);
-	}
+    public static async Task<Result> Load(Settings s)
+    {
+        var cache = Read();
+        DateTime date = Now(s.TzParam ?? s.Location.Tz).Date;
+        string prefix = CK(s, date)[..^10];
+        Day? lastKnown = cache.Where(item => item.Key.StartsWith(prefix, StringComparison.Ordinal)).OrderByDescending(item => item.Key).Select(item => item.Value).FirstOrDefault();
+        bool offline = false;
+        async Task<Day?> DayFor(DateTime requested)
+        {
+            try { return await Get(s, requested, cache); }
+            catch (Exception e)
+            {
+                offline = true;
+                Log.Write("times", "Network lookup failed: " + e.GetType().Name);
+                return LocalDay(s, requested, lastKnown);
+            }
+        }
+        Day? today = await DayFor(date);
+        if (today?.Tz != null && today.Tz != s.Location.Tz)
+        {
+            s.Location.Tz = today.Tz;
+            DateTime resolvedDate = Now(s.TzParam ?? s.Location.Tz).Date;
+            if (date != resolvedDate) { date = resolvedDate; today = await DayFor(date); }
+        }
+        lastKnown = today ?? lastKnown;
+        Day? tomorrow = await DayFor(date.AddDays(1));
+        cache.TryGetValue(CK(s, date.AddDays(-1)), out var yesterday);
+        yesterday ??= LocalDay(s, date.AddDays(-1), lastKnown);
+        // Retain seven days of history for the selected settings, including yesterday's late iqama.
+        var retained = cache.Where(item => item.Key.StartsWith(prefix, StringComparison.Ordinal) &&
+            string.CompareOrdinal(item.Key[^10..], date.AddDays(-7).ToString("yyyy-MM-dd")) >= 0).ToDictionary(item => item.Key, item => item.Value);
+        try { Storage.Write(CacheFile, JsonSerializer.Serialize(retained)); }
+        catch (Exception e) { Log.Error("cache-save", e); }
+        return new Result(today, tomorrow, offline, yesterday);
+    }
 
-	public static DateTime Now(string? tz)
-	{
-		if (string.IsNullOrEmpty(tz))
-		{
-			return DateTime.Now;
-		}
-		try
-		{
-			return TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(tz));
-		}
-		catch
-		{
-			return DateTime.Now;
-		}
-	}
+    public static DateTime Now(string? tz) => ResolveZone(tz) is TimeZoneInfo zone ? TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zone) : DateTime.Now;
 
-	public static DateTime At(DateTime day, string hm, int add = 0)
-	{
-		string[] array = hm.Split(':');
-		return day.Date.AddDays(add).AddHours(int.Parse(array[0])).AddMinutes(int.Parse(array[1]));
-	}
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, TimeSpan> ParsedTimes = new();
+    public static DateTime At(DateTime day, string hm, int add = 0)
+    {
+        var time = ParsedTimes.GetOrAdd(hm, value => TimeSpan.ParseExact(value, @"hh\:mm", CultureInfo.InvariantCulture));
+        return day.Date.AddDays(add).Add(time);
+    }
 
 	public static string F12(string hm)
 	{
@@ -312,41 +302,33 @@ public static class Times
 		return (num: $"{s.Seconds:00}", unit: L.T("ثانية"));
 	}
 
-	public static Disp? State(DateTime now, Dictionary<string, string> today, Dictionary<string, string>? tomorrow, Settings s)
-	{
-		TimeSpan timeSpan = TimeSpan.FromMinutes(1.0);
-		for (int i = 0; i < Keys.Length; i++)
-		{
-			if (i == 1)
-			{
-				continue;
-			}
-			DateTime dateTime = At(now, today[Keys[i]]);
-			TimeSpan timeSpan2 = now - dateTime;
-			if (!(timeSpan2 < TimeSpan.Zero))
-			{
-				if (timeSpan2 < timeSpan)
-				{
-					return new Disp(Phase.Adhan, i, dateTime, Tomorrow: false, timeSpan - timeSpan2);
-				}
-				DateTime dateTime2 = dateTime.AddMinutes(s.IqamaFor(i));
-				if (now < dateTime2)
-				{
-					return new Disp(Phase.Iqama, i, dateTime2, Tomorrow: false, dateTime2 - now);
-				}
-				if (now - dateTime2 < timeSpan)
-				{
-					return new Disp(Phase.IqamaNow, i, dateTime2, Tomorrow: false, TimeSpan.Zero);
-				}
-			}
-		}
-		(int, DateTime, bool)? tuple = Next(now, today, tomorrow);
-		if (tuple.HasValue)
-		{
-			return new Disp(Phase.Next, tuple.Value.Item1, tuple.Value.Item2, tuple.Value.Item3, tuple.Value.Item2 - now);
-		}
-		return null;
-	}
+    public static Disp? State(DateTime now, Dictionary<string, string> today, Dictionary<string, string>? tomorrow, Settings s, Dictionary<string, string>? yesterday = null)
+    {
+        // Newer prayer takes priority over any unusually long preceding iqama.
+        foreach (var source in new[] { (day: now.Date, times: today), (day: now.Date.AddDays(-1), times: yesterday) })
+        {
+            if (source.times == null) continue;
+            for (int i = Keys.Length - 1; i >= 0; i--)
+            {
+                if (i == 1) continue;
+                DateTime adhan = At(source.day, source.times[Keys[i]]);
+                if (now < adhan) continue;
+                DateTime nextPrayer = DateTime.MaxValue;
+                if (i < 5) nextPrayer = At(source.day, source.times[Keys[i == 0 ? 2 : i + 1]]);
+                else if (source.day < now.Date) nextPrayer = At(now, today[Keys[0]]);
+                else if (tomorrow != null) nextPrayer = At(now.AddDays(1), tomorrow[Keys[0]]);
+                if (now >= nextPrayer) break;
+                if (now < adhan.AddMinutes(1)) return new Disp(Phase.Adhan, i, adhan, false, adhan.AddMinutes(1) - now);
+                DateTime iqama = adhan.AddMinutes(s.IqamaFor(i));
+                if (iqama >= nextPrayer) iqama = nextPrayer.AddTicks(-1);
+                if (now < iqama) return new Disp(Phase.Iqama, i, iqama, false, iqama - now);
+                if (now < iqama.AddMinutes(1)) return new Disp(Phase.IqamaNow, i, iqama, false, TimeSpan.Zero);
+                break;
+            }
+        }
+        var next = Next(now, today, tomorrow);
+        return next.HasValue ? new Disp(Phase.Next, next.Value.idx, next.Value.time, next.Value.tomorrow, next.Value.time - now) : null;
+    }
 
 	public static string FmtHM(TimeSpan s)
 	{
@@ -384,7 +366,7 @@ public static class Times
 
 	public static async Task<List<Place>> Search(string q, string? cc = null)
 	{
-		string requestUri = "https://geocoding-api.open-meteo.com/v1/search?name=" + Uri.EscapeDataString(q) + "&count=15&language=ar&format=json" + (string.IsNullOrEmpty(cc) ? "" : ("&countryCode=" + cc));
+		string requestUri = "https://geocoding-api.open-meteo.com/v1/search?name=" + Uri.EscapeDataString(q) + "&count=15&language=" + Uri.EscapeDataString(L.Lang) + "&format=json" + (string.IsNullOrEmpty(cc) ? "" : ("&countryCode=" + cc));
 		using JsonDocument jsonDocument = JsonDocument.Parse(await Http.GetStringAsync(requestUri));
 		List<Place> list = new List<Place>();
 		if (jsonDocument.RootElement.TryGetProperty("results", out var value))
@@ -410,7 +392,7 @@ public static class Times
 		try
 		{
 			CultureInfo invariantCulture = CultureInfo.InvariantCulture;
-			string requestUri = $"https://api.bigdatacloud.net/data/reverse-geocode-client?latitude={lat.ToString(invariantCulture)}&longitude={lon.ToString(invariantCulture)}&localityLanguage=ar";
+			string requestUri = $"https://api.bigdatacloud.net/data/reverse-geocode-client?latitude={lat.ToString(invariantCulture)}&longitude={lon.ToString(invariantCulture)}&localityLanguage={L.Lang}";
 			using JsonDocument jsonDocument = JsonDocument.Parse(await Http.GetStringAsync(requestUri));
 			JsonElement r = jsonDocument.RootElement;
 			string text = Get("city");

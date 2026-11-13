@@ -339,7 +339,7 @@ internal sealed class TrayIcon : IDisposable
 				}
 				break;
 			case 514u:
-				_onClick();
+				try { _onClick(); } catch (Exception e) { Log.Error("tray-click", e); }
 				break;
 			case 517u:
 			{
@@ -396,7 +396,7 @@ internal sealed class TrayIcon : IDisposable
 		DestroyMenu(m);
 		if (num > 0)
 		{
-			_onMenu(num);
+			try { _onMenu(num); } catch (Exception e) { Log.Error("tray-menu", e); }
 		}
 	}
 

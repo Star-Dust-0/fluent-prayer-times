@@ -63,11 +63,7 @@ public static class L
 		try
 		{
 			string text = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-			if (text == "iw")
-			{
-				text = "he";
-			}
-			if (text == "in")
+						if (text == "in")
 			{
 				text = "id";
 			}
@@ -229,11 +225,19 @@ public static class L
 		return false;
 	}
 
+    public static void Unregister(object? root)
+    {
+        if (root is DependencyObject target) Tracked.RemoveAll(item => ReferenceEquals(item.el, target));
+        if (root is Panel panel) foreach (var child in panel.Children) Unregister(child);
+        else if (root is Border border) Unregister(border.Child);
+        else if (root is ContentControl content) Unregister(content.Content);
+    }
+
 	public static void Refresh()
 	{
-		foreach (var (weakReference, text, ar) in Tracked)
+		foreach (var (element, text, ar) in Tracked)
 		{
-            var target = weakReference;
+            var target = element;
 			string text2 = T(ar);
 			DependencyObject dependencyObject = target;
 			if (dependencyObject is Expander expander && text == "ExpanderHeader")
@@ -288,11 +292,11 @@ public static class L
 	{
 		if (Lang == "ar")
 		{
-			return ar;
+			return Array.Find(Countries.All, country => country.Cc == cc)?.Ar ?? ar;
 		}
 		try
 		{
-			return new RegionInfo(cc).EnglishName;
+			return new RegionInfo(cc).DisplayName;
 		}
 		catch
 		{
