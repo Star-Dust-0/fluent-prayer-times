@@ -28,6 +28,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\licenses\*" Link="licenses\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Audio\**" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="app.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="logo.png" CopyToOutputDirectory="PreserveNewest" />
