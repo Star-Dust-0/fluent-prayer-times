@@ -287,7 +287,7 @@ internal sealed class UpdateToast : Window
 			try
 			{
 				Directory.CreateDirectory(App.AppData);
-				Log.Error("update", ex);
+				Log.Error("update", ex2);
 			}
 			catch
 			{
