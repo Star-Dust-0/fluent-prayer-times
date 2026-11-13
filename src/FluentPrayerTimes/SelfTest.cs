@@ -246,8 +246,7 @@ internal static class SelfTest
 		{
 			Task.Run(async delegate
 			{
-				using HttpClient http = new HttpClient();
-				http.DefaultRequestHeaders.UserAgent.ParseAdd("FluentPrayerTimes-ci");
+				HttpClient http = Network.Http;
 				JsonDocument jsonDocument = JsonDocument.Parse(await http.GetStringAsync("https://api.github.com/repos/Star-Dust-0/fluent-prayer-times/releases/latest"));
 				UpdateAsset asset = MainWindow.UpdateAssetFor(jsonDocument.RootElement, new Version(1, 3, 3));
 				Check("live release offers an installer to 1.3.3", asset != null && asset.Sha256 != null && asset.Size > 1000000);

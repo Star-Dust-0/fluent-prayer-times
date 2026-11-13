@@ -454,8 +454,9 @@ public sealed partial class MainWindow : Window
 		{
 			base.AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "app.ico"));
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		base.AppWindow.Closing += delegate(AppWindow s, AppWindowClosingEventArgs a)
 		{
@@ -478,8 +479,9 @@ public sealed partial class MainWindow : Window
 				TxtVersion.Text = L.T("الإصدار ") + version.Major + "." + version.Minor + "." + version.Build;
 			}
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		RootGrid.SizeChanged += delegate
 		{
@@ -706,8 +708,9 @@ public sealed partial class MainWindow : Window
 			num = (num | 0x80) & -262145;
 			SetWindowLongPtr(_hwnd, -20, new IntPtr(num));
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 	}
 
@@ -852,8 +855,9 @@ public sealed partial class MainWindow : Window
 			}
 			base.AppWindow.MoveAndResize(new RectInt32(x2, y2, num, num2));
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 	}
 
@@ -884,8 +888,9 @@ public sealed partial class MainWindow : Window
 				return Color.FromArgb(byte.MaxValue, Convert.ToByte(text.Substring(0, 2), 16), Convert.ToByte(text.Substring(2, 2), 16), Convert.ToByte(text.Substring(4), 16));
 			}
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		return DefaultAccent;
 	}
@@ -913,22 +918,25 @@ public sealed partial class MainWindow : Window
 		{
 			Flip(RootGrid);
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		try
 		{
 			_widget?.RefreshTheme();
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		try
 		{
 			_hover.RefreshTheme();
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		static void Flip(FrameworkElement fe)
 		{
@@ -1052,7 +1060,8 @@ public sealed partial class MainWindow : Window
 		{
 			return;
 		}
-		try
+		_checkingUpdates = true;
+        try
 		{
 			HttpClient http = Network.Http;
 			using HttpResponseMessage response = await http.GetAsync("https://api.github.com/repos/Star-Dust-0/fluent-prayer-times/releases/latest");
@@ -1086,6 +1095,7 @@ public sealed partial class MainWindow : Window
 			{
 			}
 		}
+        finally { _checkingUpdates = false; }
 	}
 
 	private void AutoUpdate_Toggled(object sender, RoutedEventArgs e)
@@ -1775,8 +1785,9 @@ public sealed partial class MainWindow : Window
 			num = (L.Rtl ? (num | 0x400000) : (num & -4194305));
 			SetWindowLongPtr(windowHandle, -20, new IntPtr(num));
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		TitleStack.HorizontalAlignment = (L.Rtl ? HorizontalAlignment.Right : HorizontalAlignment.Left);
 		TitleStack.Margin = (L.Rtl ? new Thickness(0.0, 0.0, 14.0, 0.0) : new Thickness(14.0, 0.0, 0.0, 0.0));
@@ -1803,8 +1814,9 @@ public sealed partial class MainWindow : Window
 				TxtVersion.Text = L.T("الإصدار ") + version.Major + "." + version.Minor + "." + version.Build;
 			}
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 		bool loading = _loading;
 		_loading = true;
@@ -1830,8 +1842,9 @@ public sealed partial class MainWindow : Window
 		{
 			Tick();
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 	}
 
@@ -2373,8 +2386,9 @@ public sealed partial class MainWindow : Window
 			_toast.ShowToast();
 			_toast.Begin();
 		}
-		catch
+		catch (Exception error)
 		{
+            Log.Write("window", error.GetType().Name);
 		}
 	}
 
