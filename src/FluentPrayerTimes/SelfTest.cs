@@ -197,7 +197,8 @@ internal static class SelfTest
 		catch
 		{
 		}
-		Environment.Exit((fails != 0) ? 1 : 0);
+		Environment.ExitCode = fails != 0 ? 1 : 0;
+        Microsoft.UI.Xaml.Application.Current.Exit();
 		void Check(string name, bool flag)
 		{
 			log.Add((flag ? "PASS " : "FAIL ") + name);
@@ -358,7 +359,8 @@ internal static class SelfTest
 		catch
 		{
 		}
-		Environment.Exit((fails != 0) ? 1 : 0);
+		Environment.ExitCode = fails != 0 ? 1 : 0;
+        Microsoft.UI.Xaml.Application.Current.Exit();
 		void Check(string name, bool ok)
 		{
 			log.Add((ok ? "PASS " : "FAIL ") + name);

@@ -7,6 +7,7 @@ $exe="$PWD/publish/FluentPrayerTimes.exe"
 $p=Start-Process $exe -ArgumentList '--selftest' -PassThru -Wait
 Copy-Item "$settings/selftest.log" proof/selftest.log
 Get-Content proof/selftest.log
+"Selftest exit code: $($p.ExitCode)"
 if ($p.ExitCode -ne 0) { throw 'App selftest failed' }
 function Capture($name) {
  $bounds=[System.Windows.Forms.Screen]::PrimaryScreen.Bounds
