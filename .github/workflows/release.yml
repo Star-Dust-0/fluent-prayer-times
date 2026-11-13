@@ -1,0 +1,33 @@
+name: Publish release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    uses: ./.github/workflows/build.yml
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: review-verified
+          path: packages
+      - name: Validate tag, files and checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd packages
+          version="${GITHUB_REF_NAME#v}"
+          test -s "FluentPrayerTimes-v${version}-installer-win-x64.exe"
+          test -s "FluentPrayerTimes-v${version}-portable-win-x64.zip"
+          test -s "FluentPrayerTimes-v${version}-full-win-x64.zip"
+          sed -i 's/\r$//' SHA256SUMS.txt
+          sha256sum --check SHA256SUMS.txt
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft --title "Fluent Prayer Times ${GITHUB_REF_NAME}" FluentPrayerTimes-v* SHA256SUMS.txt
