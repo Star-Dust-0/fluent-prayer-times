@@ -391,7 +391,7 @@ public sealed partial class MainWindow : Window
 		}
 		ApplyAccentResources(ParseHex(_s.Accent));
 		InitializeComponent();
-        BtnStopAudio.Click += (_, _) => { Sounds.Stop(); BtnStopAudio.Visibility = Visibility.Collapsed; };
+        BtnStopAudio.Click += StopSound_Click;
 
         Nav.SelectionChanged += Nav_SelectionChanged;
         BtnApply.Click += ApplyChanges_Click;
@@ -655,6 +655,12 @@ public sealed partial class MainWindow : Window
 			SetWidget(TglWidget.IsOn);
 		}
 	}
+
+    private void StopSound_Click(object sender, RoutedEventArgs e)
+    {
+        Sounds.Stop();
+        BtnStopAudio.Visibility = Visibility.Collapsed;
+    }
 
     private void ApplyChanges_Click(object sender, RoutedEventArgs e)
     {

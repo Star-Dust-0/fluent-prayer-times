@@ -4,7 +4,11 @@ Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes,System.Windows.Forms
 $settings="$env:APPDATA/FluentPrayerTimes"
 New-Item $settings -ItemType Directory -Force | Out-Null
 $exe="$PWD/publish/FluentPrayerTimes.exe"
-$p=Start-Process $exe -ArgumentList '--selftest' -PassThru -Wait
+$info=[System.Diagnostics.ProcessStartInfo]::new($exe, '--selftest')
+$info.UseShellExecute=$false
+$p=[System.Diagnostics.Process]::Start($info)
+$p.WaitForExit()
+$p.Refresh()
 Copy-Item "$settings/selftest.log" proof/selftest.log
 Get-Content proof/selftest.log
 "Selftest exit code: $($p.ExitCode)"

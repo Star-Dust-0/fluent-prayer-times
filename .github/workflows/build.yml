@@ -78,7 +78,11 @@ jobs:
       - name: Live updater integrity, progress and cancellation tests
         shell: pwsh
         run: |
-          $p=Start-Process "$PWD/publish/FluentPrayerTimes.exe" -ArgumentList '--update-e2e' -PassThru -Wait
+          $info=[System.Diagnostics.ProcessStartInfo]::new("$PWD/publish/FluentPrayerTimes.exe", '--update-e2e')
+          $info.UseShellExecute=$false
+          $p=[System.Diagnostics.Process]::Start($info)
+          $p.WaitForExit()
+          $p.Refresh()
           Copy-Item "$env:APPDATA/FluentPrayerTimes/update-e2e.log" proof/update-e2e.log
           if ($p.ExitCode -ne 0) { throw 'Live updater verification failed' }
       - name: Actual app-wide UI control audit
